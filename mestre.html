@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>RPG Chain — Narrador</title>
 <script src="https://cdn.jsdelivr.net/npm/pouchdb@9.0.0/dist/pouchdb.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -26,8 +25,6 @@ header{background:var(--surf);border-bottom:2px solid var(--blood);padding:10px 
 .htitle{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:var(--blood2);text-transform:uppercase;}
 .hname{font-family:'Cinzel',serif;font-size:17px;font-weight:700;color:var(--gd);letter-spacing:2px;}
 .hspacer{flex:1;}
-#walletBadge{font-family:var(--mono);font-size:10px;padding:4px 10px;border:1px solid var(--br2);border-radius:2px;color:var(--tx2);display:none;}
-#walletBadge.on{border-color:var(--gr);color:var(--gr2);}
 .hbtn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:2px;cursor:pointer;border:1px solid var(--br2);background:transparent;color:var(--tx2);transition:all .15s;}
 .hbtn:hover{border-color:var(--gd2);color:var(--gd);}
 
@@ -67,8 +64,8 @@ main{flex:1;overflow-y:auto;padding:18px 20px;}
 .btn-approve:hover{background:rgba(45,106,63,.35);}
 .btn-deny{border-color:var(--blood);color:#f88;}
 .btn-deny:hover{background:rgba(139,0,0,.2);}
-.btn-chain{background:rgba(74,74,144,.15);border-color:var(--ch);color:var(--ch2);}
-.btn-chain:hover{background:rgba(74,74,144,.3);}
+.btn-save{background:rgba(74,74,144,.15);border-color:var(--ch);color:var(--ch2);}
+.btn-save:hover{background:rgba(74,74,144,.3);}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
 
 /* DROP */
@@ -86,7 +83,6 @@ main{flex:1;overflow-y:auto;padding:18px 20px;}
 .rbox.ok{border-color:var(--gr);color:var(--gr2);}
 .rbox.err{border-color:var(--blood);color:#f88;}
 .rbox.info{border-color:var(--ch);color:var(--ch2);}
-.rbox.warn{border-color:var(--gd2);color:var(--gd);}
 .loading{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;color:var(--gd2);animation:pulse 1.2s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:.3;}50%{opacity:1;}}
 
@@ -110,27 +106,16 @@ main{flex:1;overflow-y:auto;padding:18px 20px;}
 /* PLAYERS LIST */
 .player-slot{background:var(--card2);border:.5px solid var(--br);border-left:3px solid var(--blood);border-radius:2px;padding:10px 14px;margin-bottom:10px;cursor:pointer;transition:border-color .15s;}
 .player-slot:hover{border-color:var(--gd);}
-.player-slot.active{border-left-color:var(--gd);background:var(--card);}
 .slot-name{font-family:'Cinzel',serif;font-size:13px;color:var(--gd);margin-bottom:2px;}
 .slot-meta{font-size:12px;color:var(--tx3);font-family:var(--mono);}
 .slot-xp{display:flex;gap:8px;margin-top:6px;}
 .xp-pill{background:var(--card);border:.5px solid var(--br);border-radius:2px;padding:3px 8px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.05em;}
 .xp-pill span{color:var(--gd);}
 
-/* HASH */
-.hash-box{background:var(--card);border:.5px solid var(--br);border-radius:2px;padding:7px 10px;font-family:var(--mono);font-size:10px;color:var(--gd2);word-break:break-all;margin-top:6px;}
-
 /* LOG */
 .log-entry{padding:5px 0;border-bottom:1px dotted rgba(58,42,26,.4);font-size:12px;color:var(--tx2);}
 .log-entry:last-child{border-bottom:none;}
 .log-time{font-family:var(--mono);font-size:10px;color:var(--tx3);}
-
-/* ONCHAIN RESULT */
-.oc-res{background:var(--card2);border:.5px solid var(--br);border-radius:2px;padding:10px 12px;margin-top:10px;font-family:var(--mono);font-size:11px;display:none;word-break:break-all;line-height:1.6;white-space:pre-wrap;}
-.oc-res.show{display:block;}
-.oc-res.ok{border-color:var(--gr);color:var(--gr2);}
-.oc-res.err{border-color:var(--blood);color:#f88;}
-.oc-res.info{border-color:var(--ch);color:var(--ch2);}
 
 /* DIFF BADGE */
 .diff-item{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:2px;margin-bottom:4px;font-size:13px;}
@@ -164,8 +149,6 @@ main{flex:1;overflow-y:auto;padding:18px 20px;}
     <div class="hname" id="hCronicaNome">Painel do Narrador</div>
   </div>
   <div class="hspacer"></div>
-  <div id="walletBadge"></div>
-  <button class="hbtn" id="btnMM" onclick="conectarMetaMask()">🦊 MetaMask</button>
   <button class="hbtn" onclick="abrirConfig()">⚙ Config</button>
 </header>
 
@@ -173,7 +156,6 @@ main{flex:1;overflow-y:auto;padding:18px 20px;}
   <button class="tab on" onclick="goTab('cronica',this)">Crônica</button>
   <button class="tab" onclick="goTab('jogadores',this)">Jogadores</button>
   <button class="tab" onclick="goTab('xp',this)">XP</button>
-  <button class="tab" onclick="goTab('onchain',this)">⬡ Onchain</button>
 </nav>
 
 <main>
@@ -233,7 +215,7 @@ main{flex:1;overflow-y:auto;padding:18px 20px;}
             <select id="jogadorSel" onchange="selecionarJogador()"></select>
           </div>
           <div id="slotInfo" style="display:none;margin-top:8px;">
-            <div class="hash-box" id="slotHashDisplay" style="margin-bottom:8px;font-size:10px;"></div>
+            <div class="hash-box" id="slotHashDisplay" style="margin-bottom:8px;font-size:10px;word-break:break-all;"></div>
             <div id="slotXPDisplay"></div>
           </div>
         </div>
@@ -246,7 +228,7 @@ main{flex:1;overflow-y:auto;padding:18px 20px;}
         </div>
         <div class="card-body">
           <div class="drop" id="dropZone">
-            <input type="file" accept=".json" id="fileInput" onchange="loadFile(this)"/>
+            <input type="file" accept=".json" id="fileInput" onchange="handleFileUpload(this)"/>
             <div class="drop-ico">☩</div>
             <div class="drop-lbl">Arraste o <strong>ficha.json</strong> aqui</div>
             <div class="drop-hint">jogador exporta da ficha_vtm.html</div>
@@ -261,6 +243,7 @@ main{flex:1;overflow-y:auto;padding:18px 20px;}
 
           <!-- AÇÕES -->
           <div class="btn-row" id="acoesBtns" style="display:none;">
+            <button class="btn btn-save" onclick="salvarJsonLocal()">💾 Salvar JSON</button>
             <button class="btn btn-approve" id="btnAprovar" onclick="aprovarFicha()">✓ Aprovar Ficha</button>
             <button class="btn btn-deny" onclick="rejeitarFicha()">✕ Rejeitar</button>
           </div>
@@ -334,87 +317,6 @@ main{flex:1;overflow-y:auto;padding:18px 20px;}
   </div>
 </div>
 
-<!-- ═══ ONCHAIN ═══ -->
-<div class="pane" id="pane-onchain">
-  <div class="card" style="margin-bottom:14px;">
-    <div class="card-hd"><span class="card-title">⬥ Contrato Sepolia</span></div>
-    <div class="card-body">
-      <div class="frow">
-        <label>Endereço do Contrato RPGChain</label>
-        <input type="text" id="ocAddr" style="font-family:var(--mono);font-size:11px;" placeholder="0x..." oninput="salvarOcAddr()"/>
-      </div>
-      <div style="font-size:12px;color:var(--tx3);">Deploy via Remix IDE com o RPGChain.sol → cole o endereço aqui.</div>
-    </div>
-  </div>
-  <div class="g2" style="align-items:start;">
-    <div>
-      <div class="card">
-        <div class="card-hd"><span class="card-title">⬥ 1. Criar Crônica (NFT)</span></div>
-        <div class="card-body">
-          <p style="font-size:13px;color:var(--tx2);line-height:1.55;margin-bottom:12px;">Minta o NFT da autoridade narrativa. Guarde o Crônica ID.</p>
-          <div class="frow"><label>Nome</label><input type="text" id="ocNome" placeholder="Praga Sombria..."/></div>
-          <div class="frow"><label>Narrador</label><input type="text" id="ocNarrador" placeholder="Seu nome"/></div>
-          <div class="btn-row"><button class="btn btn-prim" onclick="ocCriarCronica()">⬡ Mintear NFT</button></div>
-          <div class="oc-res" id="ocResCronica"></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hd"><span class="card-title">⬥ 2. Aprovar Hash On-Chain</span></div>
-        <div class="card-body">
-          <div class="frow"><label>Crônica ID</label><input type="number" id="ocCronicaId" min="1" placeholder="1"/></div>
-          <div class="frow"><label>Hash (64 chars, sem 0x)</label><input type="text" id="ocHash" style="font-family:var(--mono);font-size:11px;" placeholder="ab991f..."/></div>
-          <div style="display:flex;gap:10px;">
-            <div class="frow" style="flex:1;"><label>Versão</label><input type="number" id="ocVersao" min="1" value="1"/></div>
-            <div class="frow" style="flex:1;"><label>XP Saldo</label><input type="number" id="ocXPSaldo" value="0"/></div>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn-approve" onclick="ocAprovarFicha()">✓ Aprovar On-Chain</button>
-            <button class="btn" onclick="ocPreencherDoSlot()">← Do slot ativo</button>
-          </div>
-          <div class="oc-res" id="ocResAprovar"></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hd"><span class="card-title">⬥ 5. Revogar / Encerrar</span></div>
-        <div class="card-body">
-          <div class="frow"><label>Crônica ID</label><input type="number" id="ocRevId" min="1" placeholder="1"/></div>
-          <div class="frow"><label>Hash a revogar</label><input type="text" id="ocRevHash" style="font-family:var(--mono);font-size:11px;" placeholder="ab991f..."/></div>
-          <div class="btn-row">
-            <button class="btn btn-deny" onclick="ocRevogarFicha()">✕ Revogar Ficha</button>
-            <button class="btn" onclick="ocEncerrarCronica()">⬡ Encerrar Crônica</button>
-          </div>
-          <div class="oc-res" id="ocResRevogar"></div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <div class="card">
-        <div class="card-hd"><span class="card-title">⬥ 3. Verificar Hash (Público)</span></div>
-        <div class="card-body">
-          <p style="font-size:13px;color:var(--tx2);line-height:1.55;margin-bottom:12px;">Sem MetaMask — usa RPC público da Sepolia.</p>
-          <div class="frow"><label>Hash (sem 0x)</label><input type="text" id="ocVerHash" style="font-family:var(--mono);font-size:11px;" placeholder="ab991f..."/></div>
-          <div class="btn-row">
-            <button class="btn btn-chain" onclick="ocVerificar()">↗ Verificar</button>
-            <button class="btn" onclick="ocPreencherVerificar()">← Do slot ativo</button>
-          </div>
-          <div class="oc-res" id="ocResVerificar"></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hd"><span class="card-title">⬥ 4. Dados da Crônica</span></div>
-        <div class="card-body">
-          <div class="frow"><label>Crônica ID</label><input type="number" id="ocConsId" min="1" placeholder="1"/></div>
-          <div class="btn-row">
-            <button class="btn btn-chain" onclick="ocConsultar()">↗ Consultar</button>
-            <button class="btn" onclick="ocListarFichas()">↗ Listar Fichas</button>
-          </div>
-          <div class="oc-res" id="ocResCons"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 </main>
 
 <div class="flash" id="flash"></div>
@@ -435,7 +337,6 @@ main{flex:1;overflow-y:auto;padding:18px 20px;}
       <option value="gemini-3-flash-preview">gemini-3-flash-preview</option>
     </select>
   </div>
-  <div class="frow"><label>Wallet Sepolia (para debug)</label><input type="text" id="cfgWallet" placeholder="0x..."/></div>
   <div class="modal-btns">
     <button class="btn btn-prim" onclick="salvarConfig()">Salvar</button>
     <button class="btn" onclick="fecharMod('modCfg')">Cancelar</button>
@@ -448,16 +349,13 @@ main{flex:1;overflow-y:auto;padding:18px 20px;}
 // STATE
 // ══════════════════════════════════════════════════
 const db = new PouchDB('rpgchain_narrador_v2');
-let CFG = {geminiKey:'',geminiModel:'gemini-2.0-flash',wallet:'',contratoAddr:'',cronicaId:''};
+let CFG = {geminiKey:'',geminiModel:'gemini-2.0-flash'};
 let CRONICA = null;
 let PLAYERS = [];
-let slotAtivo = null;      // player object selecionado
-let jsonNovo = null;       // JSON recém uploadado
-let hashNovo = null;       // hash canônico do JSON novo
-let diffResult = null;     // resultado da comparação local
-let ocSigner = null, ocProvider = null;
-const SEPOLIA_RPC = 'https://rpc.ankr.com/eth_sepolia';
-const SEPOLIA_CHAIN = 11155111n;
+let slotAtivo = null;
+let jsonNovo = null;
+let hashNovo = null;
+let diffResult = null;
 
 // ══════════════════════════════════════════════════
 // DB
@@ -476,15 +374,9 @@ async function initDB(){
     document.getElementById('hCronicaNome').textContent=cr.nome||'Painel do Narrador';
   }
   const pl=await dbGet('players'); if(pl){PLAYERS=pl.list||[];}
-  const oc=localStorage.getItem('rpgchain_contrato');
-  if(oc){document.getElementById('ocAddr').value=oc;CFG.contratoAddr=oc;}
-  const ocId=localStorage.getItem('rpgchain_cronica_id');
-  if(ocId){['ocCronicaId','ocRevId','ocConsId'].forEach(id=>document.getElementById(id).value=ocId);}
   
-  // Carregar config nos campos
   document.getElementById('cfgKey').value=CFG.geminiKey||'';
   document.getElementById('cfgModel').value=CFG.geminiModel||'gemini-2.0-flash';
-  document.getElementById('cfgWallet').value=CFG.wallet||'';
   
   renderSlots();
   populateSelects();
@@ -503,17 +395,13 @@ function goTab(id,btn){
   if(id==='xp'){populateXPSelects();renderXPSaldos();renderXPHist();}
 }
 
-// MODALS
 function abrirConfig(){document.getElementById('modCfg').style.display='flex';}
 function fecharMod(id){document.getElementById(id).style.display='none';}
 function closeModBg(e,id){if(e.target.id===id)fecharMod(id);}
-function openMod(id){document.getElementById(id).style.display='flex';}
-function closeMod(id){document.getElementById(id).style.display='none';}
 
 async function salvarConfig(){
   CFG.geminiKey=document.getElementById('cfgKey').value.trim();
   CFG.geminiModel=document.getElementById('cfgModel').value;
-  CFG.wallet=document.getElementById('cfgWallet').value.trim();
   await dbSet('config',CFG);
   fecharMod('modCfg');
   flash('Configurações salvas');
@@ -590,19 +478,24 @@ function renderSlots(){
   if(!PLAYERS.length){el.innerHTML='<div style="text-align:center;color:var(--tx3);font-style:italic;padding:16px;font-size:13px;">Nenhum slot ainda.</div>';return;}
   el.innerHTML=PLAYERS.map(p=>{
     const s=p.xpTotal-p.xpGasto;
-    return `<div class="player-slot">
+    return `<div class="player-slot" onclick="selecionarSlotPorId(${p.id})">
       <div style="display:flex;justify-content:space-between;align-items:baseline;">
         <div class="slot-name">${p.personagem||'—'} <span style="font-size:11px;color:var(--tx3);">/ ${p.nome}</span></div>
-        <button class="btn btn-deny" onclick="removerJogador(${p.id})" style="font-size:9px;padding:2px 8px;">✕</button>
+        <button class="btn btn-deny" onclick="event.stopPropagation();removerJogador(${p.id})" style="font-size:9px;padding:2px 8px;">✕</button>
       </div>
       <div class="slot-meta">${p.clan||'Clã não definido'} · v${p.versao||0}</div>
       <div class="slot-xp">
         <div class="xp-pill">Total <span>${p.xpTotal}</span></div>
         <div class="xp-pill">Saldo <span style="color:${s<0?'#f88':'var(--gr2)'}">${s>=0?'+':''}${s}</span></div>
-        <div class="xp-pill">Hash <span>${p.hashAprovado?p.hashAprovado.slice(0,8)+'...':'—'}</span></div>
       </div>
     </div>`;
   }).join('');
+}
+
+function selecionarSlotPorId(id){
+  const sel=document.getElementById('jogadorSel');
+  sel.value=id;
+  selecionarJogador();
 }
 
 // ══════════════════════════════════════════════════
@@ -623,33 +516,32 @@ function selecionarJogador(){
   slotAtivo=PLAYERS.find(p=>p.id===id)||null;
   jsonNovo=null; hashNovo=null; diffResult=null;
 
-  // reset UI
   document.getElementById('fichaDisplay').style.display='none';
   document.getElementById('fichaDisplay').innerHTML='';
   document.getElementById('diffBox').style.display='none';
   document.getElementById('bloqueioBox').style.display='none';
   document.getElementById('acoesBtns').style.display='none';
   document.getElementById('geminiResult').className='rbox';
-  document.getElementById('geminiResult').textContent='';
+  document.getElementById('geminiResult').innerHTML='';
   document.getElementById('btnGemini').disabled=true;
 
   if(!slotAtivo){
     document.getElementById('slotInfo').style.display='none';
-    document.getElementById('geminiStatus').textContent='Selecione um jogador.';
+    document.getElementById('geminiStatus').innerHTML='Selecione um jogador.';
     document.getElementById('slotLog').innerHTML='<div style="color:var(--tx3);font-style:italic;font-size:13px;">Selecione um jogador.</div>';
     return;
   }
 
   document.getElementById('slotInfo').style.display='block';
-  document.getElementById('slotHashDisplay').textContent=slotAtivo.hashAprovado||'sem hash aprovado ainda';
+  document.getElementById('slotHashDisplay').innerHTML=slotAtivo.hashAprovado ? 'Hash: '+slotAtivo.hashAprovado.slice(0,16)+'...' : 'Nenhuma ficha aprovada ainda';
   const s=slotAtivo.xpTotal-slotAtivo.xpGasto;
   document.getElementById('slotXPDisplay').innerHTML=`<span class="xp-badge ${s>=0?'xp-ok':'xp-debt'}">${s>=0?'+':''}${s} XP disponível</span>`;
 
   const isPrimeira=!slotAtivo.jsonAprovado;
-  document.getElementById('geminiStatus').textContent=isPrimeira
+  document.getElementById('geminiStatus').innerHTML=isPrimeira
     ?'Primeira ficha — Gemini vai validar as regras de criação.'
     :'Upload do JSON novo → Gemini compara com a versão anterior e calcula o XP gasto.';
-  document.getElementById('uploadLabel').textContent=isPrimeira?'v1 — primeira ficha':'v'+(slotAtivo.versao+1)+' — evolução';
+  document.getElementById('uploadLabel').innerHTML=isPrimeira?'v1 — primeira ficha':'v'+(slotAtivo.versao+1)+' — evolução';
 
   renderSlotLog();
 }
@@ -674,11 +566,14 @@ function addSlotLog(msg){
 // ══════════════════════════════════════════════════
 // UPLOAD + DIFF
 // ══════════════════════════════════════════════════
-const dz=document.getElementById('dropZone');
-dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
-dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
-dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f&&f.name.endsWith('.json'))processFile(f);else flash('Envie um .json');});
-function loadFile(input){if(input.files[0])processFile(input.files[0]);}
+function setupDragDrop(){
+  const dz=document.getElementById('dropZone');
+  if(!dz)return;
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f&&f.name.endsWith('.json'))processFile(f);else flash('Envie um arquivo .json');});
+}
+function handleFileUpload(input){if(input.files[0])processFile(input.files[0]);}
 
 async function processFile(file){
   if(!slotAtivo){flash('Selecione um jogador primeiro');return;}
@@ -687,16 +582,13 @@ async function processFile(file){
     try{
       jsonNovo=JSON.parse(e.target.result);
       hashNovo=await hashCanonico(jsonNovo);
-
-      // reset
+      
       document.getElementById('diffBox').style.display='none';
       document.getElementById('bloqueioBox').style.display='none';
-      document.getElementById('bloqueioBox').className='rbox err';
       document.getElementById('acoesBtns').style.display='none';
       document.getElementById('geminiResult').className='rbox';
-      document.getElementById('geminiResult').textContent='';
+      document.getElementById('geminiResult').innerHTML='';
 
-      // primeira ficha ou evolução
       if(!slotAtivo.jsonAprovado){
         diffResult={tipo:'primeira',bloqueado:false};
         renderFichaDisplay(jsonNovo);
@@ -709,7 +601,7 @@ async function processFile(file){
         renderDiff(resultado);
         renderFichaDisplay(jsonNovo);
         if(resultado.bloqueado){
-          document.getElementById('bloqueioBox').textContent='✕ BLOQUEADO\n\n'+resultado.motivo;
+          document.getElementById('bloqueioBox').innerHTML='✕ BLOQUEADO<br><br>'+resultado.motivo;
           document.getElementById('bloqueioBox').style.display='block';
           document.getElementById('btnGemini').disabled=true;
           flash('Ficha bloqueada — redução detectada');
@@ -731,14 +623,12 @@ function compararFichas(ant, nov){
 
   const AM={forca:'Força',destreza:'Destreza',vigor:'Vigor',carisma:'Carisma',manipulacao:'Manipulação',aparencia:'Aparência',percepcao:'Percepção',inteligencia:'Inteligência',raciocinio:'Raciocínio'};
 
-  // Atributos
   Object.keys(ant.attrs||{}).forEach(k=>{
     const a=ant.attrs[k]||0, n=(nov.attrs||{})[k]||0;
     if(n>a) mudancas.push({tipo:'up',campo:'Atributo',label:AM[k]||k,de:a,para:n});
     if(n<a){bloqueado=true;motivo+=`Atributo ${AM[k]||k} diminuiu (${a}→${n}). `;}
   });
 
-  // Skills
   const SM={prontidao:'Prontidão',esportes:'Esportes',presciencia:'Presciência',briga:'Briga',empatia:'Empatia',expressao:'Expressão',intimidacao:'Intimidação',lideranca:'Liderança',manha:'Manha',labia:'Lábia',animais:'Empatia c/Animais',oficios:'Ofícios',conducao:'Condução',etiqueta:'Etiqueta',armas_foco:'Armas de Fogo',furto:'Furto',armas_brancas:'Armas Brancas',performance:'Performance',furtividade:'Furtividade',sobrevivencia:'Sobrevivência',academicos:'Acadêmicos',computador:'Computador',financas:'Finanças',investigacao:'Investigação',direito:'Direito',medicina:'Medicina',ocultismo:'Ocultismo',politica:'Política',ciencia:'Ciência',tecnologia:'Tecnologia'};
   Object.keys(ant.skills||{}).forEach(k=>{
     const a=ant.skills[k]||0,n=(nov.skills||{})[k]||0;
@@ -746,7 +636,6 @@ function compararFichas(ant, nov){
     if(n<a){bloqueado=true;motivo+=`Habilidade ${SM[k]||k} diminuiu (${a}→${n}). `;}
   });
 
-  // Virtudes — humanidade pode diminuir (perda narrativa), atributos virtuosos não
   const VM={consciencia:'Consciência',autocontrole:'Autocontrole',coragem:'Coragem'};
   Object.keys(ant.virtues||{}).forEach(k=>{
     const a=ant.virtues[k]||0,n=(nov.virtues||{})[k]||0;
@@ -754,15 +643,12 @@ function compararFichas(ant, nov){
     if(n<a) mudancas.push({tipo:'narrativo',campo:'Virtude',label:VM[k]||k,de:a,para:n});
   });
 
-  // Humanidade — pode diminuir
   if((nov.humanidade||0)>(ant.humanidade||0)) mudancas.push({tipo:'up',campo:'Humanidade',label:'Humanidade',de:ant.humanidade,para:nov.humanidade});
   if((nov.humanidade||0)<(ant.humanidade||0)) mudancas.push({tipo:'narrativo',campo:'Humanidade',label:'Humanidade',de:ant.humanidade,para:nov.humanidade});
 
-  // Willpower permanente
   if((nov.willpower||0)>(ant.willpower||0)) mudancas.push({tipo:'up',campo:'Força de Vontade',label:'Força de Vontade',de:ant.willpower,para:nov.willpower});
   if((nov.willpower||0)<(ant.willpower||0)){bloqueado=true;motivo+=`Força de Vontade diminuiu. `;}
 
-  // Disciplinas
   const antDiscs=ant.disciplines||[], novDiscs=nov.disciplines||[];
   novDiscs.forEach(nd=>{
     const ad=antDiscs.find(x=>x.name===nd.name);
@@ -897,23 +783,34 @@ RESULTADO: APROVADO ou REPROVADO — [justificativa em 1 linha para o narrador]`
   resp=await callGemini(prompt);
   btn.disabled=false;
 
-  if(!resp){box.className='rbox show err';box.textContent='Erro ao chamar Gemini.';return;}
+  if(!resp){box.className='rbox show err';box.innerHTML='Erro ao chamar Gemini.';return;}
 
   const aprovado=resp.toLowerCase().includes('resultado: aprovado')||resp.toLowerCase().includes('resultado: válida')||resp.toLowerCase().includes('resultado: valida');
   box.className='rbox show '+(aprovado?'ok':'err');
-  box.textContent=resp;
+  box.innerHTML=resp.replace(/\n/g,'<br>');
   addSlotLog('Gemini: '+(aprovado?'APROVADO':'REPROVADO')+(diffResult?.tipo==='primeira'?' (ficha inicial)':' (evolução)'));
 }
 
 // ══════════════════════════════════════════════════
-// APROVAR / REJEITAR
+// APROVAR / REJEITAR / SALVAR JSON
 // ══════════════════════════════════════════════════
+function salvarJsonLocal(){
+  if(!jsonNovo){flash('Nenhum JSON carregado para salvar');return;}
+  const blob=new Blob([JSON.stringify(jsonNovo,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`ficha_${slotAtivo?.personagem||'personagem'}_${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  flash('JSON salvo localmente');
+}
+
 async function aprovarFicha(){
   if(!slotAtivo||!jsonNovo||!hashNovo){flash('Carregue e analise a ficha primeiro');return;}
   if(diffResult?.bloqueado){flash('Ficha bloqueada — corrija as reduções');return;}
 
-  // Extrai custo do resultado Gemini se disponível
-  const geminiText=document.getElementById('geminiResult').textContent;
+  const geminiText=document.getElementById('geminiResult').innerHTML;
   const custoMatch=geminiText.match(/CUSTO TOTAL:\s*(\d+)\s*XP/i);
   if(custoMatch && slotAtivo.jsonAprovado){
     const custo=parseInt(custoMatch[1]);
@@ -930,13 +827,8 @@ async function aprovarFicha(){
   await dbSet('players',{list:PLAYERS});
   renderSlots();
 
-  // Preenche aba onchain automaticamente
-  document.getElementById('ocHash').value=hashNovo;
-  document.getElementById('ocVersao').value=slotAtivo.versao;
-  document.getElementById('ocXPSaldo').value=slotAtivo.xpTotal-slotAtivo.xpGasto;
-
   addSlotLog('Ficha aprovada — hash: '+hashNovo.slice(0,12)+'...');
-  flash('✓ Ficha aprovada! Hash salvo. Autorize na aba ⬡ Onchain.');
+  flash('✓ Ficha aprovada!');
 }
 
 function rejeitarFicha(){
@@ -1003,7 +895,7 @@ async function darXP(){
   renderXPSaldos();
   const box=document.getElementById('xpResult');
   box.className='rbox show ok';
-  box.textContent=`+${qtd} XP para ${p.personagem||p.nome}\nSaldo agora: ${p.xpTotal-p.xpGasto} XP\nMotivo: ${motivo}`;
+  box.innerHTML=`+${qtd} XP para ${p.personagem||p.nome}<br>Saldo agora: ${p.xpTotal-p.xpGasto} XP<br>Motivo: ${motivo}`;
   flash(`+${qtd} XP → ${p.personagem||p.nome}`);
 }
 
@@ -1039,179 +931,10 @@ function renderXPHist(){
 }
 
 // ══════════════════════════════════════════════════
-// ONCHAIN
-// ══════════════════════════════════════════════════
-const OC_ABI=[
-  {"type":"function","name":"criarCronica","stateMutability":"nonpayable","inputs":[{"name":"nome","type":"string"},{"name":"narrador","type":"string"}],"outputs":[{"name":"cronicaId","type":"uint256"}]},
-  {"type":"function","name":"aprovarFicha","stateMutability":"nonpayable","inputs":[{"name":"cronicaId","type":"uint256"},{"name":"fichaHash","type":"bytes32"},{"name":"versao","type":"uint256"},{"name":"xpSaldo","type":"int256"}],"outputs":[]},
-  {"type":"function","name":"revogarFicha","stateMutability":"nonpayable","inputs":[{"name":"cronicaId","type":"uint256"},{"name":"fichaHash","type":"bytes32"}],"outputs":[]},
-  {"type":"function","name":"encerrarCronica","stateMutability":"nonpayable","inputs":[{"name":"cronicaId","type":"uint256"}],"outputs":[]},
-  {"type":"function","name":"verificarFicha","stateMutability":"view","inputs":[{"name":"fichaHash","type":"bytes32"}],"outputs":[{"name":"aprovada","type":"bool"},{"name":"cronicaId","type":"uint256"},{"name":"versao","type":"uint256"},{"name":"xpSaldo","type":"int256"},{"name":"aprovadaEm","type":"uint256"},{"name":"nomeCronica","type":"string"},{"name":"mestre","type":"address"}]},
-  {"type":"function","name":"dadosDaCronica","stateMutability":"view","inputs":[{"name":"cronicaId","type":"uint256"}],"outputs":[{"name":"nome","type":"string"},{"name":"narrador","type":"string"},{"name":"mestre","type":"address"},{"name":"criadaEm","type":"uint256"},{"name":"ativa","type":"bool"},{"name":"totalFichas","type":"uint256"}]},
-  {"type":"function","name":"hashsDaCronica","stateMutability":"view","inputs":[{"name":"cronicaId","type":"uint256"}],"outputs":[{"name":"","type":"bytes32[]"}]},
-  {"type":"event","name":"CronicaCriada","inputs":[{"name":"cronicaId","type":"uint256","indexed":true},{"name":"nome","type":"string","indexed":false},{"name":"mestre","type":"address","indexed":true}]},
-  {"type":"event","name":"FichaAprovada","inputs":[{"name":"cronicaId","type":"uint256","indexed":true},{"name":"fichaHash","type":"bytes32","indexed":true},{"name":"versao","type":"uint256","indexed":false},{"name":"xpSaldo","type":"int256","indexed":false}]}
-];
-
-function salvarOcAddr(){const v=document.getElementById('ocAddr').value.trim();CFG.contratoAddr=v;localStorage.setItem('rpgchain_contrato',v);}
-function ocH32(hex){const c=hex.replace(/^0x/,'').padStart(64,'0').slice(0,64);return '0x'+c;}
-function ocFmtDate(ts){return new Date(Number(ts)*1000).toLocaleString('pt-BR');}
-function ocRes(id,msg,type='info'){const el=document.getElementById(id);el.textContent=msg;el.className='oc-res show '+type;}
-function ocFe(e){return e.reason||e.shortMessage||e.message||String(e);}
-
-function getOcContrato(rpc=false){
-  const addr=CFG.contratoAddr||localStorage.getItem('rpgchain_contrato')||'';
-  if(!addr){flash('Cole o endereço do contrato na aba Onchain');return null;}
-  if(rpc){return new ethers.Contract(addr,OC_ABI,new ethers.JsonRpcProvider(SEPOLIA_RPC));}
-  if(!ocSigner){flash('Conecte o MetaMask primeiro');return null;}
-  return new ethers.Contract(addr,OC_ABI,ocSigner);
-}
-
-async function conectarMetaMask(){
-  if(!window.ethers){flash('ethers.js não carregou');return;}
-  if(!window.ethereum){flash('MetaMask não encontrada');return;}
-  try{
-    await window.ethereum.request({method:'eth_requestAccounts'});
-    ocProvider=new ethers.BrowserProvider(window.ethereum);
-    const net=await ocProvider.getNetwork();
-    if(net.chainId!==SEPOLIA_CHAIN){
-      try{await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0xaa36a7'}]});ocProvider=new ethers.BrowserProvider(window.ethereum);}
-      catch(e){flash('Mude para Sepolia no MetaMask');return;}
-    }
-    ocSigner=await ocProvider.getSigner();
-    const addr=await ocSigner.getAddress();
-    const badge=document.getElementById('walletBadge');
-    badge.textContent=addr.slice(0,6)+'...'+addr.slice(-4)+' · Sepolia';
-    badge.className='on';badge.style.display='block';
-    document.getElementById('btnMM').textContent='✓ Conectado';
-    flash('MetaMask conectado');
-    window.ethereum.on('accountsChanged',()=>location.reload());
-    window.ethereum.on('chainChanged',()=>location.reload());
-  }catch(e){flash('Erro: '+ocFe(e));}
-}
-
-async function ocCriarCronica(){
-  const c=getOcContrato();if(!c)return;
-  const nome=document.getElementById('ocNome').value.trim()||CRONICA?.nome||'';
-  const narrador=document.getElementById('ocNarrador').value.trim()||CRONICA?.narrador||'';
-  if(!nome){flash('Preencha o nome');return;}
-  try{
-    ocRes('ocResCronica','Aguardando MetaMask...','info');
-    const tx=await c.criarCronica(nome,narrador);
-    ocRes('ocResCronica','Confirmando...\nTX: '+tx.hash,'info');
-    const receipt=await tx.wait();
-    const iface=new ethers.Interface(OC_ABI);
-    let cronicaId='?';
-    for(const log of receipt.logs){try{const p=iface.parseLog(log);if(p?.name==='CronicaCriada')cronicaId=p.args.cronicaId.toString();}catch(e){}}
-    localStorage.setItem('rpgchain_cronica_id',cronicaId);
-    ['ocCronicaId','ocRevId','ocConsId'].forEach(id=>document.getElementById(id).value=cronicaId);
-    ocRes('ocResCronica','✓ NFT criado!\n\nCrônica ID: '+cronicaId+'\nNome: '+nome+'\nTX: '+tx.hash+'\n\n→ Guarde o ID '+cronicaId,'ok');
-    flash('NFT criado! Crônica ID: '+cronicaId);
-  }catch(e){ocRes('ocResCronica','Erro: '+ocFe(e),'err');}
-}
-
-async function ocAprovarFicha(){
-  const c=getOcContrato();if(!c)return;
-  const cronicaId=document.getElementById('ocCronicaId').value;
-  const hashHex=document.getElementById('ocHash').value.trim();
-  const versao=document.getElementById('ocVersao').value;
-  const xpSaldo=document.getElementById('ocXPSaldo').value;
-  if(!cronicaId||!hashHex){flash('Preencha todos os campos');return;}
-  if(hashHex.replace(/^0x/,'').length!==64){flash('Hash deve ter 64 chars hex');return;}
-  try{
-    ocRes('ocResAprovar','Aguardando MetaMask...','info');
-    const tx=await c.aprovarFicha(BigInt(cronicaId),ocH32(hashHex),BigInt(versao),BigInt(xpSaldo));
-    ocRes('ocResAprovar','Confirmando...\nTX: '+tx.hash,'info');
-    await tx.wait();
-    ocRes('ocResAprovar','✓ Ficha aprovada on-chain!\n\nCrônica: '+cronicaId+'\nHash: '+hashHex.slice(0,20)+'...\nVersão: '+versao+'\nXP Saldo: '+xpSaldo+'\nTX: '+tx.hash,'ok');
-    flash('Ficha aprovada on-chain!');
-  }catch(e){ocRes('ocResAprovar','Erro: '+ocFe(e),'err');}
-}
-
-function ocPreencherDoSlot(){
-  if(!slotAtivo?.hashAprovado){flash('Aprove uma ficha primeiro na aba Jogadores');return;}
-  document.getElementById('ocHash').value=slotAtivo.hashAprovado;
-  document.getElementById('ocVersao').value=slotAtivo.versao;
-  document.getElementById('ocXPSaldo').value=slotAtivo.xpTotal-slotAtivo.xpGasto;
-  flash('Dados do slot carregados');
-}
-
-function ocPreencherVerificar(){
-  if(!slotAtivo?.hashAprovado){flash('Nenhum hash aprovado no slot');return;}
-  document.getElementById('ocVerHash').value=slotAtivo.hashAprovado;
-}
-
-async function ocVerificar(){
-  const c=getOcContrato(true);if(!c)return;
-  const h=document.getElementById('ocVerHash').value.trim();
-  if(!h){flash('Cole o hash');return;}
-  try{
-    ocRes('ocResVerificar','Consultando Sepolia...','info');
-    const [aprovada,cronicaId,versao,xpSaldo,aprovadaEm,nomeCronica,mestre]=await c.verificarFicha(ocH32(h));
-    if(!aprovada){ocRes('ocResVerificar','✕ Hash não encontrado na blockchain.\n\nFicha não aprovada ou revogada.','err');}
-    else{
-      const xp=Number(xpSaldo);
-      ocRes('ocResVerificar','✓ FICHA APROVADA\n\nCrônica: "'+nomeCronica+'" (ID: '+cronicaId.toString()+')\nMestre: '+mestre+'\nVersão: '+versao.toString()+'\nXP Saldo: '+(xp>=0?'+':'')+xp+(xp<0?' (Dívida Narrativa)':'')+'\nAprovada em: '+ocFmtDate(aprovadaEm),'ok');
-    }
-  }catch(e){ocRes('ocResVerificar','Erro: '+ocFe(e),'err');}
-}
-
-async function ocConsultar(){
-  const c=getOcContrato(true);if(!c)return;
-  const id=document.getElementById('ocConsId').value;
-  if(!id){flash('Informe o ID');return;}
-  try{
-    ocRes('ocResCons','Consultando...','info');
-    const [nome,narrador,mestre,criadaEm,ativa,totalFichas]=await c.dadosDaCronica(BigInt(id));
-    ocRes('ocResCons','Crônica #'+id+'\nNome: "'+nome+'"\nNarrador: '+narrador+'\nMestre: '+mestre+'\nCriada: '+ocFmtDate(criadaEm)+'\nStatus: '+(ativa?'ATIVA':'ENCERRADA')+'\nFichas aprovadas: '+totalFichas.toString(),ativa?'ok':'info');
-  }catch(e){ocRes('ocResCons','Erro: '+ocFe(e),'err');}
-}
-
-async function ocListarFichas(){
-  const c=getOcContrato(true);if(!c)return;
-  const id=document.getElementById('ocConsId').value;
-  if(!id){flash('Informe o ID');return;}
-  try{
-    ocRes('ocResCons','Buscando...','info');
-    const hashes=await c.hashsDaCronica(BigInt(id));
-    if(!hashes.length){ocRes('ocResCons','Nenhuma ficha aprovada ainda.','info');return;}
-    ocRes('ocResCons','Fichas na Crônica #'+id+':\n\n'+hashes.map((h,i)=>(i+1)+'. '+h).join('\n'),'info');
-  }catch(e){ocRes('ocResCons','Erro: '+ocFe(e),'err');}
-}
-
-async function ocRevogarFicha(){
-  const c=getOcContrato();if(!c)return;
-  const id=document.getElementById('ocRevId').value;
-  const h=document.getElementById('ocRevHash').value.trim();
-  if(!id||!h){flash('Preencha os campos');return;}
-  if(!confirm('Revogar esta ficha?'))return;
-  try{
-    ocRes('ocResRevogar','Aguardando MetaMask...','info');
-    const tx=await c.revogarFicha(BigInt(id),ocH32(h));
-    await tx.wait();
-    ocRes('ocResRevogar','✓ Ficha revogada.\nTX: '+tx.hash,'ok');
-    flash('Ficha revogada');
-  }catch(e){ocRes('ocResRevogar','Erro: '+ocFe(e),'err');}
-}
-
-async function ocEncerrarCronica(){
-  const c=getOcContrato();if(!c)return;
-  const id=document.getElementById('ocRevId').value;
-  if(!id){flash('Informe o ID da crônica');return;}
-  if(!confirm('Encerrar crônica #'+id+'?'))return;
-  try{
-    ocRes('ocResRevogar','Aguardando MetaMask...','info');
-    const tx=await c.encerrarCronica(BigInt(id));
-    await tx.wait();
-    ocRes('ocResRevogar','✓ Crônica encerrada.\nTX: '+tx.hash,'ok');
-    flash('Crônica encerrada');
-  }catch(e){ocRes('ocResRevogar','Erro: '+ocFe(e),'err');}
-}
-
-// ══════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════
 initDB();
+setupDragDrop();
 </script>
 </body>
 </html>
