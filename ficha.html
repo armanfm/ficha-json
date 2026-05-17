@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -277,8 +277,10 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
 <nav>
   <button class="tab on" onclick="goTab('ficha',this)">Ficha</button>
   <button class="tab" onclick="goTab('disciplinas',this)">Disciplinas</button>
+  
   <button class="tab" onclick="goTab('antecedentes',this)">Antecedentes</button>
   <button class="tab" onclick="goTab('qualdef',this)">Qual &amp; Def</button>
+  <button class="tab" onclick="goTab('preludio',this)">Prelúdio</button>
   <button class="tab" onclick="goTab('notas',this)">Anotações</button>
   <button class="tab" onclick="goTab('combate',this)">Combate</button>
 </nav>
@@ -333,6 +335,10 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
 
 
 
+
+
+
+
 <!-- ANTECEDENTES -->
 <div class="pane" id="pane-antecedentes">
   <div class="card">
@@ -370,13 +376,23 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
     </div>
   </div>
   <div class="card" style="margin-top:12px;">
-    <div class="card-hd"><span class="card-title">⬥ Pontos de Bônus</span></div>
+  
+    </div>
+  </div>
+</div>
+
+
+
+<!-- PRELUDIO -->
+<div class="pane" id="pane-preludio">
+  <div class="card">
+    <div class="card-hd">
+      <span class="card-title">â¬¥ PrelÃºdio do Personagem</span>
+      <span style="font-size:10px;color:var(--tx3);font-style:italic;">incluÃ­do no JSON exportado</span>
+    </div>
     <div class="card-body">
-      <div id="bonusPoints" style="font-family:'Cinzel',serif;font-size:13px;color:var(--gd);"></div>
-      <div style="font-size:12px;color:var(--tx3);margin-top:6px;line-height:1.6;">
-        Qualidades custam pontos bônus. Defeitos devolvem pontos bônus (máx 7 pts de defeitos na criação).
-        Qualidades e defeitos são incluídos no JSON exportado para o mestre.
-      </div>
+      <textarea id="preludioText" rows="22" style="width:100%;background:var(--card);border:1px solid var(--br);border-radius:2px;padding:10px 14px;color:var(--tx);font-family:'Crimson Text',serif;font-size:15px;resize:vertical;line-height:1.7;outline:none;" placeholder="A histÃ³ria do seu personagem antes do inÃ­cio da crÃ´nica.&#10;&#10;Como era a vida humana? Quem o Abraçou? Quais sÃ£o suas motivaÃ§Ãµes, traumas, objetivos?&#10;&#10;Este texto serÃ¡ enviado ao narrador junto com a ficha."></textarea>
+      <div style="font-size:12px;color:var(--tx3);margin-top:6px;">Salvo automaticamente. Aparece no JSON quando vocÃª exportar a ficha.</div>
     </div>
   </div>
 </div>
@@ -686,6 +702,9 @@ function carregarJSON(input){
       const cn=document.getElementById('charName');
       if(cn) cn.value=(D.info&&D.info.name)||'';
       if(D.info&&D.info.name) document.title=D.info.name+' â€” VtM';
+      // atualizar textarea do prelúdio se a aba existir
+      const pre=document.getElementById('preludioText');
+      if(pre) pre.value=D.preludio||'';
       const b=document.getElementById('saveBadge');
       if(b){b.textContent='âœ“ ficha carregada';b.className='ok';
       setTimeout(()=>{b.textContent='salvo â—¦';b.className='';},1800);}
@@ -770,6 +789,75 @@ async function hashRolagem(disc,pwr,dados,diff){
   return await sha256(JSON.stringify(obj));
 }
 
+
+// ════════════════════════════════
+// DISCIPLINAS RESUMO (aba visual)
+// ════════════════════════════════
+function _ensureDiscResumo(){
+  if(!Array.isArray(D.discResumo)){
+    D.discResumo=[];
+    D.ndri=1;
+  }
+  if(!D.ndri) D.ndri=(D.discResumo.length||0)+1;
+}
+
+function renderDiscResumo(){
+  _ensureDiscResumo();
+  const el=document.getElementById('discResumoBody');
+  if(!el)return;
+  el.innerHTML='';
+  if(!D.discResumo.length){
+    el.innerHTML='<div style="text-align:center;color:var(--tx3);font-style:italic;padding:20px 0;font-size:13px;">Nenhuma disciplina. Clique em "+ Adicionar".</div>';
+    return;
+  }
+  D.discResumo.forEach(d=>{
+    const row=document.createElement('div');row.className='row';
+    const inp=document.createElement('input');inp.className='row-label editable';
+    inp.value=d.nome;inp.placeholder='Nome da disciplina...';
+    inp.oninput=()=>{d.nome=inp.value;save();};
+    const dots=document.createElement('div');dots.className='dots';
+    for(let i=1;i<=5;i++){
+      const dt=document.createElement('div');dt.className='dot'+(i<=d.valor?' on':'');
+      dt.onclick=()=>{d.valor=i===d.valor?i-1:i;save();renderDiscResumo();};
+      dots.appendChild(dt);
+    }
+    const val=document.createElement('div');val.className='row-val';val.textContent=d.valor;
+    const del=document.createElement('button');
+    del.style.cssText='background:none;border:none;color:var(--tx3);cursor:pointer;font-size:13px;margin-left:6px;';
+    del.textContent='âœ•';del.title='Remover';
+    del.onclick=()=>{D.discResumo=D.discResumo.filter(x=>x.id!==d.id);save();renderDiscResumo();};
+    row.appendChild(inp);row.appendChild(dots);row.appendChild(val);row.appendChild(del);
+    el.appendChild(row);
+  });
+}
+
+function adicionarDiscResumo(){
+  _ensureDiscResumo();
+  D.discResumo.push({id:D.ndri++,nome:'',valor:0});
+  save();renderDiscResumo();
+}
+
+// inclui no hash canÃ´nico
+if(typeof snapshotCanonico==='function'){
+  const _oldSnap2=snapshotCanonico;
+  snapshotCanonico=function(d){
+    const s=_oldSnap2(d);
+    s.discResumo=d.discResumo||[];
+    return s;
+  };
+}
+
+// adiciona no goTab existente
+if(typeof goTab==='function'){
+  const _oldGoTab2=goTab;
+  goTab=function(id,btn){
+    _oldGoTab2(id,btn);
+    if(id==='discResumo') renderDiscResumo();
+  };
+}
+
+_ensureDiscResumo();
+
 </script>
 <script>
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -833,6 +921,24 @@ function save(){
 function load(){
   try{const r=localStorage.getItem('vtm2');if(r){const p=JSON.parse(r);D=Object.assign(defaultData(),p);}}
   catch(e){}
+  // normaliza IDs de disciplinas (evita IDs duplicados ou faltando)
+  if(Array.isArray(D.disciplines)){
+    let maxId=0;
+    D.disciplines.forEach((d,i)=>{
+      if(!d.id||typeof d.id!=='number'){d.id=i+1;}
+      if(d.id>maxId) maxId=d.id;
+      if(Array.isArray(d.powers)){
+        let maxPw=0;
+        d.powers.forEach((p,j)=>{
+          if(!p.id||typeof p.id!=='number'){p.id=Date.now()+j;}
+          if(p.id>maxPw) maxPw=p.id;
+        });
+      }
+    });
+    // garante ndi maior que qualquer ID existente
+    if(!D.ndi||D.ndi<=maxId) D.ndi=maxId+1;
+  }
+  if(!D.npi||typeof D.npi!=='number') D.npi=Date.now();
 }
 function flash(){
   const b=document.getElementById('saveBadge');
@@ -945,6 +1051,14 @@ function renderDiscs(){
   const emp=document.getElementById('emptyDisc');
   if(!D.disciplines.length){emp.style.display='block';return;}
   emp.style.display='none';
+  // detecta e corrige IDs duplicados em runtime
+  const seen=new Set();
+  D.disciplines.forEach((d,i)=>{
+    if(!d.id||seen.has(d.id)){
+      d.id=Math.max(0,...D.disciplines.map(x=>x.id||0))+1+i;
+    }
+    seen.add(d.id);
+  });
   D.disciplines.forEach(disc=>{
     const item=document.createElement('div');item.className='disc-item';
     // header
@@ -998,6 +1112,10 @@ function fmtPool(p){
 }
 
 function newDisc(){
+  // garante ID único mesmo se ndi estiver bagunçado ou faltando
+  if(!D.ndi||typeof D.ndi!=='number') D.ndi=1;
+  const existing=D.disciplines.map(d=>d.id||0);
+  while(existing.includes(D.ndi)) D.ndi++;
   D.disciplines.push({id:D.ndi++,name:'',dots:1,powers:[]});
   save();renderDiscs();
 }
@@ -1527,7 +1645,7 @@ function salvarManual(){
 // ════════════════════════════════
 // ANTECEDENTES
 // ════════════════════════════════
-const ANTECEDENTES_PADRAO=[
+const ANTECEDENTES_BASE =[
   'Aliados','Contatos','DomÃ­nio','Fama','GregÃ¡rio',
   'InfluÃªncia','Mentor','Recursos','SÃ©quito','Status'
 ];
@@ -1626,6 +1744,9 @@ function carregarJSON(input){
       const cn=document.getElementById('charName');
       if(cn) cn.value=(D.info&&D.info.name)||'';
       if(D.info&&D.info.name) document.title=D.info.name+' â€” VtM';
+      // atualizar textarea do prelúdio se a aba existir
+      const pre=document.getElementById('preludioText');
+      if(pre) pre.value=D.preludio||'';
       const b=document.getElementById('saveBadge');
       if(b){b.textContent='âœ“ ficha carregada';b.className='ok';
       setTimeout(()=>{b.textContent='salvo â—¦';b.className='';},1800);}
@@ -1710,6 +1831,118 @@ async function hashRolagem(disc,pwr,dados,diff){
   return await sha256(JSON.stringify(obj));
 }
 
+
+// ════════════════════════════════
+// DISCIPLINAS RESUMO (aba visual)
+// ════════════════════════════════
+function _ensureDiscResumo(){
+  if(!Array.isArray(D.discResumo)){
+    D.discResumo=[];
+    D.ndri=1;
+  }
+  if(!D.ndri) D.ndri=(D.discResumo.length||0)+1;
+}
+
+function renderDiscResumo(){
+  _ensureDiscResumo();
+  const el=document.getElementById('discResumoBody');
+  if(!el)return;
+  el.innerHTML='';
+  if(!D.discResumo.length){
+    el.innerHTML='<div style="text-align:center;color:var(--tx3);font-style:italic;padding:20px 0;font-size:13px;">Nenhuma disciplina. Clique em "+ Adicionar".</div>';
+    return;
+  }
+  D.discResumo.forEach(d=>{
+    const row=document.createElement('div');row.className='row';
+    const inp=document.createElement('input');inp.className='row-label editable';
+    inp.value=d.nome;inp.placeholder='Nome da disciplina...';
+    inp.oninput=()=>{d.nome=inp.value;save();};
+    const dots=document.createElement('div');dots.className='dots';
+    for(let i=1;i<=5;i++){
+      const dt=document.createElement('div');dt.className='dot'+(i<=d.valor?' on':'');
+      dt.onclick=()=>{d.valor=i===d.valor?i-1:i;save();renderDiscResumo();};
+      dots.appendChild(dt);
+    }
+    const val=document.createElement('div');val.className='row-val';val.textContent=d.valor;
+    const del=document.createElement('button');
+    del.style.cssText='background:none;border:none;color:var(--tx3);cursor:pointer;font-size:13px;margin-left:6px;';
+    del.textContent='âœ•';del.title='Remover';
+    del.onclick=()=>{D.discResumo=D.discResumo.filter(x=>x.id!==d.id);save();renderDiscResumo();};
+    row.appendChild(inp);row.appendChild(dots);row.appendChild(val);row.appendChild(del);
+    el.appendChild(row);
+  });
+}
+
+function adicionarDiscResumo(){
+  _ensureDiscResumo();
+  D.discResumo.push({id:D.ndri++,nome:'',valor:0});
+  save();renderDiscResumo();
+}
+
+// inclui no hash canÃ´nico
+if(typeof snapshotCanonico==='function'){
+  const _oldSnap2=snapshotCanonico;
+  snapshotCanonico=function(d){
+    const s=_oldSnap2(d);
+    s.discResumo=d.discResumo||[];
+    return s;
+  };
+}
+
+// adiciona no goTab existente
+if(typeof goTab==='function'){
+  const _oldGoTab2=goTab;
+  goTab=function(id,btn){
+    _oldGoTab2(id,btn);
+    if(id==='discResumo') renderDiscResumo();
+  };
+}
+
+_ensureDiscResumo();
+
+
+// ════════════════════════════════
+// PRELÚDIO (vai no JSON exportado)
+// ════════════════════════════════
+let _preSt;
+function initPreludio(){
+  const el=document.getElementById('preludioText');
+  if(!el)return;
+  if(typeof D.preludio==='string') el.value=D.preludio;
+  el.addEventListener('input',()=>{
+    clearTimeout(_preSt);
+    _preSt=setTimeout(()=>{
+      D.preludio=el.value;
+      save();
+    },500);
+  });
+}
+
+// inclui no hash canônico
+if(typeof snapshotCanonico==='function'){
+  const _oldSnapPre=snapshotCanonico;
+  snapshotCanonico=function(d){
+    const s=_oldSnapPre(d);
+    s.preludio=d.preludio||'';
+    return s;
+  };
+}
+
+// goTab handler
+if(typeof goTab==='function'){
+  const _oldGoTabPre=goTab;
+  goTab=function(id,btn){
+    _oldGoTabPre(id,btn);
+    if(id==='preludio'){
+      const el=document.getElementById('preludioText');
+      if(el&&typeof D.preludio==='string') el.value=D.preludio;
+    }
+  };
+}
+
+// chamar initPreludio na inicialização
+initPreludio();
+
 </script>
 
 <!-- DISCORD CFG MODAL -->
@@ -1741,6 +1974,8 @@ async function hashRolagem(disc,pwr,dados,diff){
 
 </body>
 </html>
+
+
 
 
 
