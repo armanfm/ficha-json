@@ -687,7 +687,7 @@ function renderLog(salaId){
     const ts=new Date(ev.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
     const estado=d.estado||'pendente';
     const stClass=estado==='resolvido'?'ev-st-r':estado==='cancelado'?'ev-st-c':estado==='ativado'?'ev-st-r':'ev-st-p';
-    const stLabel=estado==='resolvido'?'✓ resolvido':estado==='cancelado'?'✕ cancelado':estado==='ativado'?'✓ ativado':'● pendente';
+    const stLabel=estado==='resolvido'?'✓ resolvido':estado==='cancelado'?'✕ cancelado':estado==='ativado'?'✓ ativado':'';
     const dmgLabel=DMG_LABEL[d.dmgType]||d.dmgType||'—';
     const dmgClass=d.dmgType==='agravado'?'et-dmg-ag':d.dmgType==='mental'?'et-dmg-m':d.dmgType&&d.dmgType!=='none'?'et-dmg':'';
 
