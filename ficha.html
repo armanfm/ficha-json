@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vampiro</title>
+<title>Vampiro: A Máscara</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
 :root{
@@ -216,18 +216,37 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
 .trait-del:hover{color:#f88;}
 .empty-traits{text-align:center;color:var(--tx3);font-style:italic;padding:16px 0;font-size:13px;}
 @media(max-width:900px){header{align-items:flex-start;flex-wrap:wrap}.top-actions{width:100%;justify-content:flex-start}.g2,.g3{grid-template-columns:1fr}.info-grid{grid-template-columns:1fr 1fr}.combat-wrap{grid-template-columns:1fr}}
+/* ── ACCESS BADGE ── */
+.access-badge{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;border:1px solid;border-radius:2px;padding:4px 9px;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.access-badge.view{border-color:var(--br2);color:var(--tx3);}
+.access-badge.view:hover{border-color:var(--gd2);color:var(--gd);}
+.access-badge.player{border-color:var(--wp);color:#8af;}
+.access-badge.player:hover{border-color:#6af;color:#adf;}
+.access-badge.master{border-color:var(--gr);color:#8c8;}
+/* PIN MODAL */
+.pin-input{background:var(--card);border:1px solid var(--br2);border-radius:2px;padding:10px 14px;color:var(--tx);font-family:'Cinzel',serif;font-size:20px;letter-spacing:6px;text-align:center;width:100%;outline:none;}
+.pin-input:focus{border-color:var(--blood);}
+.pin-level{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--br);border-radius:2px;margin-bottom:6px;cursor:pointer;transition:background .15s;}
+.pin-level:hover{background:var(--card);}
+.pin-level.active{border-color:var(--blood);background:rgba(139,0,0,.1);}
+.pin-lbl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;}
+.pin-desc{font-size:12px;color:var(--tx3);margin-top:1px;}
 </style>
 </head>
 <body>
 
 <header>
   <div>
-    <div class="htitle">Vampiro</div>
+    <div class="htitle">Vampiro: A Máscara</div>
     <input id="charName" placeholder="Nome do Personagem" spellcheck="false"/>
   </div>
   <span id="saveBadge">salvo</span>
   <span id="statusBadge" class="pill">local</span>
+  <button id="accessBadge" class="access-badge view" onclick="openPinModal()" title="Clique para entrar com PIN" style="display:none;">👁 Somente leitura</button>
+  <span id="salaBadgeHeader" style="display:none;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;padding:4px 9px;border-radius:2px;border:1px solid var(--gr);color:#8c8;cursor:pointer;" onclick="abrirModalSala()" title="Na sala — clique para ver detalhes">⚔ Sala ativa</span>
   <div class="top-actions">
+    <button class="btn btn-ghost" onclick="abrirModalLink()" title="Gerar link da ficha" style="border-color:rgba(201,168,76,.4);color:var(--gd2);">🔗 Gerar Link</button>
+    <button class="btn btn-ghost" onclick="abrirModalSala()" title="Entrar em uma sala de combate" style="border-color:rgba(58,106,170,.4);color:#8af;">⚔ Entrar na Sala</button>
     <button class="btn btn-ghost" onclick="openDiscordCfg()" title="Configurar webhook do Discord">🎮 Discord</button>
     <button class="btn btn-ghost" onclick="document.getElementById('fileLoadInput').click()" title="Carregar ficha de um arquivo JSON">⬆ Carregar JSON</button>
     <input type="file" id="fileLoadInput" accept=".json" style="display:none;" onchange="carregarJSON(this)"/>
@@ -297,7 +316,9 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
     </div>
     <div class="card-body" id="antBody"></div>
   </div>
-  
+  <div style="font-size:12px;color:var(--tx3);line-height:1.6;margin-top:8px;">
+    Clique nos pontos para definir o nível. Edite o nome livremente.
+  </div>
 </div>
 
 <!-- QUALIDADES E DEFEITOS -->
@@ -322,7 +343,10 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
       </div>
     </div>
   </div>
-
+  <div class="card" style="margin-top:12px;">
+    <div class="card-hd"><span class="card-title">⬥ Pontos Bônus</span></div>
+    <div class="card-body"><div id="bonusPoints" style="font-size:13px;color:var(--tx2);"></div></div>
+  </div>
 </div>
 
 <!-- PRELUDIO -->
@@ -473,7 +497,19 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
     <div class="frow"><label>Custo FdV</label><select id="pmBW"><option value="0">0</option><option>1</option></select></div>
     <div class="frow"><label>Duração</label><select id="pmDur"><option value="inst">Instantâneo</option><option value="turno">1 Turno</option><option value="cena">1 Cena</option><option value="perm">Permanente</option></select></div>
   </div>
-  <div class="frow"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="pmPas" style="width:auto;"> Poder Passivo (sem rolagem, sempre ativo)</label></div>
+  <div class="fg2">
+    <div class="frow">
+      <label>Tipo de Dano</label>
+      <select id="pmDmgType">
+        <option value="none">Nenhum (sem dano direto)</option>
+        <option value="contusao">Contusão — absorve com Vigor</option>
+        <option value="letal">Letal — absorve com Vigor</option>
+        <option value="agravado">Agravado — sem absorção</option>
+        <option value="mental">Mental — ataca Força de Vontade</option>
+      </select>
+    </div>
+    <div class="frow"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:18px;"><input type="checkbox" id="pmPas" style="width:auto;"> Poder Passivo (sem rolagem)</label></div>
+  </div>
   <div class="modal-btns">
     <button class="btn btn-prim" onclick="savePW()">Salvar</button>
     <button class="btn btn-sec" onclick="closePW()">Cancelar</button>
@@ -531,6 +567,13 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
   </div>
 
   <div class="cm-warn" id="cmWarn" style="display:none;"></div>
+
+  <!-- SELEÇÃO DE ALVO -->
+  <div class="cm-sec" id="cmTargetSec" style="display:none;">
+    <div class="cm-sec-t">⚔ Selecionar Alvo</div>
+    <div id="cmTargetList" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>
+  </div>
+
   <div class="dice-res" id="cmDres" style="display:none;">
     <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:4px;">Resultado</div>
     <div class="dnums" id="cmDnums"></div>
@@ -540,6 +583,49 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
     <button class="btn btn-prim" id="cmUse" onclick="activatePwr()">▶ Ativar</button>
     <button class="roll-btn" id="cmRollBtn" onclick="rollCM()">🎲 Rolar</button>
     <button class="btn btn-sec" onclick="closeCM()">Fechar</button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL DE DEFESA — aparece quando recebe ataque -->
+<div class="cov" id="defMod" style="display:none;">
+<div class="cmodal" style="max-width:420px;">
+  <div class="cm-disc" id="defAtacante"></div>
+  <div class="cm-title" style="color:#f88;">⚔ Você está sendo atacado!</div>
+  <div class="cm-sec">
+    <div class="cm-sec-t">Ataque</div>
+    <div class="cm-text" id="defInfo"></div>
+  </div>
+  <div class="cm-sec" id="defAbsorcaoSec">
+    <div class="cm-sec-t">Como se defender?</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px;">
+      <button class="btn btn-ghost" style="text-align:left;padding:9px 12px;" onclick="rolarDefesa('vigor')">
+        🎲 <strong>Vigor</strong> — Absorção normal (dif. 6)
+      </button>
+      <button class="btn btn-ghost" style="text-align:left;padding:9px 12px;" onclick="rolarDefesa('fortitude')">
+        🛡 <strong>Fortitude</strong> — Absorção sobrenatural (dif. 6)
+      </button>
+      <button class="btn btn-ghost" style="text-align:left;padding:9px 12px;" onclick="rolarDefesa('armadura')">
+        ⚔ <strong>Armadura</strong> — Proteção física
+      </button>
+      <button class="btn btn-del" style="text-align:left;padding:9px 12px;" onclick="aceitarDano()">
+        ✕ Aceitar o dano sem se defender
+      </button>
+    </div>
+  </div>
+  <div class="cm-sec" id="defAgravadoSec" style="display:none;">
+    <div style="background:rgba(139,0,0,.15);border:1px solid var(--blood);border-radius:2px;padding:10px;font-size:13px;color:#f88;">
+      ⚠ Dano Agravado ou Mental — sem absorção possível.
+    </div>
+    <div class="cm-act" style="margin-top:10px;padding-top:0;border:none;">
+      <button class="btn btn-prim" style="background:var(--blood);" onclick="aceitarDano()">Confirmar dano</button>
+    </div>
+  </div>
+  <div class="dice-res" id="defDres" style="display:none;margin-top:10px;">
+    <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:4px;">Absorção</div>
+    <div class="dnums" id="defDnums"></div>
+    <div class="dsum" id="defDsum"></div>
+    <button class="btn btn-prim" style="margin-top:10px;width:100%;" onclick="confirmarDefesa()">Confirmar</button>
   </div>
 </div>
 </div>
@@ -567,6 +653,53 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
     <button class="btn btn-prim" onclick="salvarDiscord()">Salvar</button>
     <button class="btn btn-sec" onclick="testarDiscord()">Testar conexão</button>
     <button class="btn btn-sec" onclick="closeDiscord()">Cancelar</button>
+  </div>
+</div>
+</div>
+
+<!-- LINK TOKEN MODAL -->
+<div class="ov" id="linkTokenMod" style="display:none;" onclick="closeLinkTokenBg(event)">
+<div class="modal" style="max-width:460px;">
+  <button class="modal-close" onclick="closeLinkToken()">✕</button>
+  <h3>🔗 Link da Ficha</h3>
+  <p style="font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:14px;">
+    Gera um link de <strong style="color:var(--tx);">somente leitura</strong> da ficha. Quem abrir só consegue visualizar — para editar precisa do PIN do mestre.
+  </p>
+  <div style="background:var(--card);border:1px solid var(--br);border-radius:2px;padding:12px 14px;margin-bottom:14px;">
+    <div class="frow" style="margin:0;">
+      <label>PIN do Mestre <span style="color:var(--tx3);font-style:italic;font-family:'Crimson Text',serif;">(opcional — protege a edição)</span></label>
+      <input type="password" id="pinMestreInput" placeholder="deixe vazio para link sem proteção" class="pin-input" style="font-size:14px;letter-spacing:3px;margin-top:6px;"/>
+    </div>
+    <div style="font-size:11px;color:var(--tx3);line-height:1.5;margin-top:8px;">
+      O PIN fica como hash no link — ninguém consegue descobrir o valor original.
+    </div>
+  </div>
+  <div class="frow">
+    <label>Link gerado</label>
+    <input type="text" id="linkTokenUrl" readonly style="font-size:10px;font-family:monospace;color:var(--gd2);"/>
+  </div>
+  <div class="modal-btns">
+    <button class="btn btn-prim" id="gerarLinkBtn" onclick="gerarLinkToken()">⚙ Gerar e Copiar Link</button>
+    <button class="btn btn-prim" id="copiarLinkBtn" onclick="copiarLinkToken()" style="display:none;">📋 Copiar de novo</button>
+    <button class="btn btn-sec" onclick="closeLinkToken()">Fechar</button>
+  </div>
+</div>
+</div>
+
+<!-- PIN ENTRY MODAL -->
+<div class="ov" id="pinMod" style="display:none;" onclick="closePinModBg(event)">
+<div class="modal" style="max-width:360px;">
+  <button class="modal-close" onclick="closePinMod()">✕</button>
+  <h3>🔐 PIN do Mestre</h3>
+  <p id="pinModDesc" style="font-size:13px;color:var(--tx2);line-height:1.5;margin-bottom:16px;">Digite o PIN para habilitar a edição desta ficha.</p>
+  <div class="frow">
+    <label>PIN</label>
+    <input type="password" id="pinEntryInput" class="pin-input" placeholder="••••" onkeydown="if(event.key==='Enter')submitPin()"/>
+  </div>
+  <div id="pinError" style="display:none;background:rgba(139,0,0,.15);border:1px solid var(--blood);border-radius:2px;padding:7px 10px;font-size:12px;color:#f88;margin-bottom:8px;">PIN incorreto.</div>
+  <div class="modal-btns">
+    <button class="btn btn-prim" onclick="submitPin()">Entrar</button>
+    <button class="btn btn-sec" onclick="closePinMod()">Cancelar</button>
   </div>
 </div>
 </div>
@@ -867,6 +1000,7 @@ function openEditPW(discId,pwId){
   document.getElementById('pmBB').value=p.bb||0;document.getElementById('pmBW').value=p.bw||0;
   document.getElementById('pmDur').value=p.dur||'inst';document.getElementById('pmDiff').value=p.diff||6;
   document.getElementById('pmPas').checked=!!p.passive;
+  document.getElementById('pmDmgType').value=p.dmgType||'none';
   buildAttrSel(document.getElementById('pmAttr'));
   buildSkillSel(document.getElementById('pmSkill'));
   document.getElementById('pmAttr').value=p.attr||'';
@@ -887,7 +1021,8 @@ function savePW(){
     diff:+document.getElementById('pmDiff').value,
     bb:+document.getElementById('pmBB').value,bw:+document.getElementById('pmBW').value,
     dur:document.getElementById('pmDur').value,
-    passive:document.getElementById('pmPas').checked
+    passive:document.getElementById('pmPas').checked,
+    dmgType:document.getElementById('pmDmgType').value
   };
   if(_pwId){const i=disc.powers.findIndex(x=>x.id===_pwId);if(i>=0)disc.powers[i]=pwr;}
   else disc.powers.push(pwr);
@@ -934,18 +1069,19 @@ function renderBoosts(){
   });
 }
 function boostAttr(k){
+  if(!guardCombat())return;
   if(CS.bloodCur<=0){lg('<span class="lw">⚠ Sem sangue!</span>');return;}
   CS.bloodCur--;CS.boosts[k]=(CS.boosts[k]||0)+1;
   renderBoosts();renderBlood();
   lg(`<span class="lo">${PL[k]}</span> bombado <span class="lc">-1 sangue</span> → total ${(D.attrs[k]||0)+CS.boosts[k]}`);
 }
-function resetBoosts(){CS.boosts={forca:0,destreza:0,vigor:0};renderBoosts();lg('<span class="lw">Boosts resetados.</span>');}
+function resetBoosts(){if(!guardCombat())return;CS.boosts={forca:0,destreza:0,vigor:0};renderBoosts();lg('<span class="lw">Boosts resetados.</span>');}
 
 function addFx(name,dur,disc){
   if(dur==='inst'||dur==='perm') return;
   CS.effects.push({id:CS.eid++,name,dur,disc,sc:CS.scene,t:CS.turn});renderEffects();
 }
-function rmFx(id){CS.effects=CS.effects.filter(e=>e.id!==id);renderEffects();}
+function rmFx(id){if(!guardCombat())return;CS.effects=CS.effects.filter(e=>e.id!==id);renderEffects();}
 function renderEffects(){
   const el=document.getElementById('effList');el.innerHTML='';
   document.getElementById('effCnt').textContent=CS.effects.length;
@@ -990,8 +1126,8 @@ function renderCombatDiscs(){
   });
 }
 
-function chT(d){CS.turn=Math.max(1,CS.turn+d);document.getElementById('tNum').textContent=CS.turn;if(d>0)lg(`┄┄ <span style="color:var(--gd2);font-family:'Cinzel',serif;">Turno ${CS.turn}</span> ┄┄`);}
-function advScene(){
+function chT(d){if(!guardCombat())return;CS.turn=Math.max(1,CS.turn+d);document.getElementById('tNum').textContent=CS.turn;if(d>0)lg(`┄┄ <span style="color:var(--gd2);font-family:'Cinzel',serif;">Turno ${CS.turn}</span> ┄┄`);}
+function advScene(){if(!guardCombat())return;
   CS.scene++;CS.turn=1;
   document.getElementById('sNum').textContent=CS.scene;
   document.getElementById('tNum').textContent='1';
@@ -1009,8 +1145,8 @@ function renderBlood(){
   for(let i=0;i<D.bloodMax;i++){const d=document.createElement('div');d.className='bp'+(i<CS.bloodCur?' on':'');d.onclick=()=>i<CS.bloodCur?spBlood(1,true):gnBlood(1);g.appendChild(d);}
   document.getElementById('bpCnt').textContent=`${CS.bloodCur}/${D.bloodMax}`;
 }
-function spBlood(n,doLog){if(CS.bloodCur<=0){lg('<span class="lw">⚠ Sem sangue!</span>');return;}CS.bloodCur=Math.max(0,CS.bloodCur-n);renderBlood();renderBoosts();if(doLog)lg(`<span class="lc">-${n} sangue</span> (${CS.bloodCur} rest.)`);}
-function gnBlood(n){CS.bloodCur=Math.min(D.bloodMax,CS.bloodCur+n);renderBlood();renderBoosts();lg(`<span class="lo">+${n} sangue</span>`);}
+function spBlood(n,doLog){if(!guardCombat())return;if(CS.bloodCur<=0){lg('<span class="lw">⚠ Sem sangue!</span>');return;}CS.bloodCur=Math.max(0,CS.bloodCur-n);renderBlood();renderBoosts();if(doLog)lg(`<span class="lc">-${n} sangue</span> (${CS.bloodCur} rest.)`);}
+function gnBlood(n){if(!guardCombat())return;CS.bloodCur=Math.min(D.bloodMax,CS.bloodCur+n);renderBlood();renderBoosts();lg(`<span class="lo">+${n} sangue</span>`);}
 
 function renderHealth(){
   const el=document.getElementById('hRows');el.innerHTML='';
@@ -1030,6 +1166,7 @@ function renderHealth(){
   else{st.textContent=sl[w];st.style.color=w>4?'#f88':w>2?'#fa5':'var(--tx2)';}
 }
 function cycleH(i){
+  if(!guardCombat())return;
   const c={'null':'b',b:'l',l:'a',a:null};CS.health[i]=c[String(CS.health[i])];renderHealth();
   const t={b:'Contusão',l:'Letal',a:'Agravado',null:'Curado'};
   lg(`${HL[i].l}: <span class="lc">${t[String(CS.health[i])]||'Curado'}</span>`);
@@ -1043,8 +1180,8 @@ function renderWP(){
   for(let i=0;i<D.willpower;i++){const d=document.createElement('div');d.className='wpt'+(i<CS.wpTemp?' on':'');d.onclick=()=>i<CS.wpTemp?spWP():gnWP();te.appendChild(d);}
   document.getElementById('wpCnt').textContent=`${CS.wpTemp}/${D.willpower}`;
 }
-function spWP(n=1){if(CS.wpTemp<=0){lg('<span class="lw">⚠ Sem FdV!</span>');return;}CS.wpTemp=Math.max(0,CS.wpTemp-n);renderWP();}
-function gnWP(n=1){CS.wpTemp=Math.min(D.willpower,CS.wpTemp+n);renderWP();}
+function spWP(n=1){if(!guardCombat())return;if(CS.wpTemp<=0){lg('<span class="lw">⚠ Sem FdV!</span>');return;}CS.wpTemp=Math.max(0,CS.wpTemp-n);renderWP();}
+function gnWP(n=1){if(!guardCombat())return;CS.wpTemp=Math.min(D.willpower,CS.wpTemp+n);renderWP();}
 
 function lg(msg){
   const l=document.getElementById('log');
@@ -1058,10 +1195,10 @@ function clearLog(){document.getElementById('log').innerHTML='<div class="lentry
 // ═══════════════════════════════════════════════════════════
 // COMBAT MODAL — com pool editor inline
 // ═══════════════════════════════════════════════════════════
-let _cd=null,_cp=null;
+let _cd=null,_cp=null,_eventoEnviado=false;
 
 function openCM(disc,p){
-  _cd=disc;_cp=p;
+  _cd=disc;_cp=p;_eventoEnviado=false;
   document.getElementById('cmDisc').textContent=`${disc.name} · Nível ${p.level}`;
   document.getElementById('cmTitle').textContent=p.name;
   document.getElementById('cmDesc').textContent=p.desc||'';
@@ -1176,6 +1313,26 @@ function activatePwr(){
   lg(m);
   document.getElementById('cmUse').textContent='✓ Ativado';
   document.getElementById('cmUse').disabled=true;
+
+  // Envia evento para sala de combate ao ativar
+  if(SALA.salaId && SALA.sb && !_eventoEnviado) {
+    _eventoEnviado=true;
+    SALA.sb.from('eventos_combate').insert({
+      sala_id: SALA.salaId,
+      origem_id: SALA.partId,
+      tipo: 'ativacao',
+      dados: {
+        atacante: D.info.name||'?',
+        poder: _cp.name,
+        disciplina: _cd.name,
+        nivel: _cp.level,
+        desc: _cp.desc||'',
+        sucessos: null,
+        dmgType: _cp.dmgType||'none',
+        estado: 'ativado'
+      }
+    });
+  }
 }
 
 // ── rollCM: usa pool editor se poder não tiver atributo ──
@@ -1186,12 +1343,11 @@ function rollCM(){
   let num, rawDiff;
 
   if(editorVisible&&(!_cp.attr||_cp.attr==='')){
-    // Lê valores do editor inline
     const attr=document.getElementById('cmAttrSel').value;
     const skill=document.getElementById('cmSkillSel').value;
     rawDiff=document.getElementById('cmDiffSel').value;
 
-    // Sem atributo = sem rolagem, mas ativa normalmente
+    // Sem atributo = ativa mas não rola
     if(!attr) return;
 
     let d=0;
@@ -1199,19 +1355,17 @@ function rollCM(){
     if(skill) d+=D.skills[skill]||0;
     num=Math.max(0,d);
 
-    // Salva de volta no poder para não precisar configurar de novo
-    _cp.attr=attr;
-    if(skill) _cp.skill=skill;
-    _cp.diff=rawDiff==='fdv'?'fdv':(+rawDiff||6);
-    save();
-    // Re-renderiza lista de combate para refletir o novo pool
-    renderCombatDiscs();
-
-    // Fecha o editor — poder está configurado agora
-    document.getElementById('cmPoolEditorSec').style.display='none';
-    document.getElementById('cmRoll').textContent=poolStr(_cp);
-    document.getElementById('cmRoll').style.color='';
-    document.getElementById('cmRollBtn').style.display='block';
+    // Salva de volta no poder APENAS se for mestre
+    if(canEdit()){
+      _cp.attr=attr;
+      if(skill)_cp.skill=skill;
+      _cp.diff=rawDiff==='fdv'?'fdv':(+rawDiff||6);
+      save();renderCombatDiscs();
+      document.getElementById('cmPoolEditorSec').style.display='none';
+      document.getElementById('cmRoll').textContent=poolStr(_cp);
+      document.getElementById('cmRoll').style.color='';
+      document.getElementById('cmRollBtn').style.display='block';
+    }
 
   } else {
     num=calcDice(_cp);
@@ -1234,6 +1388,26 @@ function rollCM(){
   else if(!net){ds.textContent='Falha — 0 sucessos';ds.style.color='var(--tx3)';}
   else{ds.textContent=`${net} sucesso${net>1?'s':''}`;ds.style.color='#8c8';}
   document.getElementById('cmDres').style.display='block';
+
+  // Envia evento para sala de combate (sempre que em sala)
+  if(SALA.salaId && SALA.sb && !_eventoEnviado) {
+    _eventoEnviado=true;
+    SALA.sb.from('eventos_combate').insert({
+      sala_id: SALA.salaId,
+      origem_id: SALA.partId,
+      tipo: 'ataque',
+      dados: {
+        atacante: D.info.name||'?',
+        poder: _cp.name,
+        disciplina: _cd.name,
+        nivel: _cp.level,
+        desc: _cp.desc||'',
+        sucessos: botch?-1:net,
+        dmgType: _cp.dmgType||'none',
+        estado: 'pendente'
+      }
+    });
+  }
 
   // Envia pro Discord se webhook configurado
   (async()=>{
@@ -1507,7 +1681,487 @@ function carregarJSON(input){
 }
 
 // ═══════════════════════════════════════════════════════════
-// INIT
+// LINK TOKEN — ficha codificada na URL (opcional)
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// SISTEMA DE ACESSO POR PIN
+// ═══════════════════════════════════════════════════════════
+let ACCESS_LEVEL='master'; // 'view' | 'master'
+let LINK_PINS={masterPinHash:null};
+
+// Override do canEdit existente para respeitar o sistema de PIN
+const _canEditBase=canEdit;
+canEdit=function(){
+  if(LINK_PINS.masterPinHash) return ACCESS_LEVEL==='master';
+  return _canEditBase();
+};
+
+// Combate: view-only quando link com PIN — ninguém usa, só lê
+function guardCombat(){
+  if(!LINK_PINS.masterPinHash) return true; // sem PIN = acesso total
+  if(ACCESS_LEVEL==='master') return true;
+  openPinModal();
+  return false;
+}
+
+function setAccessUI(){
+  const badge=document.getElementById('accessBadge');
+  if(!badge) return;
+  if(!LINK_PINS.masterPinHash){badge.style.display='none';return;}
+  badge.style.display='block';
+  if(ACCESS_LEVEL==='master'){
+    badge.textContent='🔓 Mestre';badge.className='access-badge master';
+  }else{
+    badge.textContent='👁 Somente leitura';badge.className='access-badge view';
+  }
+  document.body.classList.toggle('locked',!canEdit());
+}
+
+function openPinModal(){
+  document.getElementById('pinEntryInput').value='';
+  document.getElementById('pinError').style.display='none';
+  document.getElementById('pinMod').style.display='flex';
+  setTimeout(()=>document.getElementById('pinEntryInput').focus(),100);
+}
+function closePinMod(){document.getElementById('pinMod').style.display='none';}
+function closePinModBg(e){if(e.target.id==='pinMod')closePinMod();}
+
+async function submitPin(){
+  const pin=document.getElementById('pinEntryInput').value.trim();
+  if(!pin) return;
+  const h=await sha256(pin);
+  if(LINK_PINS.masterPinHash&&h===LINK_PINS.masterPinHash){
+    ACCESS_LEVEL='master';
+    closePinMod();
+    setAccessUI();
+    renderFicha();renderDiscs();
+    const b=document.getElementById('saveBadge');
+    b.textContent='🔓 acesso mestre';b.className='ok';
+    setTimeout(()=>{b.textContent='salvo ◦';b.className='';},1800);
+  }else{
+    document.getElementById('pinError').style.display='block';
+    document.getElementById('pinEntryInput').value='';
+    document.getElementById('pinEntryInput').focus();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// LINK TOKEN — ficha codificada na URL (opcional)
+// ═══════════════════════════════════════════════════════════
+function abrirModalLink(){
+  document.getElementById('pinMestreInput').value='';
+  document.getElementById('linkTokenUrl').value='';
+  document.getElementById('gerarLinkBtn').style.display='block';
+  document.getElementById('copiarLinkBtn').style.display='none';
+  document.getElementById('linkTokenMod').style.display='flex';
+}
+
+function gerarLinkToken(){
+  try{
+    const snap=snapshotCanonico(D);
+    const pinM=document.getElementById('pinMestreInput').value.trim();
+    (pinM?sha256(pinM):Promise.resolve(null)).then(masterHash=>{
+      if(masterHash) snap._pinMaster=masterHash;
+      const json=JSON.stringify(snap);
+      const token=btoa(unescape(encodeURIComponent(json)));
+      const url=location.origin+location.pathname+'#vtm='+token;
+      document.getElementById('linkTokenUrl').value=url;
+      document.getElementById('gerarLinkBtn').style.display='none';
+      document.getElementById('copiarLinkBtn').style.display='block';
+      // Copia automaticamente
+      navigator.clipboard.writeText(url).then(()=>{
+        document.getElementById('copiarLinkBtn').textContent='✓ Copiado!';
+        document.getElementById('copiarLinkBtn').style.background='rgba(58,138,62,.4)';
+        const b=document.getElementById('saveBadge');
+        b.textContent='🔗 link copiado!';b.className='ok';
+        setTimeout(()=>{
+          b.textContent='salvo ◦';b.className='';
+          document.getElementById('copiarLinkBtn').textContent='📋 Copiar de novo';
+          document.getElementById('copiarLinkBtn').style.background='';
+        },2500);
+      }).catch(()=>{
+        document.getElementById('linkTokenUrl').select();
+      });
+    });
+  }catch(e){alert('Erro ao gerar link: '+e.message);}
+}
+
+function copiarLinkToken(){
+  const input=document.getElementById('linkTokenUrl');
+  navigator.clipboard.writeText(input.value).then(()=>{
+    const btn=document.getElementById('copiarLinkBtn');
+    btn.textContent='✓ Copiado!';btn.style.background='rgba(58,138,62,.4)';
+    setTimeout(()=>{btn.textContent='📋 Copiar de novo';btn.style.background='';},2000);
+  }).catch(()=>{input.select();});
+}
+
+function closeLinkToken(){document.getElementById('linkTokenMod').style.display='none';}
+function closeLinkTokenBg(e){if(e.target.id==='linkTokenMod')closeLinkToken();}
+
+// Verifica se a URL tem um token de ficha ao abrir a página
+function verificarLinkToken(){
+  const hash=location.hash;
+  if(!hash.startsWith('#vtm='))return;
+  const token=hash.slice(5);
+  try{
+    const json=decodeURIComponent(escape(atob(token)));
+    const data=JSON.parse(json);
+    const nome=(data.info&&data.info.name)||'personagem sem nome';
+    history.replaceState(null,'',location.pathname);
+    // Extrai PIN e remove do data
+    LINK_PINS.masterPinHash=data._pinMaster||null;
+    delete data._pinMaster;
+    // Sem PIN no link = acesso total; com PIN = começa somente leitura
+    ACCESS_LEVEL=LINK_PINS.masterPinHash?'view':'master';
+    if(confirm(`🔗 Link de ficha detectado!\n\n"${nome}"\n\nCarregar esta ficha?`)){
+      D=Object.assign(defaultData(),data);
+      D.merits=D.merits||[];D.flaws=D.flaws||[];D.backgrounds=D.backgrounds||[];
+      try{localStorage.setItem('vtm2',JSON.stringify(D));}catch(e){}
+      renderFicha();renderDiscs();renderTraits();calcBonusPoints();renderBackgrounds();
+      const cn=document.getElementById('charName');
+      if(cn)cn.value=(D.info&&D.info.name)||'';
+      if(D.info&&D.info.name)document.title=D.info.name+' — VtM';
+      const pre=document.getElementById('preludioText');
+      if(pre)pre.value=D.preludio||'';
+      setAccessUI();
+      if(LINK_PINS.masterPinHash){
+        const b=document.getElementById('saveBadge');
+        b.textContent='👁 somente leitura';b.className='ok';
+        setTimeout(()=>{b.textContent='salvo ◦';b.className='';},2200);
+      }
+    }
+  }catch(e){
+    console.warn('Link token inválido:',e);
+    history.replaceState(null,'',location.pathname);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// SISTEMA DE ATAQUE E DEFESA
+// ═══════════════════════════════════════════════════════════
+let _ataqueAtual=null; // ataque recebido pendente de defesa
+let _alvoCM=null; // alvo selecionado no modal de combate
+let SALA_PARTS=[]; // participantes da sala (atualizado ao entrar)
+
+const DMG_LABELS={none:'Nenhum',contusao:'Contusão',letal:'Letal',agravado:'Agravado',mental:'Mental'};
+const DMG_ABSORVE={contusao:true,letal:true,agravado:false,mental:false};
+
+// Busca participantes da sala atual
+async function fetchSalaParticipantes(){
+  if(!SALA.sb||!SALA.salaId) return;
+  const {data}=await SALA.sb.from('participantes_sala')
+    .select('*').eq('sala_id',SALA.salaId).eq('online',true);
+  if(data) SALA_PARTS=data.filter(p=>p.id!==SALA.partId);
+}
+
+// Abre o modal de combate — com seleção de alvo se poder causa dano
+const _openCMOrig=openCM;
+openCM=function(disc,p){
+  _openCMOrig(disc,p);
+  _alvoCM=null;
+  // Mostra seleção de alvo se poder causa dano e estiver em sala
+  const targetSec=document.getElementById('cmTargetSec');
+  if(SALA.salaId&&p.dmgType&&p.dmgType!=='none'&&!p.passive){
+    targetSec.style.display='block';
+    fetchSalaParticipantes().then(()=>renderTargetList());
+  }else{
+    targetSec.style.display='none';
+  }
+};
+
+function renderTargetList(){
+  const el=document.getElementById('cmTargetList');
+  if(!SALA_PARTS.length){
+    el.innerHTML='<div style="font-size:12px;color:var(--tx3);font-style:italic;">Nenhum alvo disponível na sala.</div>';
+    return;
+  }
+  el.innerHTML='';
+  SALA_PARTS.forEach(p=>{
+    const btn=document.createElement('button');
+    btn.style.cssText='background:var(--card);border:1px solid var(--br2);border-radius:2px;padding:7px 12px;cursor:pointer;font-family:\'Crimson Text\',serif;font-size:13px;color:var(--tx);transition:all .15s;';
+    btn.innerHTML=`<span style="color:var(--gd);font-family:\'Cinzel\',serif;font-size:11px;">${p.char_name}</span><br><span style="font-size:11px;color:var(--tx3);">🩸${p.blood_cur}/${p.blood_max}</span>`;
+    btn.onclick=()=>{
+      _alvoCM=p;
+      el.querySelectorAll('button').forEach(b=>b.style.borderColor='var(--br2)');
+      btn.style.borderColor='var(--blood)';
+      btn.style.background='rgba(139,0,0,.1)';
+    };
+    el.appendChild(btn);
+  });
+}
+
+// Envia ataque para o alvo via Supabase
+async function enviarAtaque(disc,pwr,sucessos){
+  if(!SALA.sb||!SALA.salaId||!_alvoCM||!pwr.dmgType||pwr.dmgType==='none') return;
+  await SALA.sb.from('eventos_combate').insert({
+    sala_id:SALA.salaId,
+    origem_id:SALA.partId,
+    alvo_id:_alvoCM.id,
+    tipo:'ataque',
+    dados:{
+      atacante:D.info.name,
+      poder:pwr.name,
+      disciplina:disc.name,
+      nivel:pwr.level,
+      sucessos,
+      dmgType:pwr.dmgType,
+      estado:'pendente'
+    }
+  });
+}
+
+// Escuta ataques recebidos
+function subscribeAataques(){
+  if(!SALA.sb||!SALA.salaId||!SALA.partId) return;
+  SALA.sb.channel('ataques-'+SALA.partId)
+    .on('postgres_changes',{
+      event:'INSERT',schema:'public',table:'eventos_combate',
+      filter:`alvo_id=eq.${SALA.partId}`
+    },payload=>{
+      if(payload.new.dados?.estado==='pendente') receberAtaque(payload.new);
+    })
+    .subscribe();
+}
+
+function receberAtaque(evento){
+  const d=evento.dados;
+  _ataqueAtual=evento;
+  document.getElementById('defAtacante').textContent=`${d.disciplina||''} · ${d.poder}`;
+  document.getElementById('defInfo').innerHTML=
+    `<strong style="color:var(--gd);">${d.atacante}</strong> atacou com <strong>${d.poder}</strong><br>
+     <span style="color:var(--tx3);">${d.sucessos} sucesso${d.sucessos!==1?'s':''} · Dano: <strong style="color:${d.dmgType==='agravado'?'#f44':d.dmgType==='mental'?'#aaf':'#f88'}">${DMG_LABELS[d.dmgType]||d.dmgType}</strong></span>`;
+  // Mostra sempre as opções de defesa — mestre corrige se necessário
+  document.getElementById('defAbsorcaoSec').style.display='block';
+  document.getElementById('defAgravadoSec').style.display='none';
+  document.getElementById('defDres').style.display='none';
+  document.getElementById('defMod').style.display='flex';
+  lg(`<span style="color:#f88;">⚔ ${d.atacante} atacou com ${d.poder} — ${d.sucessos} sucesso${d.sucessos!==1?'s':''}!</span>`);
+}
+
+function rolarDefesa(tipo){
+  if(!_ataqueAtual) return;
+  let pool=0;
+  if(tipo==='vigor') pool=D.attrs.vigor||1;
+  else if(tipo==='fortitude'){
+    // Busca disciplina Fortitude
+    const fort=D.disciplines.find(d=>d.name.toLowerCase().includes('fortitude'));
+    pool=fort?fort.dots:0;
+    if(!pool){alert('Você não tem Fortitude!');return;}
+  }else if(tipo==='armadura'){
+    const n=parseInt(prompt('Nível da armadura (valor de absorção):','0'));
+    if(isNaN(n)||n<0) return;
+    // Armadura absorve direto sem rolar
+    aplicarDanoFinal(_ataqueAtual.dados.sucessos - n, _ataqueAtual.dados.dmgType);
+    document.getElementById('defMod').style.display='none';
+    marcarEventoResolvido(_ataqueAtual.id,'armadura',n);
+    _ataqueAtual=null;
+    return;
+  }
+  if(pool===0){alert('Pool 0 — sem dados para absorção.');return;}
+  const rs=Array.from({length:pool},()=>Math.floor(Math.random()*10)+1);
+  let absorvidos=0;rs.forEach(r=>{if(r>=6)absorvidos++;});
+  // Mostra resultado
+  const dn=document.getElementById('defDnums');dn.innerHTML='';
+  rs.forEach(r=>{const d=document.createElement('div');d.className='die '+(r>=6?'s':'f');d.textContent=r;dn.appendChild(d);});
+  document.getElementById('defDsum').textContent=`${absorvidos} absorvido${absorvidos!==1?'s':''} de ${_ataqueAtual.dados.sucessos} sucesso${_ataqueAtual.dados.sucessos!==1?'s':''}`;
+  document.getElementById('defDres').style.display='block';
+  document.getElementById('defAbsorcaoSec').style.display='none';
+  _ataqueAtual._absorvidos=absorvidos;
+  _ataqueAtual._tipoDefesa=tipo;
+  lg(`🛡 Absorção (${tipo}): ${pool} dados → ${absorvidos} absorvido${absorvidos!==1?'s':''}`);
+}
+
+function confirmarDefesa(){
+  if(!_ataqueAtual) return;
+  const danoFinal=Math.max(0,_ataqueAtual.dados.sucessos-(_ataqueAtual._absorvidos||0));
+  aplicarDanoFinal(danoFinal,_ataqueAtual.dados.dmgType);
+  marcarEventoResolvido(_ataqueAtual.id,_ataqueAtual._tipoDefesa,_ataqueAtual._absorvidos||0);
+  document.getElementById('defMod').style.display='none';
+  _ataqueAtual=null;
+}
+
+function aceitarDano(){
+  if(!_ataqueAtual) return;
+  aplicarDanoFinal(_ataqueAtual.dados.sucessos,_ataqueAtual.dados.dmgType);
+  marcarEventoResolvido(_ataqueAtual.id,'sem defesa',0);
+  document.getElementById('defMod').style.display='none';
+  _ataqueAtual=null;
+}
+
+function aplicarDanoFinal(dano,tipo){
+  if(dano<=0){lg('<span class="lo">✓ Dano absorvido completamente!</span>');pushStatusSala();return;}
+  if(tipo==='mental'){
+    // Ataca FdV
+    CS.wpTemp=Math.max(0,CS.wpTemp-dano);
+    renderWP();
+    lg(`<span class="lc">⚔ ${dano} dano Mental — FdV reduzida!</span>`);
+  }else{
+    // Aplica na vitalidade
+    const tipoCaixa=tipo==='agravado'?'a':tipo==='letal'?'l':'b';
+    let aplicados=0;
+    for(let i=0;i<CS.health.length&&aplicados<dano;i++){
+      if(CS.health[i]===null){CS.health[i]=tipoCaixa;aplicados++;}
+      else if(tipoCaixa==='a'&&CS.health[i]!=='a'){CS.health[i]='a';aplicados++;}
+      else if(tipoCaixa==='l'&&CS.health[i]==='b'){CS.health[i]='l';aplicados++;}
+    }
+    renderHealth();
+    lg(`<span class="lc">⚔ ${dano} dano ${DMG_LABELS[tipo]} aplicado!</span>`);
+  }
+  pushStatusSala();
+}
+
+async function marcarEventoResolvido(eventoId,tipoDefesa,absorvidos){
+  if(!SALA.sb||!eventoId) return;
+  await SALA.sb.from('eventos_combate').update({
+    dados:{...(_ataqueAtual?.dados||{}),estado:'resolvido',tipoDefesa,absorvidos}
+  }).eq('id',eventoId);
+}
+
+// Bloqueia botões de recuperação quando em sala
+function atualizarBotoesRecuperacao(){
+  const emSala=!!SALA.salaId;
+  // Botão +1 Sangue
+  document.querySelectorAll('.qb.rg').forEach(b=>{
+    if(b.textContent.includes('Sangue')||b.textContent.includes('1')){
+      b.disabled=emSala;
+      b.style.opacity=emSala?'.3':'';
+      b.title=emSala?'Recuperação controlada pelo mestre':'';
+    }
+  });
+  // +FdV
+  document.querySelectorAll('.qb.rg').forEach(b=>{
+    if(b.textContent.includes('FdV')){
+      b.disabled=emSala;
+      b.style.opacity=emSala?'.3':'';
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+let SALA={sb:null,salaId:null,partId:null,codigo:'',nome:'',intervalo:null};
+
+function abrirModalSala(){
+  document.getElementById('salaUrlInput').value=localStorage.getItem('sala_sb_url')||'';
+  document.getElementById('salaKeyInput').value=localStorage.getItem('sala_sb_key')||'';
+  document.getElementById('salaCodigoInput').value='';
+  document.getElementById('salaPinInput').value='';
+  document.getElementById('salaErro').style.display='none';
+  if(SALA.salaId){
+    document.getElementById('salaModTitle').textContent='⚔ Sala de Combate';
+    document.getElementById('salaModConteudo').style.display='none';
+    document.getElementById('salaModStatus').style.display='block';
+    document.getElementById('salaAtivaCodigo').textContent=SALA.codigo;
+    document.getElementById('salaAtivaNome').textContent=SALA.nome;
+  }else{
+    document.getElementById('salaModTitle').textContent='⚔ Entrar na Sala de Combate';
+    document.getElementById('salaModConteudo').style.display='block';
+    document.getElementById('salaModStatus').style.display='none';
+  }
+  document.getElementById('salaMod').style.display='flex';
+}
+function fecharModalSala(){document.getElementById('salaMod').style.display='none';}
+
+async function entrarNaSala(){
+  const url=document.getElementById('salaUrlInput').value.trim();
+  const key=document.getElementById('salaKeyInput').value.trim();
+  const codigo=document.getElementById('salaCodigoInput').value.trim().toUpperCase();
+  const pin=document.getElementById('salaPinInput').value;
+  const erroEl=document.getElementById('salaErro');
+  erroEl.style.display='none';
+  if(!url||!key){erroEl.textContent='Configure o Supabase (URL e Key).';erroEl.style.display='block';return;}
+  if(!codigo){erroEl.textContent='Digite o código da sala.';erroEl.style.display='block';return;}
+  if(!pin){erroEl.textContent='Digite o PIN da sala.';erroEl.style.display='block';return;}
+  localStorage.setItem('sala_sb_url',url);
+  localStorage.setItem('sala_sb_key',key);
+  try{SALA.sb=window.supabase.createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});}
+  catch(e){erroEl.textContent='Erro ao conectar: '+e.message;erroEl.style.display='block';return;}
+  const {data:sala,error:errSala}=await SALA.sb.from('salas_combate').select('*').eq('codigo',codigo).eq('ativa',true).single();
+  if(errSala||!sala){erroEl.textContent='Sala não encontrada ou encerrada.';erroEl.style.display='block';return;}
+  const pinHash=await sha256(pin);
+  if(pinHash!==sala.pin_hash){erroEl.textContent='PIN incorreto.';erroEl.style.display='block';return;}
+  const {data:part,error:errPart}=await SALA.sb.from('participantes_sala').insert({
+    sala_id:sala.id,char_name:D.info.name||'Personagem',player_name:D.info.player||'',
+    online:true,blood_cur:CS.bloodCur,blood_max:D.bloodMax,
+    health:CS.health,wp_temp:CS.wpTemp,willpower:D.willpower
+  }).select().single();
+  if(errPart){erroEl.textContent='Erro ao entrar: '+errPart.message;erroEl.style.display='block';return;}
+  SALA.salaId=sala.id;SALA.partId=part.id;SALA.codigo=codigo;SALA.nome=sala.nome;
+  document.getElementById('salaBadgeHeader').style.display='block';
+  if(SALA.intervalo) clearInterval(SALA.intervalo);
+  SALA.intervalo=setInterval(pushStatusSala,3000);
+  subscribeAataques();
+  atualizarBotoesRecuperacao();
+  fecharModalSala();
+  setTimeout(abrirModalSala,100);
+  const b=document.getElementById('saveBadge');
+  b.textContent='⚔ Entrou em '+codigo;b.className='ok';
+  setTimeout(()=>{b.textContent='salvo ◦';b.className='';},2500);
+}
+
+async function pushStatusSala(){
+  if(!SALA.sb||!SALA.partId) return;
+  try{
+    await SALA.sb.from('participantes_sala').update({
+      online:true,blood_cur:CS.bloodCur,blood_max:D.bloodMax,
+      health:CS.health,wp_temp:CS.wpTemp,willpower:D.willpower,
+      atualizado_em:new Date().toISOString()
+    }).eq('id',SALA.partId);
+  }catch(e){console.warn('Sync falhou:',e);}
+}
+
+async function sairDaSala(){
+  if(SALA.sb&&SALA.partId) await SALA.sb.from('participantes_sala').update({online:false}).eq('id',SALA.partId);
+  if(SALA.intervalo) clearInterval(SALA.intervalo);
+  if(SALA.sb) SALA.sb.removeAllChannels();
+  SALA={sb:null,salaId:null,partId:null,codigo:'',nome:'',intervalo:null};
+  SALA_PARTS=[];
+  document.getElementById('salaBadgeHeader').style.display='none';
+  atualizarBotoesRecuperacao();
+  fecharModalSala();
+}
+
+// Push automático quando status muda no combate
+const _spBOrig=spBlood;spBlood=function(n,l){_spBOrig(n,l);pushStatusSala();};
+const _gnBOrig=gnBlood;gnBlood=function(n){_gnBOrig(n);pushStatusSala();};
+const _cHOrig=cycleH;cycleH=function(i){_cHOrig(i);pushStatusSala();};
+const _spWOrig=spWP;spWP=function(n=1){_spWOrig(n);pushStatusSala();};
+const _gnWOrig=gnWP;gnWP=function(n=1){_gnWOrig(n);pushStatusSala();};
+const _boostOrig=boostAttr;boostAttr=function(k){_boostOrig(k);pushStatusSala();};
+
+// Auto-detecta sala ativa ao carregar a ficha
+async function autoDetectarSala(){
+  const url=localStorage.getItem('sala_sb_url');
+  const key=localStorage.getItem('sala_sb_key');
+  if(!url||!key||!window.supabase) return;
+  const charName=D.info.name;
+  if(!charName) return;
+  try{
+    const sb=window.supabase.createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
+    // Busca participante com este nome em sala ativa
+    const {data,error}=await sb
+      .from('participantes_sala')
+      .select('*, salas_combate!inner(id,codigo,nome,ativa,pin_hash)')
+      .eq('char_name',charName)
+      .eq('salas_combate.ativa',true)
+      .limit(1)
+      .single();
+    if(error||!data) return;
+    const sala=data.salas_combate;
+    // Conecta automaticamente
+    SALA.sb=sb;
+    SALA.salaId=sala.id;
+    SALA.partId=data.id;
+    SALA.codigo=sala.codigo;
+    SALA.nome=sala.nome;
+    document.getElementById('salaBadgeHeader').style.display='block';
+    if(SALA.intervalo) clearInterval(SALA.intervalo);
+    SALA.intervalo=setInterval(pushStatusSala,3000);
+    pushStatusSala();
+    const b=document.getElementById('saveBadge');
+    b.textContent='⚔ Sala '+sala.codigo+' detectada!';b.className='ok';
+    setTimeout(()=>{b.textContent='salvo ◦';b.className='';},3000);
+  }catch(e){console.warn('Auto-detect sala:',e);}
+}
 // ═══════════════════════════════════════════════════════════
 load();
 D.merits=D.merits||[];
@@ -1521,15 +2175,64 @@ initPreludio();
 
 CS.bloodCur=D.bloodMax;
 CS.wpTemp=D.willpower;
+setAccessUI();
 
 document.getElementById('charName').addEventListener('input',function(){
   D.info.name=this.value;save();document.title=(this.value||'Vampiro')+' — VtM';
 });
 if(D.info.name) document.title=D.info.name+' — VtM';
+
+// Verifica link token na URL (roda depois de tudo estar renderizado)
+verificarLinkToken();
+
+// Auto-detecta sala ativa (após 1s para garantir que D.info.name está carregado)
+setTimeout(autoDetectarSala, 1000);
 </script>
+<!-- SALA MODAL -->
+<div class="ov" id="salaMod" style="display:none;" onclick="if(event.target.id==='salaMod')fecharModalSala()">
+<div class="modal" style="max-width:420px;">
+  <button class="modal-close" onclick="fecharModalSala()">✕</button>
+  <h3 id="salaModTitle">⚔ Entrar na Sala de Combate</h3>
+  <div id="salaModConteudo">
+    <div style="font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:14px;">
+      O mestre te enviou um código e um PIN de sala. Digite abaixo para entrar e sincronizar seu status ao vivo.
+    </div>
+    <div class="fg2">
+      <div class="frow"><label>Código da Sala</label><input id="salaCodigoInput" placeholder="Ex: TREVAS-47" style="text-transform:uppercase;letter-spacing:3px;font-family:'Cinzel',serif;font-size:16px;"/></div>
+      <div class="frow"><label>PIN da Sala</label><input id="salaPinInput" type="password" placeholder="••••"/></div>
+    </div>
+    <div style="border-top:1px solid var(--br);padding-top:12px;margin-top:4px;">
+      <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--blood);margin-bottom:10px;text-transform:uppercase;">Configuração Supabase (uma vez)</div>
+      <div class="frow"><label>URL do Supabase</label><input id="salaUrlInput" placeholder="https://...supabase.co"/></div>
+      <div class="frow"><label>Publishable Key</label><input id="salaKeyInput" placeholder="sb_publishable_..."/></div>
+      <div style="font-size:11px;color:var(--tx3);line-height:1.5;">O mestre te passa esses dados. Ficam salvos neste dispositivo.</div>
+    </div>
+    <div id="salaErro" style="display:none;background:rgba(139,0,0,.15);border:1px solid var(--blood);border-radius:2px;padding:8px 10px;font-size:12px;color:#f88;margin-top:8px;"></div>
+    <div class="modal-btns">
+      <button class="btn btn-prim" onclick="entrarNaSala()">⚔ Entrar</button>
+      <button class="btn btn-sec" onclick="fecharModalSala()">Cancelar</button>
+    </div>
+  </div>
+  <!-- Status quando na sala -->
+  <div id="salaModStatus" style="display:none;">
+    <div style="text-align:center;margin-bottom:12px;">
+      <div style="font-family:'Cinzel',serif;font-size:24px;color:var(--gd);letter-spacing:4px;" id="salaAtivaCodigo"></div>
+      <div style="font-size:13px;color:var(--tx2);margin-top:4px;" id="salaAtivaNome"></div>
+      <div style="font-size:11px;color:var(--gr);margin-top:6px;">● Sincronizando ao vivo com o mestre</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--br);border-radius:2px;padding:10px;font-size:12px;color:var(--tx2);line-height:1.7;margin-bottom:12px;">
+      Seu sangue, vitalidade e FdV aparecem no painel do mestre em tempo real.<br>
+      A cada ação no combate, o status é enviado automaticamente.
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-del" onclick="sairDaSala()">Sair da Sala</button>
+      <button class="btn btn-sec" onclick="fecharModalSala()">Fechar</button>
+    </div>
+  </div>
+</div>
+</div>
+
 </body>
 </html>
-
-
 
 
