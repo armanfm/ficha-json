@@ -358,12 +358,20 @@ function initSupabase() {
   const key = localStorage.getItem('admin_sb_key');
   if (!url || !key || !window.supabase) { setSbPill('off'); return; }
   try {
-    SB = window.supabase.createClient(url, key);
-    SB.from('salas_combate').select('count', { count: 'exact', head: true }).then(({ error }) => {
-      if (error) { setSbPill('err'); SB = null; }
-      else { setSbPill('ok'); syncSalasAtivas(); }
+    // Suporte ao novo formato sb_publishable_ e ao antigo eyJ...
+    SB = window.supabase.createClient(url, key, {
+      auth: { persistSession: false, autoRefreshToken: false }
     });
-  } catch(e) { setSbPill('err'); }
+    // Testa com um select simples
+    SB.from('salas_combate').select('id').limit(1).then(({ error }) => {
+      if (error && error.code !== 'PGRST116') {
+        setSbPill('err'); SB = null;
+        console.warn('Supabase erro:', error.message);
+      } else {
+        setSbPill('ok'); syncSalasAtivas();
+      }
+    });
+  } catch(e) { setSbPill('err'); console.warn(e); }
 }
 
 function setSbPill(s) {
