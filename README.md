@@ -12,7 +12,7 @@ Sem servidor, sem conta, sem mensalidade. Cada um dono dos próprios dados.
 👉 https://armanfm.github.io/ficha-json/ficha.html
 
 **Painel do Narrador**
-👉 https://armanfm.github.io/ficha-json/mestre.html
+👉 https://armanfm.github.io/ficha-json/admin.html
 
 ---
 
