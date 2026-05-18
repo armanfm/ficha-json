@@ -3,1893 +3,1192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vampiro: A Máscara</title>
+<title>Painel do Mestre — Dark Ages</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
 :root{
   --blood:#8B0000;--blood2:#b22222;
-  --ink:#0d0905;--surf:#161008;--card:#1e1510;
-  --br:#3a2a1a;--br2:#5a3a20;
-  --gd:#c9a84c;--gd2:#7a6030;
+  --ink:#0d0905;--surf:#161008;--card:#1e1510;--card2:#241a0c;
+  --br:#3a2a1a;--br2:#5a3a20;--br3:#7a5a30;
+  --gd:#c9a84c;--gd2:#7a6030;--gd3:#e8c870;
   --tx:#e8d9c0;--tx2:#8a7a65;--tx3:#5a4a35;
   --gr:#3a8a3e;--wp:#3a6aaa;--bo:#d4a017;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--ink);font-family:'Crimson Text',serif;color:var(--tx);min-height:100vh;display:flex;flex-direction:column;}
-header{background:var(--surf);border-bottom:2px solid var(--blood);padding:8px 18px;display:flex;align-items:center;gap:16px;flex-shrink:0;}
-.htitle{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--blood2);text-transform:uppercase;}
-#charName{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gd);background:transparent;border:none;outline:none;flex:1;letter-spacing:2px;}
-#charName::placeholder{color:var(--tx3);}
-#charName:focus{border-bottom:1px solid var(--gd2);}
-#saveBadge{font-size:10px;color:var(--tx3);font-style:italic;transition:color .4s;}
-#saveBadge.ok{color:var(--gr);}
-nav{background:var(--ink);border-bottom:1px solid var(--br);display:flex;padding:0 18px;flex-shrink:0;}
-.tab{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:10px 18px;border:none;background:transparent;color:var(--tx3);cursor:pointer;border-bottom:2px solid transparent;}
-.tab:hover{color:var(--tx2);}
-.tab.on{color:var(--blood2);border-bottom-color:var(--blood);}
-main{flex:1;overflow-y:auto;padding:18px;}
-.pane{display:none;} .pane.on{display:block;}
-.card{background:var(--surf);border:1px solid var(--br);border-radius:2px;overflow:hidden;margin-bottom:12px;}
+
+header{background:var(--surf);border-bottom:2px solid var(--blood);padding:10px 20px;display:flex;align-items:center;gap:16px;flex-shrink:0;}
+.htitle{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:var(--blood2);text-transform:uppercase;}
+.htitle2{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--gd);letter-spacing:2px;}
+.hactions{margin-left:auto;display:flex;gap:8px;align-items:center;}
+.sb-pill{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:2px;}
+.sb-ok{background:rgba(58,138,62,.15);border:1px solid var(--gr);color:#8c8;}
+.sb-err{background:rgba(139,0,0,.15);border:1px solid var(--blood);color:#f99;}
+.sb-off{background:var(--card);border:1px solid var(--br2);color:var(--tx3);}
+
+.layout{display:grid;grid-template-columns:240px 1fr;flex:1;height:calc(100vh - 57px);overflow:hidden;}
+
+.sidebar{background:var(--surf);border-right:1px solid var(--br);display:flex;flex-direction:column;overflow-y:auto;}
+.s-hd{padding:10px 14px;border-bottom:1px solid var(--br);}
+.s-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gd2);}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid rgba(58,42,26,.2);cursor:pointer;transition:background .15s;}
+.nav-item:hover{background:var(--card);}
+.nav-item.active{background:rgba(139,0,0,.1);border-left:3px solid var(--blood);padding-left:11px;}
+.nav-icon{font-size:15px;flex-shrink:0;}
+.nav-name{font-family:'Cinzel',serif;font-size:11px;color:var(--tx);flex:1;}
+.nav-sub{font-size:11px;color:var(--tx3);margin-top:1px;}
+.nav-badge{font-family:'Cinzel',serif;font-size:9px;padding:2px 7px;border-radius:2px;flex-shrink:0;}
+.bg-gold{background:rgba(200,150,40,.15);border:1px solid var(--gd2);color:var(--gd);}
+.bg-red{background:rgba(139,0,0,.2);border:1px solid var(--blood);color:#f99;}
+.bg-green{background:rgba(58,138,62,.2);border:1px solid var(--gr);color:#8c8;}
+.sala-sidebar{padding:12px 14px;border-top:1px solid var(--br);}
+.sala-code-mini{font-family:'Cinzel',serif;font-size:18px;color:var(--gd);letter-spacing:3px;}
+
+.main{display:flex;flex-direction:column;overflow:hidden;}
+.main-hd{padding:10px 20px;border-bottom:1px solid var(--br);background:var(--surf);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.main-title{font-family:'Cinzel',serif;font-size:13px;color:var(--gd);letter-spacing:1px;}
+.main-body{flex:1;overflow-y:auto;padding:16px 20px;}
+
+.card{background:var(--surf);border:1px solid var(--br);border-radius:2px;margin-bottom:12px;overflow:hidden;}
 .card-hd{display:flex;align-items:center;justify-content:space-between;padding:6px 14px;background:var(--card);border-bottom:1px solid var(--br);}
 .card-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gd2);}
-.card-body{padding:10px 14px;}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.row{display:flex;align-items:center;padding:3px 0;border-bottom:1px dotted rgba(58,42,26,.35);}
-.row:last-child{border-bottom:none;}
-.row-label{flex:1;font-size:13px;color:var(--tx);}
-.row-label.editable{background:transparent;border:none;outline:none;font-family:'Crimson Text',serif;font-style:italic;color:var(--tx);min-width:0;}
-.row-label.editable::placeholder{color:var(--tx3);}
-.dots{display:flex;gap:3px;}
-.dot{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--blood);cursor:pointer;transition:transform .1s;}
-.dot:hover{transform:scale(1.25);}
-.dot.on{background:var(--blood);}
-.dot.vt{border-color:var(--wp);}
-.dot.vt.on{background:var(--wp);}
-.row-val{font-family:'Cinzel',serif;font-size:11px;color:var(--tx3);width:14px;text-align:right;margin-left:4px;}
-.info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 16px;padding:10px 14px;}
-.if-wrap{display:flex;flex-direction:column;gap:2px;}
-.if-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--blood);}
-.if-input{background:transparent;border:none;border-bottom:1px solid var(--br);padding:2px 0;font-family:'Crimson Text',serif;font-size:14px;color:var(--tx);outline:none;width:100%;}
-.if-input:focus{border-bottom-color:var(--blood);}
-.disc-item{background:var(--surf);border:1px solid var(--br);border-radius:2px;margin-bottom:10px;overflow:hidden;}
-.disc-hd{display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--card);border-bottom:1px solid var(--br);}
-.disc-name-in{font-family:'Cinzel',serif;font-size:13px;letter-spacing:2px;color:var(--gd);background:transparent;border:none;outline:none;flex:1;text-transform:uppercase;}
-.disc-name-in:focus{border-bottom:1px solid var(--gd2);}
-.ddots{display:flex;gap:4px;}
-.ddot{width:10px;height:10px;border-radius:50%;border:1px solid var(--blood);cursor:pointer;}
-.ddot.on{background:var(--blood);}
-.btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;padding:3px 10px;border-radius:2px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.card-body{padding:14px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+.btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;padding:5px 12px;border-radius:2px;cursor:pointer;transition:all .15s;white-space:nowrap;border:none;}
 .btn-ghost{background:transparent;border:1px solid var(--br2);color:var(--tx2);}
 .btn-ghost:hover{border-color:var(--gd2);color:var(--gd);}
-.btn-del{background:transparent;border:1px solid var(--br2);color:var(--tx3);}
-.btn-del:hover{border-color:var(--blood);color:#f88;}
+.btn-prim{background:var(--blood);color:#fff;padding:7px 16px;font-size:10px;}
+.btn-prim:hover{background:var(--blood2);}
+.btn-sec{background:transparent;border:1px solid var(--br2);color:var(--tx2);padding:7px 14px;}
+.btn-sec:hover{background:var(--card);}
 .btn-add{background:rgba(139,0,0,.2);border:1px solid var(--blood);color:#f99;}
 .btn-add:hover{background:rgba(139,0,0,.4);color:#fff;}
-.btn-prim{background:var(--blood);border:none;color:#fff;padding:9px 0;flex:1;font-size:11px;}
-.btn-prim:hover{background:var(--blood2);}
-.btn-prim:disabled{opacity:.4;cursor:not-allowed;}
-.btn-sec{background:transparent;border:1px solid var(--br2);color:var(--tx2);padding:9px 14px;}
-.btn-sec:hover{background:var(--card);}
-.prow{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid var(--br);font-size:13px;}
-.prow:last-child{border-bottom:none;}
-.plvl{font-family:'Cinzel',serif;font-size:9px;color:var(--tx3);width:44px;flex-shrink:0;}
-.pname{flex:1;color:var(--tx);}
-.ppool{font-size:11px;color:var(--tx3);font-style:italic;}
-.tag{font-size:10px;padding:1px 6px;border-radius:2px;flex-shrink:0;}
-.t-blood{background:rgba(139,0,0,.3);color:#f88;border:1px solid rgba(139,0,0,.5);}
-.t-wp{background:rgba(58,106,170,.3);color:#8af;border:1px solid rgba(58,106,170,.5);}
-.t-free{background:rgba(58,138,62,.3);color:#8c8;border:1px solid rgba(58,138,62,.5);}
-.t-pas{background:rgba(122,96,48,.4);color:var(--gd);border:1px solid rgba(180,140,60,.4);}
-.t-cena{background:rgba(60,80,140,.3);color:#aaf;border:1px solid rgba(60,80,140,.5);}
-.t-cfg{background:rgba(139,0,0,.15);color:#f99;border:1px solid rgba(139,0,0,.4);}
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:100;}
-.modal{background:var(--surf);border:1px solid var(--br2);border-top:3px solid var(--blood);border-radius:2px;width:480px;max-width:96vw;max-height:92vh;overflow-y:auto;padding:22px;position:relative;}
+.btn-del{background:transparent;border:1px solid var(--br2);color:var(--tx3);}
+.btn-del:hover{border-color:var(--blood);color:#f88;}
+.btn-warn{background:rgba(139,0,0,.2);border:1px solid var(--blood);color:#f99;padding:7px 14px;}
+.btn-warn:hover{background:rgba(139,0,0,.4);color:#fff;}
+
+.frow{margin-bottom:10px;}
+.frow label{display:block;font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;}
+.frow input,.frow textarea,.frow select{width:100%;background:var(--card);border:1px solid var(--br2);border-radius:2px;padding:7px 10px;color:var(--tx);font-family:'Crimson Text',serif;font-size:14px;outline:none;}
+.frow input:focus,.frow textarea:focus,.frow select:focus{border-color:var(--blood);}
+
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;z-index:100;}
+.modal{background:var(--surf);border:1px solid var(--br2);border-top:3px solid var(--blood);border-radius:2px;width:520px;max-width:96vw;max-height:92vh;overflow-y:auto;padding:22px;position:relative;}
 .modal-close{position:absolute;top:10px;right:14px;background:none;border:none;color:var(--tx3);font-size:20px;cursor:pointer;}
 .modal h3{font-family:'Cinzel',serif;font-size:16px;color:var(--gd);margin-bottom:16px;}
-.frow{margin-bottom:11px;}
-.frow label{display:block;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;}
-.frow input,.frow textarea,.frow select{width:100%;background:var(--card);border:1px solid var(--br2);border-radius:2px;padding:6px 10px;color:var(--tx);font-family:'Crimson Text',serif;font-size:14px;outline:none;}
-.frow input:focus,.frow textarea:focus,.frow select:focus{border-color:var(--blood);}
-.frow textarea{height:58px;resize:vertical;}
-.frow select option{background:var(--card);}
-.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
 .modal-btns{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--br);}
-.combat-wrap{display:grid;grid-template-columns:1fr 260px;gap:14px;align-items:start;}
-.cleft{display:flex;flex-direction:column;gap:12px;}
-.csidebar{display:flex;flex-direction:column;gap:12px;}
-.scene-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.trackers{display:flex;gap:8px;align-items:center;}
-.tbox{background:var(--card);border:1px solid var(--br);border-radius:3px;padding:4px 10px;text-align:center;}
-.tbox-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--tx3);text-transform:uppercase;}
-.tbox-num{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--gd);display:flex;align-items:center;gap:5px;}
-.tbox-num.sc{color:#aaf;}
-.tbtn{background:var(--br);border:none;color:var(--tx);width:20px;height:20px;border-radius:2px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
-.tbtn:hover{background:var(--br2);}
-.scene-adv{background:rgba(139,0,0,.25);border:1px solid var(--blood);color:#f99;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;cursor:pointer;border-radius:2px;}
-.scene-adv:hover{background:rgba(139,0,0,.5);color:#fff;}
-.boost-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.bblock{background:var(--card);border:1px solid var(--br);border-radius:2px;padding:7px 8px;text-align:center;}
-.bblock-name{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--tx2);margin-bottom:3px;}
-.bblock-num{font-family:'Cinzel',serif;font-size:26px;font-weight:700;line-height:1;}
-.bblock-sub{font-size:9px;color:var(--tx3);margin-bottom:5px;}
-.bblock-dots{display:flex;gap:3px;justify-content:center;margin-bottom:6px;}
-.bblock-btn{width:100%;background:rgba(212,160,23,.15);border:1px solid rgba(212,160,23,.4);color:var(--bo);font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;padding:3px 0;cursor:pointer;border-radius:2px;}
-.bblock-btn:hover{background:rgba(212,160,23,.3);}
-.bblock-btn:disabled{opacity:.3;cursor:not-allowed;}
-.eff-item{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--br);border-left:3px solid var(--blood2);border-radius:2px;padding:5px 10px;margin-bottom:4px;}
-.eff-name{flex:1;font-size:13px;}
-.eff-dur{font-size:10px;color:var(--tx3);font-family:'Cinzel',serif;}
-.eff-rm{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:13px;}
-.eff-rm:hover{color:#f66;}
-.pcard{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--br);cursor:pointer;transition:background .12s;}
-.pcard:last-child{border-bottom:none;}
-.pcard:hover{background:var(--card);}
-.pbar{width:3px;height:34px;border-radius:1px;flex-shrink:0;}
-.pcard-info{flex:1;}
-.pcard-name{font-family:'Cinzel',serif;font-size:13px;color:var(--tx);}
-.pcard-pool{font-size:11px;color:var(--tx3);font-style:italic;}
-.use-btn{background:var(--blood);border:none;color:#fff;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:5px 9px;cursor:pointer;border-radius:2px;}
-.use-btn:hover{background:var(--blood2);}
-.use-btn.pas{background:var(--gd2);}
-.use-btn.pas:hover{background:var(--gd);color:var(--ink);}
-.use-btn.cfg{background:rgba(139,0,0,.3);border:1px solid rgba(139,0,0,.6);color:#f99;}
-.use-btn.cfg:hover{background:rgba(139,0,0,.6);color:#fff;}
-.res{background:var(--surf);border:1px solid var(--br);border-radius:2px;overflow:hidden;}
-.res-hd{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:var(--card);border-bottom:1px solid var(--br);}
-.res-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gd2);}
-.res-val{font-family:'Cinzel',serif;font-size:12px;color:var(--gd);}
-.res-body{padding:8px 10px;}
-.bp-grid{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
-.bp{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--blood);cursor:pointer;transition:all .1s;}
-.bp.on{background:var(--blood);box-shadow:0 0 3px rgba(139,0,0,.5);}
-.bp:hover{transform:scale(1.15);}
-.qrow{display:flex;gap:5px;margin-top:4px;}
-.qb{flex:1;padding:5px 0;border:1px solid var(--br2);border-radius:2px;background:transparent;color:var(--tx);font-family:'Crimson Text',serif;font-size:12px;cursor:pointer;text-align:center;}
-.qb.sp:hover{background:rgba(139,0,0,.2);border-color:var(--blood);color:#f88;}
-.qb.rg:hover{background:rgba(58,138,62,.2);border-color:var(--gr);color:#8c8;}
-.health-row{display:flex;align-items:center;padding:3px 0;gap:5px;border-bottom:1px dotted rgba(58,42,26,.4);}
-.health-row:last-child{border-bottom:none;}
-.hlbl{flex:1;font-size:12px;color:var(--tx2);}
-.hpen{font-family:'Cinzel',serif;font-size:10px;color:var(--blood);width:18px;text-align:right;}
-.hbox{width:19px;height:19px;border:1.5px solid var(--br2);border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;color:transparent;}
-.hbox:hover{border-color:var(--gd2);}
-.hbox.ba{background:#7a5a00;border-color:#a07800;color:#ffd070;}
-.hbox.le{background:var(--blood);border-color:var(--blood2);color:#faa;}
-.hbox.ag{background:#1a0a0a;border-color:#888;color:#f33;}
-.wp-track{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}
-.wpdot{width:13px;height:13px;border-radius:50%;border:1.5px solid var(--wp);cursor:pointer;}
-.wpdot.on{background:var(--wp);}
-.wp-temp{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px;}
-.wpt{width:15px;height:8px;border:1.5px solid var(--wp);border-radius:1px;cursor:pointer;}
-.wpt.on{background:var(--wp);}
-.log-body{max-height:170px;overflow-y:auto;padding:6px 10px;}
-.lentry{padding:4px 0;border-bottom:1px solid rgba(58,42,26,.3);font-size:12px;line-height:1.4;color:var(--tx2);}
-.lentry:last-child{border-bottom:none;}
-.lr{font-family:'Cinzel',serif;font-size:9px;color:var(--tx3);margin-right:3px;}
-.lp{color:var(--gd);font-style:italic;}.lc{color:#f88;}.lo{color:#8c8;}.lw{color:#fa5;}.ls{color:#aaf;}
-.cov{position:fixed;inset:0;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;z-index:200;}
-.cmodal{background:var(--surf);border:1px solid var(--br2);border-top:3px solid var(--blood);border-radius:2px;width:440px;max-width:96vw;max-height:92vh;overflow-y:auto;padding:20px;position:relative;}
-.cm-disc{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--blood2);text-transform:uppercase;margin-bottom:3px;}
-.cm-title{font-family:'Cinzel',serif;font-size:20px;color:var(--gd);font-weight:700;margin-bottom:12px;}
-.cm-sec{margin-bottom:10px;}
-.cm-sec-t{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--tx3);text-transform:uppercase;margin-bottom:3px;padding-bottom:3px;border-bottom:1px solid var(--br);}
-.cm-text{font-size:14px;color:var(--tx);line-height:1.5;}
-.cm-tags{display:flex;gap:5px;flex-wrap:wrap;margin:5px 0;}
-.cm-warn{background:rgba(139,0,0,.15);border:1px solid rgba(139,0,0,.4);padding:7px 10px;border-radius:2px;font-size:12px;color:#f88;margin-top:8px;}
-.dice-res{background:var(--card);border:1px solid var(--br2);border-radius:2px;padding:10px;margin-top:10px;text-align:center;}
-.dnums{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:7px 0;}
-.die{width:28px;height:28px;border:1.5px solid var(--br2);border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:13px;font-weight:700;}
-.die.s{border-color:var(--gr);color:#8c8;background:rgba(58,138,62,.2);}
-.die.f{border-color:var(--br);color:var(--tx3);}
-.die.b{border-color:var(--blood);color:#f66;background:rgba(139,0,0,.2);}
-.dsum{font-family:'Cinzel',serif;font-size:14px;}
-.cm-act{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--br);flex-wrap:wrap;}
-.roll-btn{background:rgba(201,168,76,.12);border:1px solid var(--gd2);color:var(--gd);font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:9px 14px;cursor:pointer;border-radius:2px;}
-.roll-btn:hover{background:rgba(201,168,76,.25);}
-/* pool editor no modal de combate */
-.cm-pool-editor{background:var(--card);border:1px solid var(--br);border-radius:2px;padding:14px;margin-bottom:6px;}
-.cm-pool-warn{background:rgba(139,0,0,.12);border:1px solid rgba(139,0,0,.4);border-left:3px solid var(--blood);border-radius:2px;padding:10px 12px;margin-bottom:12px;font-size:13px;color:#f99;line-height:1.6;}
-.cm-pool-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
-.cm-pool-sel{background:var(--surf);border:1px solid var(--br2);border-radius:2px;padding:5px 8px;color:var(--tx);font-family:'Crimson Text',serif;font-size:13px;width:100%;outline:none;cursor:pointer;}
-.cm-pool-sel:focus{border-color:var(--blood);}
-.cm-pool-sel option{background:var(--card);}
-.cm-pool-preview{background:var(--surf);border:1px solid var(--br);border-radius:2px;padding:9px 14px;font-family:'Cinzel',serif;font-size:12px;text-align:center;letter-spacing:1px;transition:color .2s;}
+.info-warn{background:rgba(139,0,0,.08);border:1px solid rgba(139,0,0,.3);border-radius:2px;padding:10px 12px;font-size:12px;color:var(--tx2);line-height:1.6;margin-bottom:10px;}
+
+.char-item{background:var(--card);border:1px solid var(--br);border-radius:2px;padding:11px 14px;margin-bottom:7px;display:flex;align-items:center;gap:12px;}
+.char-avatar{width:36px;height:36px;background:rgba(139,0,0,.15);border:1px solid var(--blood);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.char-info{flex:1;min-width:0;}
+.char-name{font-family:'Cinzel',serif;font-size:13px;color:var(--gd);}
+.char-meta{font-size:12px;color:var(--tx3);margin-top:2px;}
+.char-note{font-size:11px;color:var(--tx3);font-style:italic;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.char-btns{display:flex;gap:4px;flex-shrink:0;}
+
+.sala-item{background:var(--card);border:1px solid var(--br);border-radius:2px;padding:14px;margin-bottom:12px;}
+.sala-item.ativa{border-color:var(--blood);background:rgba(139,0,0,.04);}
+.sala-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}
+.sala-code{font-family:'Cinzel',serif;font-size:26px;font-weight:700;color:var(--gd);letter-spacing:4px;}
+.sala-info{flex:1;}
+.sala-nome{font-size:14px;color:var(--tx);margin-bottom:3px;}
+.sala-ts{font-size:11px;color:var(--tx3);}
+.sala-badge{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;padding:3px 8px;border-radius:2px;flex-shrink:0;}
+.sb-ativa{background:rgba(139,0,0,.2);border:1px solid var(--blood);color:#f99;}
+.sb-enc{background:var(--card2);border:1px solid var(--br);color:var(--tx3);}
+.sala-btns{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.sala-split{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
+
+.part-list{display:flex;flex-direction:column;gap:10px;}
+.part-card{background:var(--surf);border:1px solid var(--br);border-radius:3px;padding:12px 14px;}
+.part-card.online{border-left:3px solid var(--gr);}
+.part-card.offline{opacity:.5;}
+.part-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.pdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.pdot.on{background:var(--gr);}
+.pdot.off{background:var(--br3);}
+.part-name{font-family:'Cinzel',serif;font-size:13px;color:var(--gd);}
+.part-player{font-size:11px;color:var(--tx3);}
+.part-npc-badge{font-size:9px;border:1px solid var(--br2);padding:1px 5px;border-radius:2px;color:var(--tx3);font-family:'Cinzel',serif;}
+
+.stat-row{margin-bottom:8px;}
+.stat-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;}
+.blood-dots{display:flex;flex-wrap:wrap;gap:4px;}
+.bdot{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--blood);cursor:pointer;transition:all .1s;}
+.bdot.on{background:var(--blood);box-shadow:0 0 3px rgba(139,0,0,.4);}
+.bdot:hover{transform:scale(1.2);}
+.health-boxes{display:flex;gap:4px;flex-wrap:wrap;}
+.hbox-adm{width:22px;height:22px;border:1.5px solid var(--br2);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;color:transparent;transition:all .15s;}
+.hbox-adm:hover{border-color:var(--gd2);}
+.hbox-adm.ba{background:#7a5a00;border-color:#a07800;color:#ffd070;}
+.hbox-adm.le{background:var(--blood);border-color:var(--blood2);color:#faa;}
+.hbox-adm.ag{background:#1a0a0a;border-color:#888;color:#f33;}
+.wp-dots{display:flex;gap:4px;flex-wrap:wrap;}
+.wdot{width:14px;height:8px;border:1.5px solid var(--wp);border-radius:2px;cursor:pointer;}
+.wdot.on{background:var(--wp);}
+
+.part-actions{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid rgba(58,42,26,.3);}
+.act-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.5px;padding:3px 7px;border-radius:2px;cursor:pointer;transition:all .15s;border:1px solid var(--br2);background:transparent;color:var(--tx2);}
+.act-btn:hover{border-color:var(--gd2);color:var(--gd);}
+.act-btn.del:hover{border-color:var(--blood);color:#f88;}
+
+.combat-panel{background:var(--surf);border:1px solid var(--br);border-radius:3px;overflow:hidden;position:sticky;top:0;}
+.cp-hd{padding:8px 12px;background:var(--card);border-bottom:1px solid var(--br);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+.cp-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gd2);}
+.cp-body{padding:10px 12px;max-height:600px;overflow-y:auto;}
+
+.ia-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:2px;cursor:pointer;background:rgba(201,168,76,.15);border:1px solid var(--gd2);color:var(--gd);transition:all .15s;}
+.ia-btn:hover{background:rgba(201,168,76,.3);}
+.ia-narrativa{background:var(--card2);border:1px solid var(--br);border-left:3px solid var(--gd2);border-radius:2px;padding:10px 12px;font-size:13px;color:var(--tx);line-height:1.7;margin-bottom:8px;font-style:italic;}
+.ia-acao{display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--card);border-radius:2px;margin-bottom:4px;font-size:12px;}
+.ia-acao-tag{font-family:'Cinzel',serif;font-size:9px;padding:2px 6px;border-radius:2px;}
+
+.hist-item{background:var(--card);border:1px solid var(--br);border-radius:2px;padding:12px 14px;margin-bottom:10px;}
+.hist-turno{font-family:'Cinzel',serif;font-size:10px;color:var(--gd2);letter-spacing:1px;margin-bottom:6px;}
+.hist-narrativa{font-size:13px;color:var(--tx);line-height:1.6;font-style:italic;margin-bottom:8px;}
+.hist-acoes{font-size:11px;color:var(--tx3);}
+
+.ev-card{background:var(--card);border:1px solid var(--br);border-radius:2px;padding:10px 12px;margin-bottom:8px;}
+.ev-card.pendente{border-left:3px solid var(--bo);}
+.ev-card.resolvido{border-left:3px solid var(--gr);}
+.ev-card.cancelado{border-left:3px solid var(--br3);opacity:.6;}
+.ev-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.ev-ts{font-family:'Cinzel',serif;font-size:8px;color:var(--tx3);}
+.ev-status{font-family:'Cinzel',serif;font-size:8px;padding:2px 6px;border-radius:2px;}
+.ev-st-p{background:rgba(212,160,23,.2);border:1px solid var(--bo);color:var(--bo);}
+.ev-st-r{background:rgba(58,138,62,.2);border:1px solid var(--gr);color:#8c8;}
+.ev-st-c{background:var(--card2);border:1px solid var(--br);color:var(--tx3);}
+.ev-atacante{font-size:13px;color:var(--gd);font-style:italic;margin-bottom:3px;}
+.ev-poder{font-family:'Cinzel',serif;font-size:12px;color:var(--tx);margin-bottom:4px;}
+.ev-disc{font-size:11px;color:var(--blood2);}
+.ev-desc{font-size:12px;color:var(--tx2);line-height:1.5;margin:6px 0;padding:6px 8px;background:var(--surf);border-radius:2px;border-left:2px solid var(--br2);}
+.ev-tags{display:flex;gap:5px;flex-wrap:wrap;margin:5px 0;}
+.ev-tag{font-size:10px;padding:2px 7px;border-radius:2px;font-family:'Cinzel',serif;}
+.et-suc{background:rgba(58,138,62,.2);border:1px solid var(--gr);color:#8c8;}
+.et-dmg{background:rgba(139,0,0,.2);border:1px solid var(--blood);color:#f88;}
+.et-dmg-ag{background:rgba(139,0,0,.3);border:1px solid #f44;color:#f44;}
+.et-dmg-m{background:rgba(58,106,170,.2);border:1px solid var(--wp);color:#aaf;}
+.et-def{background:rgba(122,96,48,.3);border:1px solid var(--gd2);color:var(--gd);}
+.ev-cancel-btn{background:transparent;border:1px solid var(--br2);color:var(--tx3);font-family:'Cinzel',serif;font-size:8px;padding:2px 8px;border-radius:2px;cursor:pointer;margin-top:5px;}
+.ev-cancel-btn:hover{border-color:var(--blood);color:#f88;}
+
+.aguardando{text-align:center;color:var(--tx3);font-style:italic;font-size:12px;padding:10px 0;}
+.aguardando span{display:inline-block;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+
+.code-box{background:var(--card2);border:2px solid var(--gd2);border-radius:3px;padding:20px;text-align:center;margin:12px 0;}
+.code-big{font-family:'Cinzel',serif;font-size:42px;font-weight:700;color:var(--gd3);letter-spacing:8px;display:block;margin-bottom:6px;}
+.sql-pre{background:var(--card2);border:1px solid var(--br);border-radius:2px;padding:12px 14px;font-family:monospace;font-size:11px;color:var(--gd2);white-space:pre-wrap;line-height:1.5;cursor:pointer;max-height:300px;overflow-y:auto;}
+.empty{text-align:center;color:var(--tx3);font-style:italic;padding:36px 0;font-size:13px;line-height:1.9;}
+
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:var(--surf);}
 ::-webkit-scrollbar-thumb{background:var(--br2);border-radius:2px;}
-.top-actions{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end;}
-.pill{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--br2);color:var(--tx2);padding:4px 8px;border-radius:2px;white-space:nowrap;}
-.pill.ok{border-color:var(--gr);color:#8c8;}.pill.lock{border-color:var(--blood);color:#f99;}
-body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.locked .dot,body.locked .ddot,body.locked .btn-add,body.locked .btn-del{cursor:not-allowed;filter:grayscale(.35);}
-.trait-item{background:var(--surf);border:1px solid var(--br);border-radius:2px;padding:8px 12px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;}
-.trait-dots{display:flex;gap:3px;flex-shrink:0;margin-top:3px;}
-.trait-dot{width:10px;height:10px;border-radius:50%;border:1px solid var(--blood);cursor:pointer;}
-.trait-dot.on{background:var(--blood);}
-.trait-dot.flaw{border-color:var(--gd2);}
-.trait-dot.flaw.on{background:var(--gd2);}
-.trait-body{flex:1;}
-.trait-name{font-size:14px;color:var(--tx);margin-bottom:2px;}
-.trait-desc{font-size:12px;color:var(--tx3);font-style:italic;line-height:1.5;}
-.trait-del{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:14px;padding:0;flex-shrink:0;}
-.trait-del:hover{color:#f88;}
-.empty-traits{text-align:center;color:var(--tx3);font-style:italic;padding:16px 0;font-size:13px;}
-@media(max-width:900px){header{align-items:flex-start;flex-wrap:wrap}.top-actions{width:100%;justify-content:flex-start}.g2,.g3{grid-template-columns:1fr}.info-grid{grid-template-columns:1fr 1fr}.combat-wrap{grid-template-columns:1fr}}
-/* ── ACCESS BADGE ── */
-.access-badge{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;border:1px solid;border-radius:2px;padding:4px 9px;cursor:pointer;white-space:nowrap;transition:all .2s;}
-.access-badge.view{border-color:var(--br2);color:var(--tx3);}
-.access-badge.view:hover{border-color:var(--gd2);color:var(--gd);}
-.access-badge.player{border-color:var(--wp);color:#8af;}
-.access-badge.player:hover{border-color:#6af;color:#adf;}
-.access-badge.master{border-color:var(--gr);color:#8c8;}
-/* PIN MODAL */
-.pin-input{background:var(--card);border:1px solid var(--br2);border-radius:2px;padding:10px 14px;color:var(--tx);font-family:'Cinzel',serif;font-size:20px;letter-spacing:6px;text-align:center;width:100%;outline:none;}
-.pin-input:focus{border-color:var(--blood);}
-.pin-level{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--br);border-radius:2px;margin-bottom:6px;cursor:pointer;transition:background .15s;}
-.pin-level:hover{background:var(--card);}
-.pin-level.active{border-color:var(--blood);background:rgba(139,0,0,.1);}
-.pin-lbl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;}
-.pin-desc{font-size:12px;color:var(--tx3);margin-top:1px;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;height:auto;}.sidebar{border-right:none;border-bottom:1px solid var(--br);max-height:200px;}.sala-split{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
 <header>
   <div>
-    <div class="htitle">Vampiro: A Máscara</div>
-    <input id="charName" placeholder="Nome do Personagem" spellcheck="false"/>
+    <div class="htitle">Vampiro: A Máscara — Dark Ages</div>
+    <div class="htitle2">⬥ Painel do Mestre</div>
   </div>
-  <span id="saveBadge">salvo</span>
-  <span id="statusBadge" class="pill">local</span>
-  <button id="accessBadge" class="access-badge view" onclick="openPinModal()" title="Clique para entrar com PIN" style="display:none;">👁 Somente leitura</button>
-  <span id="salaBadgeHeader" style="display:none;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;padding:4px 9px;border-radius:2px;border:1px solid var(--gr);color:#8c8;cursor:pointer;" onclick="abrirModalSala()" title="Na sala — clique para ver detalhes">⚔ Sala ativa</span>
-  <div class="top-actions">
-    <button class="btn btn-ghost" onclick="abrirModalLink()" title="Gerar link da ficha" style="border-color:rgba(201,168,76,.4);color:var(--gd2);">🔗 Gerar Link</button>
-    <button class="btn btn-ghost" onclick="abrirModalSala()" title="Entrar em uma sala de combate" style="border-color:rgba(58,106,170,.4);color:#8af;">⚔ Entrar na Sala</button>
-    <button class="btn btn-ghost" onclick="openDiscordCfg()" title="Configurar webhook do Discord">🎮 Discord</button>
-    <button class="btn btn-ghost" onclick="document.getElementById('fileLoadInput').click()" title="Carregar ficha de um arquivo JSON">⬆ Carregar JSON</button>
-    <input type="file" id="fileLoadInput" accept=".json" style="display:none;" onchange="carregarJSON(this)"/>
-    <button class="btn btn-ghost" onclick="exportarJSON()" title="Exporta o JSON para enviar ao mestre">⬇ Exportar JSON</button>
-    <button onclick="salvarManual()" style="background:rgba(58,138,62,.25);border:1px solid var(--gr);color:#8c8;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;padding:5px 12px;border-radius:2px;cursor:pointer;" title="Salvar agora">💾 Salvar</button>
-    <span id="saveBadge2" style="font-size:10px;color:var(--tx3);font-style:italic;"></span>
+  <div class="hactions">
+    <span id="sbPill" class="sb-pill sb-off">⬥ offline</span>
+    <button class="btn btn-ghost" onclick="navTo('config')">⚙ Config</button>
   </div>
 </header>
 
-<nav>
-  <button class="tab on" onclick="goTab('ficha',this)">Ficha</button>
-  <button class="tab" onclick="goTab('disciplinas',this)">Disciplinas</button>
-  <button class="tab" onclick="goTab('antecedentes',this)">Antecedentes</button>
-  <button class="tab" onclick="goTab('qualdef',this)">Qual &amp; Def</button>
-  <button class="tab" onclick="goTab('preludio',this)">Prelúdio</button>
-  <button class="tab" onclick="goTab('notas',this)">Anotações</button>
-  <button class="tab" onclick="goTab('combate',this)">Combate</button>
-</nav>
-
-<main>
-
-<!-- FICHA -->
-<div class="pane on" id="pane-ficha">
-  <div class="card">
-    <div class="card-hd"><span class="card-title">⬥ Personagem</span></div>
-    <div class="info-grid" id="infoGrid"></div>
-  </div>
-  <div class="g3">
-    <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">Físicos</span></div><div class="card-body" id="fisicos"></div></div>
-    <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">Social</span></div><div class="card-body" id="social"></div></div>
-    <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">Mentais</span></div><div class="card-body" id="mentais"></div></div>
-  </div>
-  <div class="g3" style="margin-top:12px;">
-    <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">Talentos</span></div><div class="card-body" id="talentos"></div></div>
-    <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">Perícias</span></div><div class="card-body" id="pericias"></div></div>
-    <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">Conhecimentos</span></div><div class="card-body" id="conhecimentos"></div></div>
-  </div>
-  <div class="g2" style="margin-top:12px;">
-    <div class="card" style="margin:0">
-      <div class="card-hd"><span class="card-title">⬥ Virtudes</span></div>
-      <div class="card-body" id="virtudes"></div>
+<div class="layout">
+  <div class="sidebar">
+    <div class="s-hd"><span class="s-title">Menu</span></div>
+    <div class="nav-item active" id="nav-personagens" onclick="navTo('personagens')">
+      <div class="nav-icon">🩸</div>
+      <div><div class="nav-name">Personagens</div><div class="nav-sub">Fichas da crônica</div></div>
+      <span class="nav-badge bg-gold" id="charBadge">0</span>
     </div>
-    <div class="card" style="margin:0">
-      <div class="card-hd"><span class="card-title">⬥ Força de Vontade · Humanidade · Sangue</span></div>
-      <div class="card-body" id="pools"></div>
+    <div class="nav-item" id="nav-salas" onclick="navTo('salas')">
+      <div class="nav-icon">⚔</div>
+      <div><div class="nav-name">Salas de Combate</div><div class="nav-sub">Sessões ao vivo</div></div>
+      <span class="nav-badge bg-red" id="salaBadge" style="display:none;"></span>
     </div>
+    <div class="nav-item" id="nav-config" onclick="navTo('config')">
+      <div class="nav-icon">⚙</div>
+      <div><div class="nav-name">Configurações</div><div class="nav-sub">Supabase · Discord</div></div>
+    </div>
+    <div class="nav-item" id="nav-historico" onclick="navTo('historico')">
+      <div class="nav-icon">📜</div>
+      <div><div class="nav-name">Histórico</div><div class="nav-sub">Turnos registrados</div></div>
+      <span class="nav-badge bg-gold" id="histBadge" style="display:none;"></span>
+    </div>
+    <div id="sidebarSala" style="display:none;">
+      <div class="sala-sidebar">
+        <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--blood2);text-transform:uppercase;margin-bottom:6px;">● Sala Ativa</div>
+        <div class="sala-code-mini" id="sbSalaCodigo"></div>
+        <div style="font-size:12px;color:var(--tx2);margin:3px 0 7px;" id="sbSalaNome"></div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;" id="sbSalaInfo"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="main-hd">
+      <span class="main-title" id="mainTitle">⬥ Personagens</span>
+      <div id="mainActions"></div>
+    </div>
+    <div class="main-body" id="mainBody"></div>
   </div>
 </div>
 
-<!-- DISCIPLINAS -->
-<div class="pane" id="pane-disciplinas">
-  <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
-    <button class="btn btn-add" onclick="newDisc()">+ Nova Disciplina</button>
-  </div>
-  <div id="discList"></div>
-  <div id="emptyDisc" style="text-align:center;color:var(--tx3);font-style:italic;padding:40px 0;font-size:14px;display:none;">
-    Nenhuma disciplina cadastrada. Clique em "+ Nova Disciplina".
-  </div>
-</div>
-
-<!-- ANTECEDENTES -->
-<div class="pane" id="pane-antecedentes">
-  <div class="card">
-    <div class="card-hd">
-      <span class="card-title">⬥ Antecedentes</span>
-      <button class="btn btn-add" onclick="adicionarAntecedente()">+ Adicionar</button>
-    </div>
-    <div class="card-body" id="antBody"></div>
-  </div>
-  <div style="font-size:12px;color:var(--tx3);line-height:1.6;margin-top:8px;">
-    Clique nos pontos para definir o nível. Edite o nome livremente.
-  </div>
-</div>
-
-<!-- QUALIDADES E DEFEITOS -->
-<div class="pane" id="pane-qualdef">
+<!-- CHAR MODAL -->
+<div class="ov" id="charMod" style="display:none;" onclick="if(event.target.id==='charMod')closeCharMod()">
+<div class="modal">
+  <button class="modal-close" onclick="closeCharMod()">✕</button>
+  <h3 id="charModTitle">Novo Personagem</h3>
   <div class="g2">
-    <div class="card" style="margin:0">
-      <div class="card-hd">
-        <span class="card-title">⬥ Qualidades</span>
-        <button class="btn btn-add" onclick="novaTrait('merit')">+ Adicionar</button>
-      </div>
-      <div class="card-body" id="meritsList">
-        <div class="empty-traits">Nenhuma qualidade cadastrada.</div>
-      </div>
+    <div class="frow"><label>Nome do Personagem</label><input id="cmName" placeholder="Ex: Malakai"/></div>
+    <div class="frow"><label>Nome do Jogador</label><input id="cmPlayer" placeholder="Ex: Rafael"/></div>
+  </div>
+  <div class="g2">
+    <div class="frow">
+      <label>Clã</label>
+      <select id="cmClan">
+        <option value="">— Selecione —</option>
+        <option>Assamita</option><option>Brujah</option><option>Cappadociano</option>
+        <option>Seguidores de Set</option><option>Gangrel</option><option>Lasombra</option>
+        <option>Malkavian</option><option>Nosferatu</option><option>Ravnos</option>
+        <option>Toreador</option><option>Tremere</option><option>Tzimisce</option>
+        <option>Ventrue</option><option>Outro</option>
+      </select>
     </div>
-    <div class="card" style="margin:0">
-      <div class="card-hd">
-        <span class="card-title">⬥ Defeitos</span>
-        <button class="btn btn-add" onclick="novaTrait('flaw')">+ Adicionar</button>
-      </div>
-      <div class="card-body" id="flawsList">
-        <div class="empty-traits">Nenhum defeito cadastrado.</div>
-      </div>
-    </div>
-  </div>
-  <div class="card" style="margin-top:12px;">
-    <div class="card-hd"><span class="card-title">⬥ Pontos Bônus</span></div>
-    <div class="card-body"><div id="bonusPoints" style="font-size:13px;color:var(--tx2);"></div></div>
-  </div>
-</div>
-
-<!-- PRELUDIO -->
-<div class="pane" id="pane-preludio">
-  <div class="card">
-    <div class="card-hd">
-      <span class="card-title">⬥ Prelúdio do Personagem</span>
-      <span style="font-size:10px;color:var(--tx3);font-style:italic;">incluído no JSON exportado</span>
-    </div>
-    <div class="card-body">
-      <textarea id="preludioText" rows="22" style="width:100%;background:var(--card);border:1px solid var(--br);border-radius:2px;padding:10px 14px;color:var(--tx);font-family:'Crimson Text',serif;font-size:15px;resize:vertical;line-height:1.7;outline:none;" placeholder="A história do seu personagem antes do início da crônica."></textarea>
-    </div>
-  </div>
-</div>
-
-<!-- ANOTAÇÕES -->
-<div class="pane" id="pane-notas">
-  <div class="card">
-    <div class="card-hd">
-      <span class="card-title">⬥ Anotações Privadas</span>
-      <span style="font-size:10px;color:var(--tx3);font-style:italic;">não exportado no JSON</span>
-    </div>
-    <div class="card-body">
-      <textarea id="notasText" rows="20" style="width:100%;background:var(--card);border:1px solid var(--br);border-radius:2px;padding:10px 14px;color:var(--tx);font-family:'Crimson Text',serif;font-size:15px;resize:vertical;line-height:1.7;outline:none;" placeholder="Segredos do personagem, planos, relações..."></textarea>
-    </div>
-  </div>
-</div>
-
-<!-- COMBATE -->
-<div class="pane" id="pane-combate">
-  <div class="scene-row">
-    <div style="font-family:'Cinzel',serif;font-size:11px;color:var(--tx3);letter-spacing:2px;text-transform:uppercase;">Modo Combate</div>
-    <div class="trackers">
-      <div class="tbox">
-        <div class="tbox-lbl">Turno</div>
-        <div class="tbox-num"><button class="tbtn" onclick="chT(-1)">−</button><span id="tNum">1</span><button class="tbtn" onclick="chT(1)">+</button></div>
-      </div>
-      <div class="tbox">
-        <div class="tbox-lbl">Cena</div>
-        <div class="tbox-num sc"><span id="sNum">1</span></div>
-      </div>
-      <button class="scene-adv" onclick="advScene()">⟶ Nova Cena</button>
-    </div>
-  </div>
-  <div class="combat-wrap">
-    <div class="cleft">
-      <div class="card">
-        <div class="card-hd">
-          <span class="card-title">⬥ Atributos Físicos</span>
-          <span style="font-size:11px;color:var(--tx3);font-style:italic;">1 sangue → +1 (até fim da cena)</span>
-        </div>
-        <div class="card-body">
-          <div class="boost-grid" id="boostGrid"></div>
-          <div style="display:flex;justify-content:flex-end;margin-top:8px;">
-            <button class="btn btn-del" onclick="resetBoosts()" style="font-size:10px;padding:2px 10px;">Limpar boosts</button>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hd">
-          <span class="card-title">⬥ Efeitos Ativos</span>
-          <span id="effCnt" style="font-family:'Cinzel',serif;font-size:10px;color:var(--tx3);">0</span>
-        </div>
-        <div class="card-body">
-          <div id="effList"><div style="font-size:12px;color:var(--tx3);font-style:italic;text-align:center;padding:6px 0;">Nenhum efeito ativo.</div></div>
-        </div>
-      </div>
-      <div id="combatDiscs"></div>
-    </div>
-    <div class="csidebar">
-      <div class="res">
-        <div class="res-hd"><span class="res-title">⬥ Sangue</span><span class="res-val" id="bpCnt">—</span></div>
-        <div class="res-body">
-          <div class="bp-grid" id="bpGrid"></div>
-          <div class="qrow">
-            <button class="qb sp" onclick="spBlood(1,true)">− 1</button>
-            <button class="qb rg" onclick="gnBlood(1)">+ 1</button>
-          </div>
-        </div>
-      </div>
-      <div class="res">
-        <div class="res-hd"><span class="res-title">⬥ Vitalidade</span><span class="res-val" id="hStat" style="font-size:11px;font-style:italic;color:var(--tx2);">Ileso</span></div>
-        <div class="res-body">
-          <div id="hRows"></div>
-          <div style="display:flex;gap:8px;margin-top:6px;font-size:10px;color:var(--tx3);">
-            <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;background:#7a5a00;border-radius:1px;display:inline-block;"></span>Contusão</span>
-            <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;background:var(--blood);border-radius:1px;display:inline-block;"></span>Letal</span>
-            <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;background:#1a0a0a;border:1px solid #888;border-radius:1px;display:inline-block;"></span>Agravado</span>
-          </div>
-        </div>
-      </div>
-      <div class="res">
-        <div class="res-hd"><span class="res-title">⬥ Força de Vontade</span><span class="res-val" id="wpCnt">—</span></div>
-        <div class="res-body">
-          <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:4px;">Permanente</div>
-          <div class="wp-track" id="wpPerm"></div>
-          <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:4px;">Temporária</div>
-          <div class="wp-temp" id="wpTemp"></div>
-          <div class="qrow">
-            <button class="qb sp" onclick="spWP()">− 1 FdV</button>
-            <button class="qb rg" onclick="gnWP()">+ 1 FdV</button>
-          </div>
-        </div>
-      </div>
-      <div class="res">
-        <div class="res-hd">
-          <span class="res-title">⬥ Registro</span>
-          <button style="background:none;border:none;color:var(--tx3);font-size:10px;cursor:pointer;font-family:'Crimson Text',serif;" onclick="clearLog()">limpar</button>
-        </div>
-        <div class="log-body" id="log">
-          <div class="lentry" style="color:var(--tx3);font-style:italic;text-align:center;padding:8px 0;">Os atos desta noite serão registrados aqui.</div>
-        </div>
-      </div>
-      <div class="res">
-        <div class="res-hd"><span class="res-title">⬥ Integridade</span></div>
-        <div class="res-body">
-          <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:3px;">Hash atual da ficha</div>
-          <div id="hashAtualDisplay" onclick="computarHash()" title="Clique para calcular" style="font-family:monospace;font-size:9px;color:var(--gd2);word-break:break-all;background:var(--card);padding:5px 8px;border-radius:2px;margin-bottom:6px;cursor:pointer;">— clique para calcular —</div>
-          <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:3px;">Hash aprovado (mestre)</div>
-          <input id="hashAprovadoInput" type="text" placeholder="Cole o hash aprovado..." oninput="verificarIntegridade()" style="width:100%;background:var(--card);border:1px solid var(--br);padding:4px 8px;color:var(--tx);font-family:monospace;font-size:9px;border-radius:2px;outline:none;margin-bottom:6px;"/>
-          <div id="hashVerResult" style="display:none;border-radius:2px;padding:5px 8px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.04em;"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-</main>
-
-<!-- POWER EDIT MODAL -->
-<div class="ov" id="pwMod" style="display:none;" onclick="closePWBg(event)">
-<div class="modal">
-  <button class="modal-close" onclick="closePW()">✕</button>
-  <h3 id="pwModTitle">Novo Poder</h3>
-  <div class="fg2">
-    <div class="frow"><label>Nome do Poder</label><input id="pmName"/></div>
-    <div class="frow"><label>Nível (1–5)</label><select id="pmLvl"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
-  </div>
-  <div class="frow"><label>Descrição / Efeito em Combate</label><textarea id="pmDesc"></textarea></div>
-  <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--blood);margin:4px 0 10px;padding-top:8px;border-top:1px solid var(--br);">Pool de Dados — selecione o que este poder usa</div>
-  <div class="fg3">
-    <div class="frow"><label>Atributo</label><select id="pmAttr"></select></div>
-    <div class="frow"><label>Habilidade (opcional)</label><select id="pmSkill"></select></div>
-    <div class="frow"><label>Dificuldade</label><select id="pmDiff"><option>4</option><option>5</option><option value="6" selected>6</option><option>7</option><option>8</option><option>9</option><option value="fdv">Força de Vontade</option><option value="var">Variável (narrador)</option></select></div>
-  </div>
-  <div class="fg3">
-    <div class="frow"><label>Custo Sangue</label><select id="pmBB"><option value="0">0</option><option>1</option><option>2</option><option>3</option></select></div>
-    <div class="frow"><label>Custo FdV</label><select id="pmBW"><option value="0">0</option><option>1</option></select></div>
-    <div class="frow"><label>Duração</label><select id="pmDur"><option value="inst">Instantâneo</option><option value="turno">1 Turno</option><option value="cena">1 Cena</option><option value="perm">Permanente</option></select></div>
-  </div>
-  <div class="frow"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="pmPas" style="width:auto;"> Poder Passivo (sem rolagem, sempre ativo)</label></div>
-  <div class="modal-btns">
-    <button class="btn btn-prim" onclick="savePW()">Salvar</button>
-    <button class="btn btn-sec" onclick="closePW()">Cancelar</button>
-  </div>
-</div>
-</div>
-
-<!-- COMBAT MODAL -->
-<div class="cov" id="cmOv" style="display:none;" onclick="closeCMBg(event)">
-<div class="cmodal">
-  <button class="modal-close" onclick="closeCM()">✕</button>
-  <div class="cm-disc" id="cmDisc"></div>
-  <div class="cm-title" id="cmTitle"></div>
-  <div class="cm-sec"><div class="cm-sec-t">Descrição / Efeito</div><div class="cm-text" id="cmDesc"></div></div>
-  <div class="cm-sec">
-    <div class="cm-sec-t">Custo · Duração · Dados</div>
-    <div class="cm-tags" id="cmTags"></div>
-    <div class="cm-text" id="cmRoll" style="margin-top:5px;font-size:13px;font-style:italic;"></div>
-  </div>
-
-  <!-- ═══ POOL EDITOR — aparece quando o poder não tem atributo configurado ═══ -->
-  <div class="cm-sec" id="cmPoolEditorSec" style="display:none;">
-    <div class="cm-sec-t">⚙ Parada de Dados — Preencher Agora</div>
-    <div class="cm-pool-editor">
-      <div class="cm-pool-warn">
-        ⚠ Este poder não tem parada de dados configurada.<br>
-        <span style="color:var(--tx2);font-size:12px;">Preencha abaixo para rolar — os valores serão salvos no poder automaticamente.</span>
-      </div>
-      <div class="cm-pool-grid">
-        <div>
-          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;">Atributo</div>
-          <select id="cmAttrSel" class="cm-pool-sel" onchange="updateCMPoolLive()"></select>
-        </div>
-        <div>
-          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;">Habilidade</div>
-          <select id="cmSkillSel" class="cm-pool-sel" onchange="updateCMPoolLive()"></select>
-        </div>
-        <div>
-          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;">Dificuldade</div>
-          <select id="cmDiffSel" class="cm-pool-sel" onchange="updateCMPoolLive()">
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6" selected>6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="fdv">Força de Vontade</option>
-          </select>
-        </div>
-      </div>
-      <div id="cmPoolPreview" class="cm-pool-preview" style="color:var(--tx3);">
-        — selecione um atributo para calcular —
-      </div>
-    </div>
-  </div>
-
-  <div class="cm-warn" id="cmWarn" style="display:none;"></div>
-  <div class="dice-res" id="cmDres" style="display:none;">
-    <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:4px;">Resultado</div>
-    <div class="dnums" id="cmDnums"></div>
-    <div class="dsum" id="cmDsum"></div>
-  </div>
-  <div class="cm-act">
-    <button class="btn btn-prim" id="cmUse" onclick="activatePwr()">▶ Ativar</button>
-    <button class="roll-btn" id="cmRollBtn" onclick="rollCM()">🎲 Rolar</button>
-    <button class="btn btn-sec" onclick="closeCM()">Fechar</button>
-  </div>
-</div>
-</div>
-
-<!-- SETUP MODAL -->
-<div class="ov" id="setupMod" style="display:none;" onclick="closeSetupBg(event)"><div class="modal"><button class="modal-close" onclick="closeSetup()">x</button><h3>Conectar Supabase</h3><div class="frow"><label>URL do projeto</label><input id="sbUrl" placeholder="https://...supabase.co"/></div><div class="frow"><label>Anon public key</label><textarea id="sbKey" style="height:92px;"></textarea></div><div class="frow"><label>ID da ficha atual</label><input id="sheetId" placeholder="vazio ate criar online"/></div><div class="modal-btns"><button class="btn btn-prim" onclick="saveSetup()">Salvar conexao</button><button class="btn btn-sec" onclick="loadOnlineFicha()">Carregar ficha</button><button class="btn btn-sec" onclick="acceptMestreToken()">Aceitar token mestre</button><button class="btn btn-sec" onclick="reopenWithToken()">Reabrir com token</button><button class="btn btn-sec" onclick="mestreEditToken()">Token edicao</button></div></div></div>
-
-<!-- DISCORD CFG MODAL -->
-<div class="ov" id="dscMod" style="display:none;" onclick="closeDiscordBg(event)">
-<div class="modal">
-  <button class="modal-close" onclick="closeDiscord()">✕</button>
-  <h3>Discord Webhook</h3>
-  <p style="font-size:13px;color:var(--tx2);line-height:1.55;margin-bottom:14px;">
-    Cole aqui o webhook URL do canal do Discord da crônica. Toda rolagem em combate é enviada automaticamente.
-  </p>
-  <div class="frow">
-    <label>Webhook URL</label>
-    <input type="text" id="dscUrl" placeholder="https://discord.com/api/webhooks/..."/>
+    <div class="frow"><label>Geração</label><input id="cmGen" placeholder="Ex: 8ª"/></div>
   </div>
   <div class="frow">
-    <label>Seu nome no Discord (opcional)</label>
-    <input type="text" id="dscNome" placeholder="Como vai aparecer nas rolagens"/>
+    <label>Link da Ficha</label>
+    <input id="cmLink" placeholder="https://...#vtm=..."/>
   </div>
+  <div class="frow"><label>Anotações do Mestre</label><textarea id="cmNotes" rows="3"></textarea></div>
   <div class="modal-btns">
-    <button class="btn btn-prim" onclick="salvarDiscord()">Salvar</button>
-    <button class="btn btn-sec" onclick="testarDiscord()">Testar conexão</button>
-    <button class="btn btn-sec" onclick="closeDiscord()">Cancelar</button>
+    <button class="btn btn-prim" onclick="saveChar()">Salvar</button>
+    <button class="btn btn-sec" onclick="closeCharMod()">Cancelar</button>
   </div>
 </div>
 </div>
 
-<!-- LINK TOKEN MODAL -->
-<div class="ov" id="linkTokenMod" style="display:none;" onclick="closeLinkTokenBg(event)">
-<div class="modal" style="max-width:460px;">
-  <button class="modal-close" onclick="closeLinkToken()">✕</button>
-  <h3>🔗 Link da Ficha</h3>
-  <p style="font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:14px;">
-    Gera um link de <strong style="color:var(--tx);">somente leitura</strong> da ficha. Quem abrir só consegue visualizar — para editar precisa do PIN do mestre.
-  </p>
-  <div style="background:var(--card);border:1px solid var(--br);border-radius:2px;padding:12px 14px;margin-bottom:14px;">
-    <div class="frow" style="margin:0;">
-      <label>PIN do Mestre <span style="color:var(--tx3);font-style:italic;font-family:'Crimson Text',serif;">(opcional — protege a edição)</span></label>
-      <input type="password" id="pinMestreInput" placeholder="deixe vazio para link sem proteção" class="pin-input" style="font-size:14px;letter-spacing:3px;margin-top:6px;"/>
-    </div>
-    <div style="font-size:11px;color:var(--tx3);line-height:1.5;margin-top:8px;">
-      O PIN fica como hash no link — ninguém consegue descobrir o valor original.
-    </div>
+<!-- SALA MODAL -->
+<div class="ov" id="salaMod" style="display:none;" onclick="if(event.target.id==='salaMod')closeSalaMod()">
+<div class="modal" style="max-width:500px;">
+  <button class="modal-close" onclick="closeSalaMod()">✕</button>
+  <h3>⚔ Nova Sala de Combate</h3>
+  <div class="frow"><label>Nome da Sessão</label><input id="smNome" placeholder="Ex: Noite de São Bartolomeu"/></div>
+  <div class="g2">
+    <div class="frow"><label>PIN da Sala</label><input id="smPin" type="password" placeholder="••••"/></div>
+    <div class="frow"><label>Confirmar PIN</label><input id="smPinC" type="password" placeholder="••••"/></div>
   </div>
   <div class="frow">
-    <label>Link gerado</label>
-    <input type="text" id="linkTokenUrl" readonly style="font-size:10px;font-family:monospace;color:var(--gd2);"/>
+    <label>Personagens nesta cena</label>
+    <div id="smCharList" style="background:var(--card);border:1px solid var(--br2);border-radius:2px;padding:8px;max-height:160px;overflow-y:auto;">
+      <div style="font-size:12px;color:var(--tx3);font-style:italic;">Nenhum personagem cadastrado.</div>
+    </div>
   </div>
+  <div class="info-warn">🩸 O código é gerado automaticamente. Os personagens selecionados entram como participantes.</div>
   <div class="modal-btns">
-    <button class="btn btn-prim" id="gerarLinkBtn" onclick="gerarLinkToken()">⚙ Gerar e Copiar Link</button>
-    <button class="btn btn-prim" id="copiarLinkBtn" onclick="copiarLinkToken()" style="display:none;">📋 Copiar de novo</button>
-    <button class="btn btn-sec" onclick="closeLinkToken()">Fechar</button>
+    <button class="btn btn-prim" onclick="criarSala()">Criar Sala</button>
+    <button class="btn btn-sec" onclick="closeSalaMod()">Cancelar</button>
   </div>
 </div>
 </div>
 
-<!-- PIN ENTRY MODAL -->
-<div class="ov" id="pinMod" style="display:none;" onclick="closePinModBg(event)">
-<div class="modal" style="max-width:360px;">
-  <button class="modal-close" onclick="closePinMod()">✕</button>
-  <h3>🔐 PIN do Mestre</h3>
-  <p id="pinModDesc" style="font-size:13px;color:var(--tx2);line-height:1.5;margin-bottom:16px;">Digite o PIN para habilitar a edição desta ficha.</p>
-  <div class="frow">
-    <label>PIN</label>
-    <input type="password" id="pinEntryInput" class="pin-input" placeholder="••••" onkeydown="if(event.key==='Enter')submitPin()"/>
-  </div>
-  <div id="pinError" style="display:none;background:rgba(139,0,0,.15);border:1px solid var(--blood);border-radius:2px;padding:7px 10px;font-size:12px;color:#f88;margin-bottom:8px;">PIN incorreto.</div>
-  <div class="modal-btns">
-    <button class="btn btn-prim" onclick="submitPin()">Entrar</button>
-    <button class="btn btn-sec" onclick="closePinMod()">Cancelar</button>
+<!-- CÓDIGO MODAL -->
+<div class="ov" id="codeMod" style="display:none;" onclick="if(event.target.id==='codeMod')closeCodeMod()">
+<div class="modal" style="max-width:400px;text-align:center;">
+  <button class="modal-close" onclick="closeCodeMod()">✕</button>
+  <h3 style="text-align:center;">✓ Sala Criada!</h3>
+  <div class="code-box"><span class="code-big" id="codeDisplay">—</span><div class="code-hint" id="codeNome"></div></div>
+  <div class="modal-btns" style="justify-content:center;">
+    <button class="btn btn-prim" onclick="copiarCodigo()">📋 Copiar Código</button>
+    <button class="btn btn-sec" onclick="closeCodeMod()">Fechar</button>
   </div>
 </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ═══════════════════════════════════════════════════════════
-// STATIC DEFINITIONS
-// ═══════════════════════════════════════════════════════════
-const ATTRS=[
-  {k:'forca',l:'Força',g:'fisico'},{k:'destreza',l:'Destreza',g:'fisico'},{k:'vigor',l:'Vigor',g:'fisico'},
-  {k:'carisma',l:'Carisma',g:'social'},{k:'manipulacao',l:'Manipulação',g:'social'},{k:'aparencia',l:'Aparência',g:'social'},
-  {k:'percepcao',l:'Percepção',g:'mental'},{k:'inteligencia',l:'Inteligência',g:'mental'},{k:'raciocinio',l:'Raciocínio',g:'mental'}
-];
-const SKILLS=[
-  {k:'prontidao',l:'Prontidão',g:'t'},{k:'esportes',l:'Esportes',g:'t'},{k:'presciencia',l:'Presciência',g:'t'},
-  {k:'briga',l:'Briga',g:'t'},{k:'empatia',l:'Empatia',g:'t'},{k:'expressao',l:'Expressão',g:'t'},
-  {k:'intimidacao',l:'Intimidação',g:'t'},{k:'lideranca',l:'Liderança',g:'t'},{k:'manha',l:'Manha',g:'t'},
-  {k:'labia',l:'Lábia',g:'t'},{k:'sk_t_c',l:'',g:'t'},
-  {k:'animais',l:'Empatia c/Animais',g:'p'},{k:'oficios',l:'Ofícios',g:'p'},{k:'conducao',l:'Condução',g:'p'},
-  {k:'etiqueta',l:'Etiqueta',g:'p'},{k:'armas_fogo',l:'Armas de Fogo',g:'p'},{k:'furto',l:'Furto',g:'p'},
-  {k:'armas_brancas',l:'Armas Brancas',g:'p'},{k:'performance',l:'Performance',g:'p'},
-  {k:'furtividade',l:'Furtividade',g:'p'},{k:'sobrevivencia',l:'Sobrevivência',g:'p'},{k:'sk_p_c',l:'',g:'p'},
-  {k:'academicos',l:'Acadêmicos',g:'c'},{k:'computador',l:'Computador',g:'c'},{k:'financas',l:'Finanças',g:'c'},
-  {k:'investigacao',l:'Investigação',g:'c'},{k:'direito',l:'Direito',g:'c'},{k:'medicina',l:'Medicina',g:'c'},
-  {k:'ocultismo',l:'Ocultismo',g:'c'},{k:'politica',l:'Política',g:'c'},{k:'ciencia',l:'Ciência',g:'c'},
-  {k:'tecnologia',l:'Tecnologia',g:'c'},{k:'sk_c_c',l:'',g:'c'}
-];
-const VIRTUES=[{k:'consciencia',l:'Consciência / Convicção'},{k:'autocontrole',l:'Autocontrole / Instinto'},{k:'coragem',l:'Coragem'}];
-const HL=[{l:'Escoriado',p:'—'},{l:'Machucado',p:'-1'},{l:'Ferido',p:'-1'},{l:'Ferido Grav.',p:'-2'},{l:'Espancado',p:'-2'},{l:'Aleijado',p:'-5'},{l:'Incapacitado',p:'Inc'}];
-const DUR={inst:'Instantâneo',turno:'1 Turno',cena:'1 Cena',perm:'Permanente'};
-const FISICOS=['forca','destreza','vigor'];
-const PL={forca:'Força',destreza:'Destreza',vigor:'Vigor'};
+// ═══════════════════════════════════════
+// ESTADO
+// ═══════════════════════════════════════
+let chars=[], salas=[], nci=1;
+let currentNav='personagens';
+let editCharId=null;
+let SB=null, realtimeSub=null, eventosSub=null;
+let _codigoAtual='';
+let _eventosLog={}; // salaId → eventos[]
 
-// ═══════════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════════
-function defaultData(){
-  const a={},s={},sn={};
-  ATTRS.forEach(x=>a[x.k]=1);
-  SKILLS.forEach(x=>{s[x.k]=0;if(!x.l)sn[x.k]='';});
-  return {
-    info:{name:'',clan:'',gen:'',nature:'',demeanor:'',haven:'',concept:'',player:''},
-    attrs:a, skills:s, skillNames:sn,
-    virtues:{consciencia:1,autocontrole:1,coragem:1},
-    willpower:5, humanidade:7, bloodMax:10,
-    disciplines:[], merits:[], flaws:[], backgrounds:[],
-    ndi:1, npi:1, nbi:1,
-    preludio:'', versao:0
-  };
-}
+const HL=['Escoriado','Machucado','Ferido','Ferido G.','Espancado','Aleijado','Incap.'];
+const DMG_LABEL={contusao:'Contusão',letal:'Letal',agravado:'Agravado',mental:'Mental',none:'Nenhum'};
+const DMG_COLOR={contusao:'#f88',letal:'#f88',agravado:'#f44',mental:'#aaf',none:'var(--tx3)'};
 
-let D=defaultData();
-const CS={turn:1,scene:1,boosts:{forca:0,destreza:0,vigor:0},
-  health:[null,null,null,null,null,null,null],wpTemp:5,bloodCur:10,effects:[],eid:1};
+const SQL_TABLES=`-- Execute no SQL Editor do Supabase
 
-// ═══════════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS salas_combate (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  codigo TEXT UNIQUE NOT NULL,
+  nome TEXT NOT NULL,
+  pin_hash TEXT NOT NULL,
+  ativa BOOLEAN DEFAULT true,
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS participantes_sala (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  sala_id UUID REFERENCES salas_combate(id) ON DELETE CASCADE,
+  char_name TEXT,
+  player_name TEXT,
+  is_npc BOOLEAN DEFAULT false,
+  online BOOLEAN DEFAULT false,
+  blood_cur INT DEFAULT 10,
+  blood_max INT DEFAULT 10,
+  health JSONB DEFAULT '[]',
+  wp_temp INT DEFAULT 5,
+  willpower INT DEFAULT 5,
+  atualizado_em TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS eventos_combate (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  sala_id UUID REFERENCES salas_combate(id) ON DELETE CASCADE,
+  origem_id UUID,
+  alvo_id UUID,
+  tipo TEXT,
+  dados JSONB,
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE participantes_sala REPLICA IDENTITY FULL;
+ALTER TABLE eventos_combate REPLICA IDENTITY FULL;
+
+ALTER TABLE salas_combate ENABLE ROW LEVEL SECURITY;
+ALTER TABLE participantes_sala ENABLE ROW LEVEL SECURITY;
+ALTER TABLE eventos_combate ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "pub" ON salas_combate FOR ALL USING (true);
+CREATE POLICY "pub" ON participantes_sala FOR ALL USING (true);
+CREATE POLICY "pub" ON eventos_combate FOR ALL USING (true);`;
+
+// ═══════════════════════════════════════
 // STORAGE
-// ═══════════════════════════════════════════════════════════
-let _st;
-function save(){
-  clearTimeout(_st);
-  _st=setTimeout(()=>{
-    try{localStorage.setItem('vtm2',JSON.stringify(D));flash();}catch(e){}
-  },400);
-}
-function load(){
-  try{const r=localStorage.getItem('vtm2');if(r){const p=JSON.parse(r);D=Object.assign(defaultData(),p);}}
-  catch(e){}
-  if(Array.isArray(D.disciplines)){
-    let maxId=0;
-    D.disciplines.forEach((d,i)=>{
-      if(!d.id||typeof d.id!=='number'){d.id=i+1;}
-      if(d.id>maxId) maxId=d.id;
+// ═══════════════════════════════════════
+function saveLocal(){try{localStorage.setItem('vtm_admin_v3',JSON.stringify({chars,salas,nci}));}catch(e){}}
+function loadLocal(){try{const r=localStorage.getItem('vtm_admin_v3');if(r){const p=JSON.parse(r);chars=p.chars||[];salas=p.salas||[];nci=p.nci||1;}}catch(e){}}
+
+// ═══════════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════════
+async function sha256(str){const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+
+function initSupabase(){
+  const url=localStorage.getItem('admin_sb_url');
+  const key=localStorage.getItem('admin_sb_key');
+  if(!url||!key||!window.supabase){setSbPill('off');return;}
+  try{
+    SB=window.supabase.createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
+    SB.from('salas_combate').select('id').limit(1).then(({error})=>{
+      if(error&&error.code!=='PGRST116'){setSbPill('err');SB=null;}
+      else{setSbPill('ok');syncSalasAtivas();}
     });
-    if(!D.ndi||D.ndi<=maxId) D.ndi=maxId+1;
-  }
-  if(!D.npi||typeof D.npi!=='number') D.npi=Date.now();
-  if(!Array.isArray(D.backgrounds)){
-    const ANTECEDENTES_PADRAO=['Aliados','Contatos','Domínio','Fama','Gregário','Influência','Mentor','Recursos','Séquito','Status'];
-    D.backgrounds=ANTECEDENTES_PADRAO.map((nome,i)=>({id:i+1,nome,valor:0}));
-    D.nbi=D.backgrounds.length+1;
-  }
-  if(!D.nbi) D.nbi=(D.backgrounds.length||0)+1;
+  }catch(e){setSbPill('err');}
 }
-function flash(){
-  const b=document.getElementById('saveBadge');
-  b.textContent='✓ salvo';b.className='ok';
-  setTimeout(()=>{b.textContent='salvo ◦';b.className='';},1400);
+function setSbPill(s){
+  const el=document.getElementById('sbPill');
+  if(s==='ok'){el.className='sb-pill sb-ok';el.textContent='⬥ Supabase: online';}
+  else if(s==='err'){el.className='sb-pill sb-err';el.textContent='⬥ Supabase: erro';}
+  else{el.className='sb-pill sb-off';el.textContent='⬥ Supabase: desconectado';}
 }
 
-// ═══════════════════════════════════════════════════════════
-// TABS
-// ═══════════════════════════════════════════════════════════
-function goTab(id,btn){
-  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('pane-'+id).classList.add('on');
-  btn.classList.add('on');
-  if(id==='combate'){renderCombat();initHashVerif();}
-  if(id==='qualdef'){renderTraits();calcBonusPoints();}
-  if(id==='antecedentes') renderBackgrounds();
-  if(id==='preludio'){const el=document.getElementById('preludioText');if(el&&typeof D.preludio==='string')el.value=D.preludio;}
+// ═══════════════════════════════════════
+// NAVEGAÇÃO
+// ═══════════════════════════════════════
+function navTo(section){
+  currentNav=section;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const ni=document.getElementById('nav-'+section);if(ni)ni.classList.add('active');
+  if(section==='personagens') renderPersonagens();
+  else if(section==='salas') renderSalas();
+  else if(section==='config') renderConfig();
+  else if(section==='historico') renderHistorico();
 }
 
-// ═══════════════════════════════════════════════════════════
-// DOTS
-// ═══════════════════════════════════════════════════════════
-function mkDots(val,max,onChange,vt=false){
-  const w=document.createElement('div');w.className='dots';
-  for(let i=1;i<=max;i++){
+// ═══════════════════════════════════════
+// PERSONAGENS
+// ═══════════════════════════════════════
+function renderPersonagens(){
+  document.getElementById('mainTitle').textContent='⬥ Personagens da Crônica';
+  document.getElementById('mainActions').innerHTML=`<button class="btn btn-add" onclick="openAddChar()">+ Novo Personagem</button>`;
+  document.getElementById('charBadge').textContent=chars.length;
+  const el=document.getElementById('mainBody');
+  if(!chars.length){el.innerHTML=`<div class="empty">🩸 Nenhum personagem cadastrado.<br>Clique em "+ Novo Personagem".</div>`;return;}
+  el.innerHTML='';
+  chars.forEach(c=>{
+    const d=document.createElement('div');d.className='char-item';
+    d.innerHTML=`
+      <div class="char-avatar">🩸</div>
+      <div class="char-info">
+        <div class="char-name">${c.name||'Sem nome'}</div>
+        <div class="char-meta">👤 ${c.player||'—'} &nbsp;·&nbsp; 🦇 ${c.clan||'—'} ${c.gen?'· '+c.gen:''}</div>
+        ${c.notes?`<div class="char-note">${c.notes}</div>`:''}
+      </div>
+      <div class="char-btns">
+        ${c.link?`<button class="btn btn-ghost" onclick="window.open(decodeURIComponent('${encodeURIComponent(c.link)}'),'_blank')">↗</button>
+        <button class="btn btn-ghost" onclick="navigator.clipboard.writeText(decodeURIComponent('${encodeURIComponent(c.link)}')).then(()=>flash('📋 Copiado!'))">📋</button>`:''}
+        <button class="btn btn-ghost" onclick="openEditChar(${c.id})">✎</button>
+        <button class="btn btn-del" onclick="deleteChar(${c.id})">✕</button>
+      </div>`;
+    el.appendChild(d);
+  });
+}
+function openAddChar(){editCharId=null;document.getElementById('charModTitle').textContent='Novo Personagem';['cmName','cmPlayer','cmLink','cmNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('cmClan').value='';document.getElementById('cmGen').value='';document.getElementById('charMod').style.display='flex';setTimeout(()=>document.getElementById('cmName').focus(),100);}
+function openEditChar(id){const c=chars.find(x=>x.id===id);if(!c)return;editCharId=id;document.getElementById('charModTitle').textContent='Editar Personagem';document.getElementById('cmName').value=c.name||'';document.getElementById('cmPlayer').value=c.player||'';document.getElementById('cmClan').value=c.clan||'';document.getElementById('cmGen').value=c.gen||'';document.getElementById('cmLink').value=c.link||'';document.getElementById('cmNotes').value=c.notes||'';document.getElementById('charMod').style.display='flex';}
+function closeCharMod(){document.getElementById('charMod').style.display='none';}
+function saveChar(){const name=document.getElementById('cmName').value.trim();if(!name){alert('Nome obrigatório');return;}const data={id:editCharId||nci++,name,player:document.getElementById('cmPlayer').value.trim(),clan:document.getElementById('cmClan').value,gen:document.getElementById('cmGen').value.trim(),link:document.getElementById('cmLink').value.trim(),notes:document.getElementById('cmNotes').value.trim()};if(editCharId){const i=chars.findIndex(x=>x.id===editCharId);if(i>=0)chars[i]=data;}else chars.push(data);saveLocal();closeCharMod();renderPersonagens();}
+function deleteChar(id){if(!confirm('Remover?'))return;chars=chars.filter(x=>x.id!==id);saveLocal();renderPersonagens();}
+
+// ═══════════════════════════════════════
+// SALAS
+// ═══════════════════════════════════════
+function gerarCodigo(){const p=['SOMBRA','SANGUE','TREVAS','NOITE','CINZAS','FERRO','LAMA','FUMO','LUTO','BRUMA'];return p[Math.floor(Math.random()*p.length)]+'-'+(Math.floor(Math.random()*90)+10);}
+
+function renderSalas(){
+  document.getElementById('mainTitle').textContent='⚔ Salas de Combate';
+  document.getElementById('mainActions').innerHTML=`<button class="btn btn-add" onclick="openNovaSala()">+ Nova Sala</button>`;
+  const el=document.getElementById('mainBody');
+  const ativas=salas.filter(s=>s.ativa);
+  const enc=salas.filter(s=>!s.ativa);
+  if(!salas.length){el.innerHTML=`<div class="empty">⚔ Nenhuma sala criada.</div>`;return;}
+  el.innerHTML='';
+  [...ativas,...enc].forEach(s=>{
     const d=document.createElement('div');
-    d.className='dot'+(i<=val?' on':'')+(vt?' vt':'');
-    d.onclick=()=>{onChange(i===val?i-1:i);};
-    w.appendChild(d);
-  }
-  return w;
+    d.className='sala-item'+(s.ativa?' ativa':'');
+    const parts=s.participantes||[];
+    const online=parts.filter(p=>p.online||p.is_npc).length;
+    const ts=new Date(s.criadoEm).toLocaleString('pt-BR');
+    d.innerHTML=`
+      <div class="sala-top">
+        <div><div class="sala-code">${s.codigo}</div><div class="sala-info"><div class="sala-nome">${s.nome}</div><div class="sala-ts">${ts}</div></div></div>
+        <span class="sala-badge ${s.ativa?'sb-ativa':'sb-enc'}">${s.ativa?'● ATIVA':'○ ENCERRADA'}</span>
+      </div>
+      <div class="sala-btns">
+        ${s.ativa?`
+          <button class="btn btn-ghost" onclick="copiarCodigoDireto('${s.codigo}','${s.nome}')">📋 Copiar Código</button>
+          <button class="btn btn-add" onclick="adicionarNPC('${s.sbId||s.id}')">+ NPC</button>
+          <button class="btn btn-warn" onclick="encerrarSala(${s.id})">Encerrar</button>
+        `:`<button class="btn btn-del" onclick="deletarSala(${s.id})">✕ Remover</button>`}
+      </div>
+      ${parts.length||s.ativa?`
+        <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px;">
+          Participantes — ${online} online / ${parts.length} total
+        </div>
+        <div class="sala-split">
+          <div class="part-list" id="parts-${s.id}"></div>
+          <div class="combat-panel">
+            <div class="cp-hd">
+              <span class="cp-title">⚔ Combate Ao Vivo</span>
+              <div style="display:flex;gap:5px;align-items:center;">
+                <button class="ia-btn" onclick="analisarTurno('${s.sbId||s.id}','${s.id}')">⚡ Processar Turno</button>
+                <button style="background:none;border:none;color:var(--tx3);font-size:10px;cursor:pointer;" onclick="limparLog('${s.sbId||s.id}')">limpar</button>
+              </div>
+            </div>
+            <div class="cp-body" id="log-${s.sbId||s.id}">
+              <div class="aguardando"><span>● Aguardando ações...</span></div>
+            </div>
+          </div>
+        </div>
+      `:`<div class="aguardando"><span>● Aguardando jogadores...</span></div>`}`;
+    el.appendChild(d);
+    if(parts.length) renderParticipantes(s);
+    if(s.ativa) carregarEventos(s.sbId||s.id);
+  });
+  const badge=document.getElementById('salaBadge');
+  if(ativas.length){badge.style.display='block';badge.textContent=ativas.length;}
+  else badge.style.display='none';
+  atualizarSidebarSala();
 }
 
-// ═══════════════════════════════════════════════════════════
-// FICHA RENDER
-// ═══════════════════════════════════════════════════════════
-function renderFicha(){
-  document.getElementById('charName').value=D.info.name||'';
-  const ig=document.getElementById('infoGrid');ig.innerHTML='';
-  const IF=[{k:'clan',l:'Clã'},{k:'gen',l:'Geração'},{k:'nature',l:'Natureza'},{k:'demeanor',l:'Comportamento'},{k:'haven',l:'Refúgio'},{k:'concept',l:'Conceito'},{k:'player',l:'Jogador'}];
-  IF.forEach(f=>{
-    const w=document.createElement('div');w.className='if-wrap';
-    w.innerHTML=`<div class="if-label">${f.l}</div>`;
-    const inp=document.createElement('input');inp.className='if-input';inp.value=D.info[f.k]||'';
-    inp.oninput=()=>{D.info[f.k]=inp.value;save();};
-    w.appendChild(inp);ig.appendChild(w);
-  });
-  [{id:'fisicos',g:'fisico'},{id:'social',g:'social'},{id:'mentais',g:'mental'}].forEach(({id,g})=>{
-    const el=document.getElementById(id);el.innerHTML='';
-    ATTRS.filter(a=>a.g===g).forEach(a=>{
-      const row=document.createElement('div');row.className='row';
-      const lbl=document.createElement('div');lbl.className='row-label';lbl.textContent=a.l;
-      const dots=mkDots(D.attrs[a.k],5,v=>{D.attrs[a.k]=v;save();renderFicha();});
-      const val=document.createElement('div');val.className='row-val';val.textContent=D.attrs[a.k];
-      row.appendChild(lbl);row.appendChild(dots);row.appendChild(val);el.appendChild(row);
-    });
-  });
-  [{id:'talentos',g:'t'},{id:'pericias',g:'p'},{id:'conhecimentos',g:'c'}].forEach(({id,g})=>{
-    const el=document.getElementById(id);el.innerHTML='';
-    SKILLS.filter(s=>s.g===g).forEach(s=>{
-      const row=document.createElement('div');row.className='row';
-      if(!s.l){
-        const inp=document.createElement('input');inp.className='row-label editable';
-        inp.placeholder='Especialização...';inp.value=D.skillNames[s.k]||'';
-        inp.oninput=()=>{D.skillNames[s.k]=inp.value;save();};
-        row.appendChild(inp);
-      } else {
-        const lbl=document.createElement('div');lbl.className='row-label';lbl.textContent=s.l;row.appendChild(lbl);
-      }
-      const dots=mkDots(D.skills[s.k],5,v=>{D.skills[s.k]=v;save();renderFicha();});
-      const val=document.createElement('div');val.className='row-val';val.textContent=D.skills[s.k];
-      row.appendChild(dots);row.appendChild(val);el.appendChild(row);
-    });
-  });
-  const ve=document.getElementById('virtudes');ve.innerHTML='';
-  VIRTUES.forEach(v=>{
-    const row=document.createElement('div');row.className='row';
-    const lbl=document.createElement('div');lbl.className='row-label';lbl.textContent=v.l;
-    const dots=mkDots(D.virtues[v.k],5,nv=>{D.virtues[v.k]=nv;save();renderFicha();},true);
-    const val=document.createElement('div');val.className='row-val';val.textContent=D.virtues[v.k];
-    row.appendChild(lbl);row.appendChild(dots);row.appendChild(val);ve.appendChild(row);
-  });
-  const pe=document.getElementById('pools');pe.innerHTML='';
-  [{label:'Força de Vontade',key:'willpower',max:10},{label:'Humanidade / Caminho',key:'humanidade',max:10},{label:'Sangue máximo',key:'bloodMax',max:20}].forEach(({label,key,max})=>{
-    const row=document.createElement('div');row.className='row';
-    const lbl=document.createElement('div');lbl.className='row-label';lbl.textContent=label;
-    const dots=mkDots(D[key],max,v=>{D[key]=v;save();renderFicha();});
-    const val=document.createElement('div');val.className='row-val';val.textContent=D[key];
-    row.appendChild(lbl);row.appendChild(dots);row.appendChild(val);pe.appendChild(row);
-  });
-}
+// PARTICIPANT CARDS VISUAIS
+function renderParticipantes(sala){
+  const el=document.getElementById('parts-'+sala.id);if(!el)return;
+  const parts=sala.participantes||[];
+  if(!parts.length){el.innerHTML='<div class="aguardando"><span>● Aguardando...</span></div>';return;}
+  el.innerHTML='';
+  parts.forEach(p=>{
+    const sbId=p.sbId||p.id;
+    const salaDbId=sala.sbId||sala.id;
+    const blood=p.blood_cur??p.bloodCur??10;
+    const bloodMax=p.blood_max??p.bloodMax??10;
+    const health=Array.isArray(p.health)?p.health:[null,null,null,null,null,null,null];
+    const wpTemp=p.wp_temp??p.wpTemp??5;
+    const wpMax=p.willpower??5;
+    const isOnline=p.online||p.is_npc;
 
-// ═══════════════════════════════════════════════════════════
-// DISCIPLINES
-// ═══════════════════════════════════════════════════════════
-let _pwDiscId=null,_pwId=null;
-
-function renderDiscs(){
-  const dl=document.getElementById('discList');dl.innerHTML='';
-  const emp=document.getElementById('emptyDisc');
-  if(!D.disciplines.length){emp.style.display='block';return;}
-  emp.style.display='none';
-  const seen=new Set();
-  D.disciplines.forEach((d,i)=>{
-    if(!d.id||seen.has(d.id)){d.id=Math.max(0,...D.disciplines.map(x=>x.id||0))+1+i;}
-    seen.add(d.id);
-  });
-  D.disciplines.forEach(disc=>{
-    const item=document.createElement('div');item.className='disc-item';
-    const hd=document.createElement('div');hd.className='disc-hd';
-    const ni=document.createElement('input');ni.className='disc-name-in';ni.value=disc.name;ni.placeholder='Nome da Disciplina';
-    ni.onclick=e=>e.stopPropagation();
-    ni.oninput=()=>{disc.name=ni.value;save();};
-    const dd=document.createElement('div');dd.className='ddots';
-    for(let i=1;i<=5;i++){const d=document.createElement('div');d.className='ddot'+(i<=disc.dots?' on':'');d.onclick=e=>{e.stopPropagation();disc.dots=i===disc.dots?i-1:i;save();renderDiscs();};dd.appendChild(d);}
-    const addBtn=document.createElement('button');addBtn.className='btn btn-add';addBtn.textContent='+ Poder';
-    addBtn.onclick=e=>{e.stopPropagation();openNewPW(disc.id);};
-    const delBtn=document.createElement('button');delBtn.className='btn btn-del';delBtn.textContent='✕';
-    delBtn.onclick=e=>{e.stopPropagation();if(confirm('Remover disciplina "'+disc.name+'"?')){D.disciplines=D.disciplines.filter(d=>d.id!==disc.id);save();renderDiscs();}};
-    hd.appendChild(ni);hd.appendChild(dd);hd.appendChild(addBtn);hd.appendChild(delBtn);
-    item.appendChild(hd);
-    if(disc.powers&&disc.powers.length){
-      disc.powers.forEach(p=>{
-        const pr=document.createElement('div');pr.className='prow';
-        const pool=fmtPool(p);
-        const hasPool=!p.passive&&p.attr&&p.attr!=='';
-        pr.innerHTML=`<span class="plvl">${Array.from({length:5},(_,i)=>`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:1px solid var(--blood);margin-right:2px;${i<p.level?'background:var(--blood);':''}"></span>`).join('')}</span><span class="pname">${p.name||'—'}</span><span class="ppool">${hasPool?pool:'<span style="color:#f99;font-size:10px;">⚙ pool não config.</span>'}</span>`;
-        if(p.passive) pr.innerHTML+=`<span class="tag t-pas">Passivo</span>`;
-        else{
-          if(!hasPool) pr.innerHTML+=`<span class="tag t-cfg">⚙ config.</span>`;
-          if(p.bb>0) pr.innerHTML+=`<span class="tag t-blood">🩸${p.bb}</span>`;
-          if(p.bw>0) pr.innerHTML+=`<span class="tag t-wp">💙${p.bw}</span>`;
-          if(!p.bb&&!p.bw) pr.innerHTML+=`<span class="tag t-free">Grátis</span>`;
-          pr.innerHTML+=`<span class="tag t-cena">${DUR[p.dur]||p.dur}</span>`;
-        }
-        const eb=document.createElement('button');eb.className='btn btn-ghost';eb.textContent='Editar';eb.onclick=()=>openEditPW(disc.id,p.id);
-        const db=document.createElement('button');db.className='btn btn-del';db.textContent='✕';
-        db.onclick=()=>{if(confirm('Remover poder?')){disc.powers=disc.powers.filter(x=>x.id!==p.id);save();renderDiscs();}};
-        pr.appendChild(eb);pr.appendChild(db);
-        item.appendChild(pr);
-      });
-    } else {
-      const np=document.createElement('div');np.style.cssText='padding:10px 14px;font-size:12px;color:var(--tx3);font-style:italic;';np.textContent='Nenhum poder cadastrado.';item.appendChild(np);
+    let bloodHtml='<div class="blood-dots">';
+    for(let i=0;i<bloodMax;i++){
+      bloodHtml+=`<div class="bdot${i<blood?' on':''}" onclick="editarStatus('${salaDbId}','${sbId}','blood',${i<blood?-1:1})"></div>`;
     }
-    dl.appendChild(item);
-  });
-}
+    bloodHtml+='</div>';
 
-function fmtPool(p){
-  if(p.passive) return 'Passivo';
-  if(!p.attr||p.attr==='') return '— pool não configurada';
-  const a=ATTRS.find(x=>x.k===p.attr)||{l:p.attr==='fdv'?'FdV':''};
-  const s=SKILLS.find(x=>x.k===p.skill);
-  const sn=s?(s.l||D.skillNames[s.k]||'?'):'';
-  let r=a.l||(p.attr==='fdv'?'FdV':'');
-  if(sn) r+=' + '+sn;
-  if(p.diff){const ds=p.diff==='fdv'?'Dif.FdV':(p.diff==='var'?'Dif.Var':'Dif.'+p.diff);r+=` (${ds})`;}
-  return r||'—';
-}
-
-function newDisc(){
-  if(!D.ndi||typeof D.ndi!=='number') D.ndi=1;
-  const existing=D.disciplines.map(d=>d.id||0);
-  while(existing.includes(D.ndi)) D.ndi++;
-  D.disciplines.push({id:D.ndi++,name:'',dots:1,powers:[]});
-  save();renderDiscs();
-}
-
-function buildAttrSel(sel){
-  sel.innerHTML='<option value="">— Nenhum —</option>';
-  [['fisico','── Físicos ──'],['social','── Social ──'],['mental','── Mentais ──']].forEach(([g,lbl])=>{
-    const og=document.createElement('optgroup');og.label=lbl;
-    ATTRS.filter(a=>a.g===g).forEach(a=>{const o=document.createElement('option');o.value=a.k;o.textContent=a.l;og.appendChild(o);});
-    sel.appendChild(og);
-  });
-  const o=document.createElement('option');o.value='fdv';o.textContent='Força de Vontade';sel.appendChild(o);
-}
-function buildSkillSel(sel){
-  sel.innerHTML='<option value="">— Nenhuma —</option>';
-  [['t','── Talentos ──'],['p','── Perícias ──'],['c','── Conhecimentos ──']].forEach(([g,lbl])=>{
-    const og=document.createElement('optgroup');og.label=lbl;
-    SKILLS.filter(s=>s.g===g).forEach(s=>{
-      const o=document.createElement('option');o.value=s.k;
-      o.textContent=s.l||(D.skillNames[s.k]||'Especialização');
-      og.appendChild(o);
+    let healthHtml='<div class="health-boxes">';
+    const HL_LABELS=['Esc.','Mac.','Fer.','F.G.','Esp.','Alei.','Incap.'];
+    health.forEach((h,i)=>{
+      const cls=h==='b'?' ba':h==='l'?' le':h==='a'?' ag':'';
+      const ch=h==='b'?'/':h==='l'?'✕':h==='a'?'*':'';
+      healthHtml+=`<div class="hbox-adm${cls}" title="${HL_LABELS[i]}" onclick="cicloDano('${salaDbId}','${sbId}',${i})">${ch}</div>`;
     });
-    sel.appendChild(og);
+    healthHtml+='</div>';
+
+    let wpHtml='<div class="wp-dots">';
+    for(let i=0;i<wpMax;i++){wpHtml+=`<div class="wdot${i<wpTemp?' on':''}" onclick="editarStatus('${salaDbId}','${sbId}','wp',${i<wpTemp?-1:1})"></div>`;}
+    wpHtml+='</div>';
+
+    const healthStatus=healthLabel(health);
+
+    const card=document.createElement('div');
+    card.className='part-card'+(isOnline?' online':' offline');
+    card.innerHTML=`
+      <div class="part-header">
+        <div class="pdot ${isOnline?'on':'off'}"></div>
+        <div class="part-name">${p.char_name||p.charName||'?'}</div>
+        ${p.is_npc?'<span class="part-npc-badge">NPC</span>':''}
+        <div class="part-player" style="margin-left:auto;">· ${p.player_name||p.playerName||''}</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">🩸 Sangue — ${blood}/${bloodMax}</div>
+        ${bloodHtml}
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">❤ Vitalidade — ${healthStatus}</div>
+        ${healthHtml}
+        <div style="display:flex;gap:6px;margin-top:4px;font-size:10px;color:var(--tx3);">
+          <span>/ Contusão</span><span>✕ Letal</span><span>* Agravado</span>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">💙 Força de Vontade — ${wpTemp}/${wpMax}</div>
+        ${wpHtml}
+      </div>
+      <div class="part-actions">
+        <button class="act-btn" onclick="curarVitalidade('${salaDbId}','${sbId}')">❤ Curar</button>
+        <button class="act-btn" onclick="editarStatus('${salaDbId}','${sbId}','blood',1)">🩸+</button>
+        <button class="act-btn" onclick="editarStatus('${salaDbId}','${sbId}','blood',-1)">🩸−</button>
+        <button class="act-btn" onclick="editarStatus('${salaDbId}','${sbId}','wp',1)">FdV+</button>
+        <button class="act-btn" onclick="editarStatus('${salaDbId}','${sbId}','wp',-1)">FdV−</button>
+        <button class="act-btn del" onclick="removerParticipante('${salaDbId}','${sbId}')">✕ Remover</button>
+      </div>`;
+    el.appendChild(card);
   });
 }
 
-function openNewPW(discId){
-  _pwDiscId=discId;_pwId=null;
-  document.getElementById('pwModTitle').textContent='Novo Poder';
-  ['pmName','pmDesc'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('pmLvl').value='1';
-  document.getElementById('pmBB').value='0';document.getElementById('pmBW').value='0';
-  document.getElementById('pmDur').value='inst';document.getElementById('pmDiff').value='6';
-  document.getElementById('pmPas').checked=false;
-  buildAttrSel(document.getElementById('pmAttr'));
-  buildSkillSel(document.getElementById('pmSkill'));
-  document.getElementById('pwMod').style.display='flex';
-}
-function openEditPW(discId,pwId){
-  _pwDiscId=discId;_pwId=pwId;
-  const disc=D.disciplines.find(d=>d.id===discId);
-  const p=disc&&disc.powers.find(x=>x.id===pwId);
-  if(!p) return;
-  document.getElementById('pwModTitle').textContent='Editar Poder';
-  document.getElementById('pmName').value=p.name||'';
-  document.getElementById('pmLvl').value=p.level||1;
-  document.getElementById('pmDesc').value=p.desc||'';
-  document.getElementById('pmBB').value=p.bb||0;document.getElementById('pmBW').value=p.bw||0;
-  document.getElementById('pmDur').value=p.dur||'inst';document.getElementById('pmDiff').value=p.diff||6;
-  document.getElementById('pmPas').checked=!!p.passive;
-  buildAttrSel(document.getElementById('pmAttr'));
-  buildSkillSel(document.getElementById('pmSkill'));
-  document.getElementById('pmAttr').value=p.attr||'';
-  document.getElementById('pmSkill').value=p.skill||'';
-  document.getElementById('pwMod').style.display='flex';
-}
-function closePW(){document.getElementById('pwMod').style.display='none';}
-function closePWBg(e){if(e.target.id==='pwMod')closePW();}
-function savePW(){
-  const name=document.getElementById('pmName').value.trim();
-  if(!name){alert('Nome obrigatório');return;}
-  const disc=D.disciplines.find(d=>d.id===_pwDiscId);if(!disc) return;
-  const pwr={
-    id:_pwId||D.npi++,name,level:+document.getElementById('pmLvl').value,
-    desc:document.getElementById('pmDesc').value,
-    attr:document.getElementById('pmAttr').value,
-    skill:document.getElementById('pmSkill').value,
-    diff:+document.getElementById('pmDiff').value,
-    bb:+document.getElementById('pmBB').value,bw:+document.getElementById('pmBW').value,
-    dur:document.getElementById('pmDur').value,
-    passive:document.getElementById('pmPas').checked
-  };
-  if(_pwId){const i=disc.powers.findIndex(x=>x.id===_pwId);if(i>=0)disc.powers[i]=pwr;}
-  else disc.powers.push(pwr);
-  save();closePW();renderDiscs();
+function healthLabel(health){
+  if(!health||!Array.isArray(health))return'Ileso';
+  const w=health.findIndex(h=>h!==null);
+  if(w===-1)return'✓ Ileso';
+  return['Escoriado','Machucado','Ferido','Ferido G.','Espancado','Aleijado','Incapacitado'][w]||'Ileso';
 }
 
-// ═══════════════════════════════════════════════════════════
-// COMBAT
-// ═══════════════════════════════════════════════════════════
-function getAttrV(k){
-  if(k==='fdv') return D.willpower;
-  return (D.attrs[k]||0)+(CS.boosts[k]||0);
-}
-function calcDice(p){
-  let d=0;
-  if(p.attr) d+=getAttrV(p.attr);
-  if(p.skill) d+=D.skills[p.skill]||0;
-  return Math.max(0,d);
-}
-function poolStr(p){
-  if(p.passive) return 'Passivo';
-  if(!p.attr||p.attr==='') return '⚙ pool não configurada';
-  const dice=calcDice(p);
-  return fmtPool(p)+(dice?` → ${dice} dados`:'');
+// EDITAR STATUS
+async function editarStatus(salaId,partId,tipo,delta){
+  if(!SB)return;
+  const{data:p}=await SB.from('participantes_sala').select('*').eq('id',partId).single();
+  if(!p)return;
+  let update={};
+  if(tipo==='blood'){update.blood_cur=Math.max(0,Math.min(p.blood_max||10,(p.blood_cur||0)+delta));}
+  else if(tipo==='wp'){update.wp_temp=Math.max(0,Math.min(p.willpower||5,(p.wp_temp||0)+delta));}
+  await SB.from('participantes_sala').update(update).eq('id',partId);
 }
 
-function renderCombat(){
-  CS.bloodCur=Math.min(CS.bloodCur,D.bloodMax);
-  CS.wpTemp=Math.min(CS.wpTemp,D.willpower);
-  renderBoosts();renderEffects();renderCombatDiscs();renderBlood();renderHealth();renderWP();
+async function cicloDano(salaId,partId,idx){
+  if(!SB)return;
+  const{data:p}=await SB.from('participantes_sala').select('*').eq('id',partId).single();
+  if(!p)return;
+  const health=[...(p.health||[null,null,null,null,null,null,null])];
+  const ciclo={'null':'b',b:'l',l:'a',a:null};
+  health[idx]=ciclo[String(health[idx])];
+  await SB.from('participantes_sala').update({health}).eq('id',partId);
 }
 
-function renderBoosts(){
-  const g=document.getElementById('boostGrid');g.innerHTML='';
-  FISICOS.forEach(k=>{
-    const base=D.attrs[k]||1,boost=CS.boosts[k]||0,total=base+boost,canB=CS.bloodCur>0&&total<5;
-    const b=document.createElement('div');b.className='bblock';
-    b.innerHTML=`<div class="bblock-name">${PL[k]}</div>
-      <div class="bblock-num" style="color:${boost>0?'var(--bo)':'var(--gd)'}">${total}</div>
-      <div class="bblock-sub">${boost>0?`${base}+${boost}`:' '}</div>
-      <div class="bblock-dots">${Array.from({length:5},(_,i)=>`<div class="dot${i<base?' on':i<total?' on':''}${i>=base&&i<total?' style="background:var(--bo);border-color:var(--bo);"':''}"></div>`).join('')}</div>
-      <button class="bblock-btn" ${canB?'':'disabled'} onclick="boostAttr('${k}')">🩸 +1 ${PL[k]}</button>`;
-    g.appendChild(b);
+async function curarVitalidade(salaId,partId){
+  if(!SB)return;
+  const{data:p}=await SB.from('participantes_sala').select('*').eq('id',partId).single();
+  if(!p)return;
+  const health=[...(p.health||[null,null,null,null,null,null,null])];
+  for(const tipo of['a','l','b']){const idx=health.lastIndexOf(tipo);if(idx>=0){health[idx]=null;break;}}
+  await SB.from('participantes_sala').update({health}).eq('id',partId);
+}
+
+async function removerParticipante(salaId,partId){
+  if(!SB||!confirm('Remover?'))return;
+  await SB.from('participantes_sala').delete().eq('id',partId);
+}
+
+async function adicionarNPC(salaId){
+  const nome=prompt('Nome do NPC:');if(!nome)return;
+  const sangue=parseInt(prompt('Sangue máximo:','10'))||10;
+  if(!SB)return;
+  await SB.from('participantes_sala').insert({
+    sala_id:salaId,char_name:nome,player_name:'Mestre',
+    online:true,is_npc:true,blood_cur:sangue,blood_max:sangue,
+    health:[null,null,null,null,null,null,null],wp_temp:5,willpower:5
   });
 }
-function boostAttr(k){
-  if(!guardCombat())return;
-  if(CS.bloodCur<=0){lg('<span class="lw">⚠ Sem sangue!</span>');return;}
-  CS.bloodCur--;CS.boosts[k]=(CS.boosts[k]||0)+1;
-  renderBoosts();renderBlood();
-  lg(`<span class="lo">${PL[k]}</span> bombado <span class="lc">-1 sangue</span> → total ${(D.attrs[k]||0)+CS.boosts[k]}`);
-}
-function resetBoosts(){if(!guardCombat())return;CS.boosts={forca:0,destreza:0,vigor:0};renderBoosts();lg('<span class="lw">Boosts resetados.</span>');}
 
-function addFx(name,dur,disc){
-  if(dur==='inst'||dur==='perm') return;
-  CS.effects.push({id:CS.eid++,name,dur,disc,sc:CS.scene,t:CS.turn});renderEffects();
+// LOG DE COMBATE AO VIVO
+async function carregarEventos(salaId){
+  if(!SB||!salaId)return;
+  const{data}=await SB.from('eventos_combate')
+    .select('*').eq('sala_id',salaId)
+    .order('criado_em',{ascending:false}).limit(20);
+  if(!data)return;
+  _eventosLog[salaId]=(data||[]).reverse();
+  renderLog(salaId);
 }
-function rmFx(id){if(!guardCombat())return;CS.effects=CS.effects.filter(e=>e.id!==id);renderEffects();}
-function renderEffects(){
-  const el=document.getElementById('effList');el.innerHTML='';
-  document.getElementById('effCnt').textContent=CS.effects.length;
-  if(!CS.effects.length){el.innerHTML='<div style="font-size:12px;color:var(--tx3);font-style:italic;text-align:center;padding:6px 0;">Nenhum efeito ativo.</div>';return;}
-  CS.effects.forEach(e=>{
-    const d=document.createElement('div');d.className='eff-item';
-    d.innerHTML=`<div class="eff-name"><span style="color:var(--gd);font-size:11px;">${e.disc}</span> — ${e.name}</div>
-      <div class="eff-dur" style="color:${e.dur==='cena'?'#aaf':'#fca'}">${e.dur==='cena'?'Cena '+e.sc:'T'+e.t}</div>
-      <button class="eff-rm" onclick="rmFx(${e.id})">✕</button>`;
+
+function adicionarEvento(salaId,evento){
+  if(!_eventosLog[salaId])_eventosLog[salaId]=[];
+  const idx=_eventosLog[salaId].findIndex(e=>e.id===evento.id);
+  if(idx>=0)_eventosLog[salaId][idx]=evento;
+  else _eventosLog[salaId].push(evento);
+  renderLog(salaId);
+  enviarEventoDiscord(evento);
+}
+
+function renderLog(salaId){
+  const el=document.getElementById('log-'+salaId);if(!el)return;
+  const eventos=_eventosLog[salaId]||[];
+  if(!eventos.length){el.innerHTML='<div class="aguardando"><span>● Aguardando ações...</span></div>';return;}
+
+  el.innerHTML=[...eventos].reverse().map(ev=>{
+    const d=ev.dados||{};
+    const ts=new Date(ev.criado_em).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const estado=d.estado||'pendente';
+    const stClass=estado==='resolvido'?'ev-st-r':estado==='cancelado'?'ev-st-c':estado==='ativado'?'ev-st-r':'ev-st-p';
+    const stLabel=estado==='resolvido'?'✓ resolvido':estado==='cancelado'?'✕ cancelado':estado==='ativado'?'✓ ativado':'● pendente';
+    const dmgLabel=DMG_LABEL[d.dmgType]||d.dmgType||'—';
+    const dmgClass=d.dmgType==='agravado'?'et-dmg-ag':d.dmgType==='mental'?'et-dmg-m':d.dmgType&&d.dmgType!=='none'?'et-dmg':'';
+
+    let dadosHtml='';
+    if(d.dados_rolados&&d.dados_rolados.length){
+      const diff=d.dificuldade||6;
+      dadosHtml=`<div style="display:flex;flex-wrap:wrap;gap:3px;margin:5px 0;">
+        ${d.dados_rolados.map(r=>{
+          const cls=r===1?'b':r>=diff?'s':'f';
+          const color=r===1?'#f44':r>=diff?'#8c8':'var(--tx3)';
+          return `<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:3px;font-family:'Cinzel',serif;font-size:11px;font-weight:700;border:1.5px solid ${r===1?'var(--blood)':r>=diff?'var(--gr)':'var(--br)'};background:${r===1?'rgba(139,0,0,.2)':r>=diff?'rgba(58,138,62,.2)':'transparent'};color:${color}">${r}</span>`;
+        }).join('')}
+      </div>`;
+    }
+
+    const sucLabel = d.botch ? '💀 Falha Crítica' : d.sucessos===null ? '—' : d.sucessos===0 ? 'Falha' : `${d.sucessos} sucesso${d.sucessos!==1?'s':''}`;
+    const sucColor = d.botch ? '#f44' : d.sucessos===0||d.sucessos===null ? 'var(--tx3)' : '#8c8';
+
+    return `<div class="ev-card ${estado}" style="margin-bottom:8px;">
+      <div class="ev-header">
+        <span class="ev-ts">${ts}</span>
+        <span class="ev-status ${stClass}">${stLabel}</span>
+      </div>
+      <div class="ev-disc" style="color:var(--blood2);font-size:10px;">${d.disciplina||''} · Nível ${d.nivel||'?'}</div>
+      <div class="ev-poder" style="font-family:'Cinzel',serif;font-size:14px;color:var(--gd);margin:2px 0;">${d.poder||'?'}</div>
+      <div class="ev-atacante" style="font-size:12px;color:var(--tx2);margin-bottom:4px;">por <strong style="color:var(--tx);">${d.atacante||'?'}</strong></div>
+      ${d.desc?`<div class="ev-desc" style="font-size:11px;color:var(--tx2);line-height:1.5;margin:5px 0;padding:6px 8px;background:var(--surf);border-radius:2px;border-left:2px solid var(--br2);max-height:80px;overflow-y:auto;">${d.desc}</div>`:''}
+      ${d.dados_rolados?`<div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;color:var(--tx3);margin-top:5px;">DADOS — ${d.pool||d.dados_rolados.length} dados (Dif. ${d.dificuldade||6})</div>${dadosHtml}`:''}
+      <div class="ev-tags" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">
+        <span style="font-family:'Cinzel',serif;font-size:10px;padding:2px 8px;border-radius:2px;border:1px solid ${sucColor==='#8c8'?'var(--gr)':sucColor==='#f44'?'var(--blood)':'var(--br)'};color:${sucColor};background:${sucColor==='#8c8'?'rgba(58,138,62,.15)':sucColor==='#f44'?'rgba(139,0,0,.15)':'transparent'}">${sucLabel}</span>
+        ${d.dmgType&&d.dmgType!=='none'?`<span class="ev-tag ${dmgClass}">${dmgLabel}</span>`:''}
+        ${d.tipoDefesa?`<span class="ev-tag et-def">${d.tipoDefesa} · abs. ${d.absorvidos??0}</span>`:''}
+      </div>
+      ${estado==='pendente'?`<button class="ev-cancel-btn" onclick="cancelarEvento('${ev.id}','${salaId}')">✕ Cancelar ação</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+async function cancelarEvento(eventoId,salaId){
+  if(!SB||!confirm('Cancelar esta ação? Ajuste o status manualmente.'))return;
+  const ev=(_eventosLog[salaId]||[]).find(e=>e.id===eventoId);
+  if(!ev)return;
+  await SB.from('eventos_combate').update({dados:{...ev.dados,estado:'cancelado'}}).eq('id',eventoId);
+  flash('✕ Cancelado — ajuste o status manualmente.');
+}
+
+async function limparLog(salaId){
+  if(!confirm('Limpar o log?'))return;
+  if(SB)await SB.from('eventos_combate').delete().eq('sala_id',salaId);
+  _eventosLog[salaId]=[];
+  renderLog(salaId);
+}
+
+// DISCORD
+async function enviarEventoDiscord(ev){
+  const url=localStorage.getItem('admin_discord_url');if(!url)return;
+  const d=ev.dados||{};
+  if(!d.atacante||!d.poder)return;
+  const estado=d.estado||'pendente';
+  const cor=estado==='resolvido'?5763719:estado==='cancelado'?9803157:15548997;
+  const dmgLabel=DMG_LABEL[d.dmgType]||'?';
+  const fields=[
+    {name:'Atacante',value:d.atacante,inline:true},
+    {name:'Alvo',value:d.alvo||'?',inline:true},
+    {name:'Disciplina',value:`${d.disciplina||'?'} · Nível ${d.nivel||'?'}`,inline:true},
+    {name:'Sucessos',value:`${d.sucessos??0} sucesso${d.sucessos!==1?'s':''}`,inline:true},
+    {name:'Tipo de Dano',value:dmgLabel,inline:true},
+    {name:'Estado',value:estado==='resolvido'?'✓ Resolvido':estado==='cancelado'?'✕ Cancelado':'● Pendente',inline:true},
+  ];
+  if(d.tipoDefesa) fields.push({name:'Defesa',value:`${d.tipoDefesa} · absorveu ${d.absorvidos??0}`,inline:true});
+  if(d.danoFinal!=null) fields.push({name:'Dano Final',value:`${d.danoFinal}`,inline:true});
+  if(d.desc) fields.push({name:'Descrição do Poder',value:d.desc.slice(0,300),inline:false});
+  try{
+    await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({username:'Painel do Mestre',embeds:[{
+        title:`⚔ ${d.poder}`,color:cor,fields,
+        footer:{text:new Date(ev.criado_em||Date.now()).toLocaleTimeString('pt-BR')}
+      }]})
+    });
+  }catch(e){console.warn('Discord falhou:',e);}
+}
+
+// REALTIME
+function subscribeToSala(sala){
+  if(!SB||!sala.sbId)return;
+  if(realtimeSub)SB.removeChannel(realtimeSub);
+  realtimeSub=SB.channel('sala-'+sala.sbId)
+    .on('postgres_changes',{event:'*',schema:'public',table:'participantes_sala',filter:`sala_id=eq.${sala.sbId}`},
+      payload=>handlePartEvent(sala,payload))
+    .on('postgres_changes',{event:'*',schema:'public',table:'eventos_combate',filter:`sala_id=eq.${sala.sbId}`},
+      payload=>handleEventoEvent(sala.sbId,payload))
+    .subscribe();
+}
+
+function handlePartEvent(sala,payload){
+  const{eventType,new:nw,old}=payload;
+  if(!sala.participantes)sala.participantes=[];
+  if(eventType==='INSERT'||eventType==='UPDATE'){
+    const idx=sala.participantes.findIndex(p=>(p.sbId||p.id)===nw.id);
+    const mapped={sbId:nw.id,char_name:nw.char_name,player_name:nw.player_name,
+      is_npc:nw.is_npc,online:nw.online,
+      blood_cur:nw.blood_cur,blood_max:nw.blood_max,
+      health:nw.health,wp_temp:nw.wp_temp,willpower:nw.willpower};
+    if(idx>=0)sala.participantes[idx]=mapped;
+    else sala.participantes.push(mapped);
+  }else if(eventType==='DELETE'){
+    sala.participantes=sala.participantes.filter(p=>(p.sbId||p.id)!==old.id);
+  }
+  saveLocal();
+  if(currentNav==='salas') renderSalas();
+  atualizarSidebarSala();
+}
+
+function handleEventoEvent(salaId,payload){
+  if(payload.eventType==='INSERT'||payload.eventType==='UPDATE'){
+    adicionarEvento(salaId,payload.new);
+  }
+}
+
+async function syncSalasAtivas(){
+  if(!SB)return;
+  const{data,error}=await SB.from('salas_combate').select('*, participantes_sala(*)').eq('ativa',true);
+  if(error||!data)return;
+  data.forEach(row=>{
+    let local=salas.find(s=>s.sbId===row.id);
+    if(!local){local={id:row.id,sbId:row.id,codigo:row.codigo,nome:row.nome,pinHash:row.pin_hash,ativa:row.ativa,criadoEm:row.criado_em,participantes:[]};salas.push(local);}
+    local.participantes=(row.participantes_sala||[]).map(p=>({sbId:p.id,char_name:p.char_name,player_name:p.player_name,is_npc:p.is_npc,online:p.online,blood_cur:p.blood_cur,blood_max:p.blood_max,health:p.health,wp_temp:p.wp_temp,willpower:p.willpower}));
+    subscribeToSala(local);
+  });
+  saveLocal();
+  if(currentNav==='salas')renderSalas();
+  atualizarSidebarSala();
+}
+
+// CRIAR SALA
+function openNovaSala(){
+  if(!SB){if(confirm('Supabase não configurado.\nAbrir configurações?'))navTo('config');return;}
+  document.getElementById('smNome').value='';document.getElementById('smPin').value='';document.getElementById('smPinC').value='';
+  const listEl=document.getElementById('smCharList');
+  if(!chars.length){listEl.innerHTML='<div style="font-size:12px;color:var(--tx3);font-style:italic;">Nenhum personagem cadastrado.</div>';}
+  else{listEl.innerHTML=chars.map(c=>`<label style="display:flex;align-items:center;gap:8px;padding:6px 8px;cursor:pointer;border-bottom:1px solid rgba(58,42,26,.2);font-size:13px;"><input type="checkbox" value="${c.id}" style="width:auto;accent-color:var(--blood);" checked/><div><div style="font-family:'Cinzel',serif;font-size:11px;color:var(--gd);">${c.name}</div><div style="font-size:11px;color:var(--tx3);">👤 ${c.player||'—'}</div></div></label>`).join('');}
+  document.getElementById('salaMod').style.display='flex';
+  setTimeout(()=>document.getElementById('smNome').focus(),100);
+}
+function closeSalaMod(){document.getElementById('salaMod').style.display='none';}
+
+async function criarSala(){
+  const nome=document.getElementById('smNome').value.trim();
+  const pin=document.getElementById('smPin').value;
+  const pinC=document.getElementById('smPinC').value;
+  if(!nome){alert('Nome obrigatório');return;}
+  if(!pin){alert('PIN obrigatório');return;}
+  if(pin!==pinC){alert('PINs não conferem');return;}
+  const codigo=gerarCodigo();
+  const pinHash=await sha256(pin);
+  const{data,error}=await SB.from('salas_combate').insert({codigo,nome,pin_hash:pinHash,ativa:true}).select().single();
+  if(error){alert('Erro: '+error.message);return;}
+  const checkboxes=document.getElementById('smCharList').querySelectorAll('input[type=checkbox]:checked');
+  const selecionados=chars.filter(c=>Array.from(checkboxes).map(cb=>parseInt(cb.value)).includes(c.id));
+  if(selecionados.length){
+    await SB.from('participantes_sala').insert(selecionados.map(c=>({sala_id:data.id,char_name:c.name,player_name:c.player||'',online:false,blood_cur:10,blood_max:10,health:[null,null,null,null,null,null,null],wp_temp:5,willpower:5})));
+  }
+  const sala={id:data.id,sbId:data.id,codigo,nome,pinHash,ativa:true,criadoEm:data.criado_em,participantes:[]};
+  salas.push(sala);saveLocal();closeSalaMod();
+  subscribeToSala(sala);await syncSalasAtivas();
+  _codigoAtual=codigo;document.getElementById('codeDisplay').textContent=codigo;document.getElementById('codeNome').textContent=nome;document.getElementById('codeMod').style.display='flex';
+  renderSalas();
+}
+
+function copiarCodigo(){navigator.clipboard.writeText(_codigoAtual).then(()=>flash('📋 Código copiado!'));}
+function copiarCodigoDireto(codigo,nome){const txt=`⚔ Sala: ${nome}\nCódigo: ${codigo}\n\nAbra sua ficha → Entrar na Sala`;navigator.clipboard.writeText(txt).then(()=>flash('📋 Copiado!')).catch(()=>alert(txt));}
+function closeCodeMod(){document.getElementById('codeMod').style.display='none';}
+
+function encerrarSala(id){
+  if(!confirm('Encerrar esta sala?'))return;
+  const s=salas.find(x=>x.id===id);if(!s)return;
+  s.ativa=false;
+  if(SB&&s.sbId)SB.from('salas_combate').update({ativa:false}).eq('id',s.sbId);
+  if(realtimeSub){SB?.removeChannel(realtimeSub);realtimeSub=null;}
+  saveLocal();renderSalas();
+}
+function deletarSala(id){if(!confirm('Remover?'))return;salas=salas.filter(x=>x.id!==id);saveLocal();renderSalas();}
+
+function atualizarSidebarSala(){
+  const ativa=salas.find(s=>s.ativa);
+  const sec=document.getElementById('sidebarSala');
+  if(!ativa){sec.style.display='none';return;}
+  sec.style.display='block';
+  document.getElementById('sbSalaCodigo').textContent=ativa.codigo;
+  document.getElementById('sbSalaNome').textContent=ativa.nome;
+  const online=(ativa.participantes||[]).filter(p=>p.online||p.is_npc).length;
+  const total=(ativa.participantes||[]).length;
+  document.getElementById('sbSalaInfo').innerHTML=`<span class="nav-badge bg-green">● ${online} online</span><span class="nav-badge bg-gold">${total} total</span>`;
+}
+
+// ═══════════════════════════════════════
+// SISTEMA DETERMINÍSTICO — ATUALIZAÇÃO AUTOMÁTICA
+// ═══════════════════════════════════════
+
+// Mapeamento de custos por poder (Sangue e FdV)
+const CUSTOS = {
+  // Força de Vontade
+  'força de vontade': { sangue: 0, fdv: -1 },
+  'fdv': { sangue: 0, fdv: -1 },
+  'willpower': { sangue: 0, fdv: -1 },
+  
+  // Disciplinas de Sangue
+  'sangue': { sangue: -1, fdv: 0 },
+  'poder de sangue': { sangue: -1, fdv: 0 },
+  'blood': { sangue: -1, fdv: 0 },
+  
+  // Celeridade (gasto de sangue ao ativar)
+  'celeridade': { sangue: -1, fdv: 0 },
+  'cuerpo veloz': { sangue: -1, fdv: 0 },
+  
+  // Potência / Vigor (sem custo)
+  'potência': { sangue: 0, fdv: 0 },
+  'potencia': { sangue: 0, fdv: 0 },
+  'vigor': { sangue: 0, fdv: 0 },
+  'fortitude': { sangue: 0, fdv: 0 },
+  
+  // Auspícios
+  'auspícios': { sangue: 0, fdv: -1 },
+  'auspicios': { sangue: 0, fdv: -1 },
+  
+  // Ofuscação
+  'ofuscação': { sangue: 0, fdv: 0 },
+  'ofuscacao': { sangue: 0, fdv: 0 },
+  
+  // Presença
+  'presença': { sangue: 0, fdv: -1 },
+  'presenca': { sangue: 0, fdv: -1 },
+  
+  // Dominação
+  'dominação': { sangue: 0, fdv: -1 },
+  'dominacao': { sangue: 0, fdv: -1 },
+  
+  // Metamorfose
+  'metamorfose': { sangue: -1, fdv: 0 },
+  
+  // Necromancia
+  'necromancia': { sangue: 0, fdv: -1 },
+  
+  // Thanatosis
+  'thanatosis': { sangue: -1, fdv: 0 },
+  
+  // Quietus
+  'quietus': { sangue: -1, fdv: 0 },
+};
+
+function obterCusto(poder) {
+  if (!poder) return { sangue: 0, fdv: 0 };
+  const poderLower = poder.toLowerCase().trim();
+  for (const [chave, custo] of Object.entries(CUSTOS)) {
+    if (poderLower.includes(chave)) {
+      return custo;
+    }
+  }
+  return { sangue: 0, fdv: 0 }; // sem custo por padrão
+}
+
+// Dano por tipo de poder (pré-configurado)
+const DANO_PADRAO = {
+  'sangue': { tipo: 'b', base: 1 },
+  'força de vontade': { tipo: 'mental', base: 1 },
+  'celeridade': { tipo: 'l', base: 1 },
+  'potência': { tipo: 'a', base: 2 },
+  'potencia': { tipo: 'a', base: 2 },
+  'vigor': { tipo: 'a', base: 2 },
+  'fortitude': { tipo: 'none', base: 0 },
+  'ofuscação': { tipo: 'l', base: 1 },
+  'presença': { tipo: 'mental', base: 1 },
+  'dominação': { tipo: 'mental', base: 1 },
+  'thanatosis': { tipo: 'a', base: 2 },
+  'quietus': { tipo: 'l', base: 2 },
+  'metamorfose': { tipo: 'a', base: 2 },
+};
+
+function obterDanoPoder(poder, sucessos = 1) {
+  if (!poder) return { tipo: 'b', valor: 0 };
+  const poderLower = poder.toLowerCase().trim();
+  for (const [chave, dano] of Object.entries(DANO_PADRAO)) {
+    if (poderLower.includes(chave)) {
+      return { tipo: dano.tipo, valor: dano.base + (sucessos > 1 ? Math.floor(sucessos / 2) : 0) };
+    }
+  }
+  return { tipo: 'b', valor: Math.max(0, sucessos || 0) };
+}
+
+async function aplicarAcaoAutomatica(evento, salaId, sala) {
+  if (!SB) return;
+  const dados = evento.dados || {};
+  const atacante = dados.atacante;
+  const poder = dados.poder;
+  
+  if (!atacante) return;
+  
+  // Encontra o personagem atacante
+  const personagem = (sala?.participantes || []).find(p => {
+    const nome = (p.char_name || p.charName || '').toLowerCase();
+    return nome.includes(atacante.toLowerCase()) || atacante.toLowerCase().includes(nome);
+  });
+  
+  if (!personagem) {
+    console.warn('Personagem não encontrado:', atacante);
+    return;
+  }
+  
+  const personagemId = personagem.sbId || personagem.id;
+  
+  // 1. Aplica custo de Sangue e FdV
+  const custo = obterCusto(poder);
+  if (custo.sangue !== 0) {
+    await editarStatus(salaId, personagemId, 'blood', custo.sangue);
+    flash(`🩸 ${atacante} gastou ${Math.abs(custo.sangue)} sangue para usar ${poder || 'um poder'}`);
+  }
+  if (custo.fdv !== 0) {
+    await editarStatus(salaId, personagemId, 'wp', custo.fdv);
+    flash(`💙 ${atacante} gastou ${Math.abs(custo.fdv)} Força de Vontade`);
+  }
+  
+  // 2. Aplica dano se existir alvo
+  const alvo = dados.alvo;
+  if (alvo && dados.sucessos && dados.sucessos > 0) {
+    const personagemAlvo = (sala?.participantes || []).find(p => {
+      const nome = (p.char_name || p.charName || '').toLowerCase();
+      return nome.includes(alvo.toLowerCase()) || alvo.toLowerCase().includes(nome);
+    });
+    
+    if (personagemAlvo) {
+      const alvoId = personagemAlvo.sbId || personagemAlvo.id;
+      const danoInfo = obterDanoPoder(poder, dados.sucessos);
+      
+      if (danoInfo.valor > 0 && danoInfo.tipo !== 'none') {
+        const { data: p } = await SB.from('participantes_sala').select('*').eq('id', alvoId).single();
+        if (p) {
+          const health = [...(p.health || [null, null, null, null, null, null, null])];
+          let aplicados = 0;
+          for (let i = 0; i < health.length && aplicados < danoInfo.valor; i++) {
+            if (health[i] === null) {
+              health[i] = danoInfo.tipo;
+              aplicados++;
+            } else if (danoInfo.tipo === 'a' && health[i] !== 'a') {
+              health[i] = 'a';
+              aplicados++;
+            } else if (danoInfo.tipo === 'l' && health[i] === 'b') {
+              health[i] = 'l';
+              aplicados++;
+            }
+          }
+          await SB.from('participantes_sala').update({ health }).eq('id', alvoId);
+          flash(`⚔️ ${alvo} sofreu ${aplicados} de dano ${DMG_LABEL[danoInfo.tipo] || danoInfo.tipo}`);
+        }
+      }
+    }
+  }
+}
+
+// Função principal de análise de turno (sem Gemini)
+async function analisarTurno(salaId, localId) {
+  const sala = salas.find(s => (s.sbId || s.id) === salaId || String(s.id) === String(localId));
+  const eventos = _eventosLog[salaId] || [];
+  
+  if (!eventos.length) {
+    flash('⚠ Nenhum evento para processar.');
+    return;
+  }
+  
+  const logEl = document.getElementById('log-' + salaId);
+  const orig = logEl ? logEl.innerHTML : '';
+  if (logEl) logEl.innerHTML = `<div style="text-align:center;padding:30px;color:var(--gd2);font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;">⚡ Processando turno e aplicando custos...</div>`;
+  
+  // Aplica as ações automaticamente
+  for (const evento of eventos) {
+    if (evento.dados?.estado !== 'cancelado') {
+      await aplicarAcaoAutomatica(evento, salaId, sala);
+    }
+  }
+  
+  // Atualiza a interface
+  await syncSalasAtivas();
+  if (currentNav === 'salas') renderSalas();
+  
+  // Gera narrativa simples
+  const resumo = eventos.map(ev => {
+    const d = ev.dados || {};
+    return `${d.atacante || 'Alguém'} usou ${d.poder || 'um poder'}${d.alvo ? ` em ${d.alvo}` : ''}`;
+  }).join('; ');
+  
+  const narrativa = `⚔ Turno processado. ${resumo || 'Nenhuma ação registrada.'}`;
+  
+  // Salva no histórico
+  const turno = historico.length + 1;
+  historico.unshift({
+    id: Date.now(),
+    salaId,
+    turno,
+    ts: new Date().toISOString(),
+    narrativa: narrativa,
+    acoes: eventos.map(ev => ({
+      personagem: ev.dados?.atacante || '?',
+      tipo: 'ação',
+      descricao: `${ev.dados?.poder || 'ação'}${ev.dados?.alvo ? ` contra ${ev.dados.alvo}` : ''}`
+    }))
+  });
+  localStorage.setItem('vtm_historico', JSON.stringify(historico.slice(0, 100)));
+  const b = document.getElementById('histBadge');
+  if (b) { b.style.display = 'block'; b.textContent = historico.length; }
+  
+  if (logEl) {
+    logEl.innerHTML = `<div class="ia-narrativa">⚡ ${narrativa}</div>${orig}`;
+  }
+  flash('⚡ Turno processado! Custos e danos aplicados automaticamente.');
+}
+
+// ═══════════════════════════════════════
+// CONFIG (sem Gemini)
+// ═══════════════════════════════════════
+function renderConfig(){
+  document.getElementById('mainTitle').textContent='⚙ Configurações';
+  document.getElementById('mainActions').innerHTML='';
+  const url=localStorage.getItem('admin_sb_url')||'';
+  const key=localStorage.getItem('admin_sb_key')||'';
+  const dsc=localStorage.getItem('admin_discord_url')||'';
+  
+  document.getElementById('mainBody').innerHTML=`
+    <div class="card">
+      <div class="card-hd"><span class="card-title">⬥ Supabase</span></div>
+      <div class="card-body">
+        <div class="frow"><label>URL do Projeto</label><input id="cfgUrl" value="${url}" placeholder="https://...supabase.co"/></div>
+        <div class="frow"><label>Publishable Key</label><textarea id="cfgKey" rows="2" style="font-family:monospace;font-size:11px;" placeholder="sb_publishable_...">${key}</textarea></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+          <button class="btn btn-prim" onclick="salvarConfig()">Salvar e Conectar</button>
+          <button class="btn btn-ghost" onclick="copiarSQL()">📋 Copiar SQL das Tabelas</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><span class="card-title">⬥ Discord Webhook</span></div>
+      <div class="card-body">
+        <div class="frow"><label>Webhook URL do Canal</label><input id="cfgDsc" value="${dsc}" placeholder="https://discord.com/api/webhooks/..."/></div>
+        <button class="btn btn-prim" onclick="salvarDiscord()">Salvar Webhook</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><span class="card-title">⬥ Regras do Sistema</span></div>
+      <div class="card-body">
+        <div class="info-warn" style="margin-bottom:0;">
+          <strong>⚡ Sistema Determinístico</strong><br>
+          • <strong>Força de Vontade</strong>: -1 FdV por uso<br>
+          • <strong>Poderes de Sangue</strong> (Celeridade, Metamorfose, Thanatosis, Quietus): -1 Sangue<br>
+          • <strong>Disciplinas Mentais</strong> (Presença, Dominação, Auspícios): -1 FdV<br>
+          • <strong>Potência/Vigor</strong>: sem custo, dano agravado<br>
+          • <strong>Dano</strong> aplicado automaticamente conforme sucessos<br><br>
+          Os custos e danos são aplicados automaticamente ao clicar em "Processar Turno".
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><span class="card-title">⬥ SQL — Tabelas</span><span style="font-size:11px;color:var(--tx3);font-style:italic;">Execute no Supabase SQL Editor</span></div>
+      <div class="card-body">
+        <pre class="sql-pre" onclick="copiarSQL()" title="Clique para copiar">${SQL_TABLES}</pre>
+        <div style="font-size:11px;color:var(--tx3);margin-top:6px;">Clique para copiar · Cole no SQL Editor e clique Run</div>
+      </div>
+    </div>`;
+}
+
+function salvarConfig(){
+  const url=document.getElementById('cfgUrl').value.trim();
+  const key=document.getElementById('cfgKey').value.trim();
+  if(!url||!key){alert('Preencha URL e Key');return;}
+  localStorage.setItem('admin_sb_url',url);localStorage.setItem('admin_sb_key',key);
+  SB=null;initSupabase();flash('⬥ Configurações salvas!');
+}
+
+function salvarDiscord(){
+  const url=document.getElementById('cfgDsc').value.trim();
+  localStorage.setItem('admin_discord_url',url);
+  flash('⬥ Discord salvo!');
+}
+function copiarSQL(){navigator.clipboard.writeText(SQL_TABLES).then(()=>flash('📋 SQL copiado!')).catch(()=>{});}
+
+// FLASH
+function flash(msg){
+  const el=document.getElementById('sbPill');
+  const orig=el.textContent,cls=el.className;
+  el.textContent=msg;el.className='sb-pill sb-ok';
+  setTimeout(()=>{el.textContent=orig;el.className=cls;},2000);
+}
+
+// HISTÓRICO
+let historico = [];
+function loadHistorico(){try{const r=localStorage.getItem('vtm_historico');if(r)historico=JSON.parse(r);}catch(e){}}
+function renderHistorico(){
+  document.getElementById('mainTitle').textContent='📜 Histórico de Turnos';
+  document.getElementById('mainActions').innerHTML=`<button class="btn btn-del" onclick="if(confirm('Limpar histórico?')){historico=[];localStorage.removeItem('vtm_historico');renderHistorico();}">Limpar</button>`;
+  const el=document.getElementById('mainBody');
+  if(!historico.length){el.innerHTML=`<div class="empty">📜 Nenhum turno processado ainda.<br>Use "⚡ Processar Turno" durante o combate.</div>`;return;}
+  el.innerHTML='';
+  historico.forEach(h=>{
+    const d=document.createElement('div');d.className='hist-item';
+    const ts=new Date(h.ts).toLocaleString('pt-BR');
+    d.innerHTML=`<div class="hist-turno">⬥ Turno ${h.turno||'?'} · ${ts}</div>
+      <div class="hist-narrativa">⚡ ${h.narrativa}</div>
+      ${(h.acoes||[]).map(a=>`<div class="ia-acao"><span class="ia-acao-tag" style="background:rgba(139,0,0,.15);border:1px solid var(--blood);color:#f99;">${a.personagem}</span> <span style="color:var(--tx2);font-size:11px;">${a.descricao||''}</span></div>`).join('')}`;
     el.appendChild(d);
   });
 }
 
-function renderCombatDiscs(){
-  const el=document.getElementById('combatDiscs');el.innerHTML='';
-  if(!D.disciplines.length){
-    el.innerHTML='<div style="text-align:center;color:var(--tx3);font-style:italic;padding:20px 0;font-size:13px;">Vá à aba Disciplinas para cadastrar seus poderes.</div>';
-    return;
-  }
-  const barC={1:'#4a1a1a',2:'var(--blood)',3:'var(--blood2)',4:'#e67e22',5:'#f39c12'};
-  D.disciplines.forEach(disc=>{
-    const block=document.createElement('div');block.className='card';block.style.marginBottom='10px';
-    const hd=document.createElement('div');hd.className='card-hd';
-    hd.innerHTML=`<span class="card-title">${disc.name}</span><div class="ddots">${Array.from({length:5},(_,i)=>`<div class="ddot${i<disc.dots?' on':''}"></div>`).join('')}</div>`;
-    block.appendChild(hd);
-    const pl=document.createElement('div');
-    (disc.powers||[]).forEach(p=>{
-      const hasPool=p.passive||(!(!p.attr||p.attr===''));
-      const c=document.createElement('div');c.className='pcard';
-      c.innerHTML=`<div class="pbar" style="background:${barC[p.level]||'var(--blood)'}"></div>
-        <div class="pcard-info">
-          <div class="pcard-name">${p.name}</div>
-          <div class="pcard-pool">${hasPool?poolStr(p):'<span style="color:#f99;">⚙ pool não configurada — clique para preencher</span>'}</div>
-        </div>
-        ${p.bb>0?`<span class="tag t-blood">🩸${p.bb}</span>`:''}
-        ${p.bw>0?`<span class="tag t-wp">💙${p.bw}</span>`:''}
-        <button class="use-btn${p.passive?' pas':(!hasPool?' cfg':'')}">${p.passive?'Ver':(!hasPool?'⚙ Config.':'Usar')}</button>`;
-      c.querySelector('.use-btn').onclick=(e)=>{e.stopPropagation();openCM(disc,p);};
-      pl.appendChild(c);
-    });
-    block.appendChild(pl);el.appendChild(block);
-  });
-}
-
-function chT(d){if(!guardCombat())return;CS.turn=Math.max(1,CS.turn+d);document.getElementById('tNum').textContent=CS.turn;if(d>0)lg(`┄┄ <span style="color:var(--gd2);font-family:'Cinzel',serif;">Turno ${CS.turn}</span> ┄┄`);}
-function advScene(){if(!guardCombat())return;
-  CS.scene++;CS.turn=1;
-  document.getElementById('sNum').textContent=CS.scene;
-  document.getElementById('tNum').textContent='1';
-  const exp=CS.effects.filter(e=>e.dur==='cena').map(e=>e.name);
-  CS.effects=CS.effects.filter(e=>e.dur!=='cena');
-  let hb=false;FISICOS.forEach(k=>{if(CS.boosts[k]>0){hb=true;CS.boosts[k]=0;}});
-  renderBoosts();renderEffects();
-  lg(`<span class="ls">┄┄ Cena ${CS.scene} ┄┄</span>`);
-  if(hb) lg('<span class="lw">⚠ Boosts expiraram.</span>');
-  if(exp.length) lg(`<span class="lw">⚠ Expirado: ${exp.join(', ')}</span>`);
-}
-
-function renderBlood(){
-  const g=document.getElementById('bpGrid');g.innerHTML='';
-  for(let i=0;i<D.bloodMax;i++){const d=document.createElement('div');d.className='bp'+(i<CS.bloodCur?' on':'');d.onclick=()=>i<CS.bloodCur?spBlood(1,true):gnBlood(1);g.appendChild(d);}
-  document.getElementById('bpCnt').textContent=`${CS.bloodCur}/${D.bloodMax}`;
-}
-function spBlood(n,doLog){if(!guardCombat())return;if(CS.bloodCur<=0){lg('<span class="lw">⚠ Sem sangue!</span>');return;}CS.bloodCur=Math.max(0,CS.bloodCur-n);renderBlood();renderBoosts();if(doLog)lg(`<span class="lc">-${n} sangue</span> (${CS.bloodCur} rest.)`);}
-function gnBlood(n){if(!guardCombat())return;CS.bloodCur=Math.min(D.bloodMax,CS.bloodCur+n);renderBlood();renderBoosts();lg(`<span class="lo">+${n} sangue</span>`);}
-
-function renderHealth(){
-  const el=document.getElementById('hRows');el.innerHTML='';
-  HL.forEach((h,i)=>{
-    const dmg=CS.health[i];
-    const cls=dmg==='b'?'ba':dmg==='l'?'le':dmg==='a'?'ag':'';
-    const ch=dmg==='b'?'/':dmg==='l'?'✕':dmg==='a'?'*':'';
-    const row=document.createElement('div');row.className='health-row';
-    row.innerHTML=`<div class="hlbl">${h.l}</div><div class="hpen">${h.p}</div><div class="hbox ${cls}" onclick="cycleH(${i})">${ch}</div>`;
-    el.appendChild(row);
-  });
-  const w=CS.health.findIndex(h=>h!==null);
-  const st=document.getElementById('hStat');
-  const sl=['Escoriado','Machucado','Ferido','Ferido Grav.','Espancado','Aleijado','Incapacitado'];
-  if(w===-1){st.textContent='Ileso';st.style.color='var(--gr)';}
-  else if(w>=6){st.textContent='INCAPACITADO';st.style.color='#f44';}
-  else{st.textContent=sl[w];st.style.color=w>4?'#f88':w>2?'#fa5':'var(--tx2)';}
-}
-function cycleH(i){
-  if(!guardCombat())return;
-  const c={'null':'b',b:'l',l:'a',a:null};CS.health[i]=c[String(CS.health[i])];renderHealth();
-  const t={b:'Contusão',l:'Letal',a:'Agravado',null:'Curado'};
-  lg(`${HL[i].l}: <span class="lc">${t[String(CS.health[i])]||'Curado'}</span>`);
-}
-
-function renderWP(){
-  CS.wpTemp=Math.min(CS.wpTemp,D.willpower);
-  const pe=document.getElementById('wpPerm');pe.innerHTML='';
-  for(let i=0;i<10;i++){const d=document.createElement('div');d.className='wpdot'+(i<D.willpower?' on':'');d.style.opacity=i<D.willpower?'1':'0.2';pe.appendChild(d);}
-  const te=document.getElementById('wpTemp');te.innerHTML='';
-  for(let i=0;i<D.willpower;i++){const d=document.createElement('div');d.className='wpt'+(i<CS.wpTemp?' on':'');d.onclick=()=>i<CS.wpTemp?spWP():gnWP();te.appendChild(d);}
-  document.getElementById('wpCnt').textContent=`${CS.wpTemp}/${D.willpower}`;
-}
-function spWP(n=1){if(!guardCombat())return;if(CS.wpTemp<=0){lg('<span class="lw">⚠ Sem FdV!</span>');return;}CS.wpTemp=Math.max(0,CS.wpTemp-n);renderWP();}
-function gnWP(n=1){if(!guardCombat())return;CS.wpTemp=Math.min(D.willpower,CS.wpTemp+n);renderWP();}
-
-function lg(msg){
-  const l=document.getElementById('log');
-  if(l.children[0]&&l.children[0].style.textAlign==='center') l.innerHTML='';
-  const e=document.createElement('div');e.className='lentry';
-  e.innerHTML=`<span class="lr">C${CS.scene}·T${CS.turn}</span> ${msg}`;
-  l.prepend(e);
-}
-function clearLog(){document.getElementById('log').innerHTML='<div class="lentry" style="color:var(--tx3);font-style:italic;text-align:center;padding:8px 0;">Os atos desta noite serão registrados aqui.</div>';}
-
-// ═══════════════════════════════════════════════════════════
-// COMBAT MODAL — com pool editor inline
-// ═══════════════════════════════════════════════════════════
-let _cd=null,_cp=null;
-
-function openCM(disc,p){
-  _cd=disc;_cp=p;
-  document.getElementById('cmDisc').textContent=`${disc.name} · Nível ${p.level}`;
-  document.getElementById('cmTitle').textContent=p.name;
-  document.getElementById('cmDesc').textContent=p.desc||'';
-
-  const dice=calcDice(p);
-  const tags=document.getElementById('cmTags');tags.innerHTML='';
-  if(p.passive){
-    tags.innerHTML='<span class="tag t-pas">Passivo — Sempre ativo</span>';
-  } else {
-    if(!p.bb&&!p.bw) tags.innerHTML+='<span class="tag t-free">Sem custo</span>';
-    if(p.bb>0) tags.innerHTML+=`<span class="tag t-blood">🩸 ${p.bb} Sangue</span>`;
-    if(p.bw>0) tags.innerHTML+=`<span class="tag t-wp">💙 ${p.bw} FdV</span>`;
-    tags.innerHTML+=`<span class="tag t-cena">⏱ ${DUR[p.dur]||p.dur}</span>`;
-  }
-
-  const rollEl=document.getElementById('cmRoll');
-  rollEl.style.color='';
-
-  const w=document.getElementById('cmWarn');let wt='';
-  if(p.bb>0&&CS.bloodCur<p.bb) wt+=`⚠ Sangue insuficiente (${CS.bloodCur}/${p.bb}). `;
-  if(p.bw>0&&CS.wpTemp<p.bw) wt+='⚠ FdV insuficiente. ';
-  w.style.display=wt?'block':'none';w.textContent=wt;
-  document.getElementById('cmDres').style.display='none';
-
-  const ub=document.getElementById('cmUse');
-  const rb=document.getElementById('cmRollBtn');
-  ub.style.display=p.passive?'none':'block';
-  ub.textContent='▶ Ativar';
-  ub.disabled=false;
-
-  // ── Pool editor: aparece quando poder não tem atributo configurado ──
-  const editorSec=document.getElementById('cmPoolEditorSec');
-  const noPool=!p.passive&&(!p.attr||p.attr==='');
-
-  if(noPool){
-    editorSec.style.display='block';
-    // Popula os selects
-    buildAttrSel(document.getElementById('cmAttrSel'));
-    buildSkillSel(document.getElementById('cmSkillSel'));
-    document.getElementById('cmAttrSel').value='';
-    document.getElementById('cmSkillSel').value='';
-    document.getElementById('cmDiffSel').value='6';
-    document.getElementById('cmPoolPreview').textContent='— selecione um atributo para calcular —';
-    document.getElementById('cmPoolPreview').style.color='var(--tx3)';
-    // Rolar fica escondido até selecionar atributo
-    rb.style.display='none';
-    // Sinaliza no texto principal
-    rollEl.textContent='⚠ Parada não configurada — preencha abaixo';
-    rollEl.style.color='#f99';
-  } else {
-    editorSec.style.display='none';
-    rollEl.textContent=p.passive?'':(`${fmtPool(p)} → ${dice} dados`);
-    rb.style.display=(p.passive||dice===0)?'none':'block';
-  }
-
-  document.getElementById('cmOv').style.display='flex';
-}
-
-// Atualiza preview em tempo real enquanto jogador seleciona atributo/habilidade
-function updateCMPoolLive(){
-  if(!_cp) return;
-  const attr=document.getElementById('cmAttrSel').value;
-  const skill=document.getElementById('cmSkillSel').value;
-  const diff=document.getElementById('cmDiffSel').value;
-
-  let dice=0;
-  if(attr) dice+=getAttrV(attr);
-  if(skill) dice+=D.skills[skill]||0;
-  dice=Math.max(0,dice);
-
-  const preview=document.getElementById('cmPoolPreview');
-  const rb=document.getElementById('cmRollBtn');
-  const rollEl=document.getElementById('cmRoll');
-
-  if(!attr){
-    preview.textContent='— selecione um atributo para calcular —';
-    preview.style.color='var(--tx3)';
-    rb.style.display='none';
-    rollEl.textContent='⚠ Parada não configurada — preencha abaixo';
-    rollEl.style.color='#f99';
-    return;
-  }
-
-  const aLbl=ATTRS.find(x=>x.k===attr)?.l||attr;
-  const sLbl=skill?(SKILLS.find(x=>x.k===skill)?.l||D.skillNames[skill]||skill):'';
-  const dLbl=diff==='fdv'?'Dif. FdV':'Dif. '+diff;
-  const poolTxt=sLbl?`${aLbl} + ${sLbl}`:aLbl;
-
-  preview.textContent=`${poolTxt} (${dLbl}) → ${dice} dados`;
-  preview.style.color=dice>0?'var(--gd)':'#f88';
-
-  rollEl.textContent=`${poolTxt} (${dLbl}) → ${dice} dados`;
-  rollEl.style.color='';
-
-  rb.style.display=dice>0?'block':'none';
-}
-
-function closeCM(){document.getElementById('cmOv').style.display='none';_cd=null;_cp=null;}
-function closeCMBg(e){if(e.target.id==='cmOv')closeCM();}
-
-function activatePwr(){
-  if(!_cp) return;
-  if(_cp.bb>0&&CS.bloodCur<_cp.bb){const w=document.getElementById('cmWarn');w.style.display='block';w.textContent='⚠ Sangue insuficiente!';return;}
-  if(_cp.bw>0&&CS.wpTemp<_cp.bw){const w=document.getElementById('cmWarn');w.style.display='block';w.textContent='⚠ FdV insuficiente!';return;}
-  if(_cp.bb>0) spBlood(_cp.bb,false);
-  if(_cp.bw>0) spWP(_cp.bw);
-  addFx(_cp.name,_cp.dur,_cd.name);
-  rollCM();
-  let m=`<span class="lp">${_cd.name}: ${_cp.name}</span> ativado`;
-  if(_cp.bb>0) m+=` <span class="lc">-${_cp.bb} sangue</span>`;
-  if(_cp.bw>0) m+=` <span class="lc">-${_cp.bw} FdV</span>`;
-  lg(m);
-  document.getElementById('cmUse').textContent='✓ Ativado';
-  document.getElementById('cmUse').disabled=true;
-}
-
-// ── rollCM: usa pool editor se poder não tiver atributo ──
-function rollCM(){
-  if(!_cp) return;
-
-  const editorVisible=document.getElementById('cmPoolEditorSec')?.style.display!=='none';
-  let num, rawDiff;
-
-  if(editorVisible&&(!_cp.attr||_cp.attr==='')){
-    const attr=document.getElementById('cmAttrSel').value;
-    const skill=document.getElementById('cmSkillSel').value;
-    rawDiff=document.getElementById('cmDiffSel').value;
-
-    // Sem atributo = ativa mas não rola
-    if(!attr) return;
-
-    let d=0;
-    if(attr) d+=getAttrV(attr);
-    if(skill) d+=D.skills[skill]||0;
-    num=Math.max(0,d);
-
-    // Salva de volta no poder APENAS se for mestre
-    if(canEdit()){
-      _cp.attr=attr;
-      if(skill)_cp.skill=skill;
-      _cp.diff=rawDiff==='fdv'?'fdv':(+rawDiff||6);
-      save();renderCombatDiscs();
-      document.getElementById('cmPoolEditorSec').style.display='none';
-      document.getElementById('cmRoll').textContent=poolStr(_cp);
-      document.getElementById('cmRoll').style.color='';
-      document.getElementById('cmRollBtn').style.display='block';
-    }
-
-  } else {
-    num=calcDice(_cp);
-    rawDiff=_cp.diff;
-  }
-
-  if(num===0){lg('<span class="lw">Pool 0 — sem dados.</span>');return;}
-
-  const diff=(rawDiff==='fdv')?(D.willpower||6):(rawDiff==='var')?6:(+rawDiff||6);
-  const rs=Array.from({length:num},()=>Math.floor(Math.random()*10)+1);
-  let suc=0,ones=0;
-  rs.forEach(r=>{if(r>=diff)suc++;if(r===1)ones++;});
-  const botch=!suc&&ones>0,net=Math.max(0,suc-ones);
-
-  const dn=document.getElementById('cmDnums');dn.innerHTML='';
-  rs.forEach(r=>{const d=document.createElement('div');d.className='die '+(r===1?'b':r>=diff?'s':'f');d.textContent=r;dn.appendChild(d);});
-
-  const ds=document.getElementById('cmDsum');
-  if(botch){ds.textContent='💀 Falha Crítica!';ds.style.color='#f44';lg(`<span class="lw">💀 Falha Crítica — ${_cp.name}!</span>`);}
-  else if(!net){ds.textContent='Falha — 0 sucessos';ds.style.color='var(--tx3)';}
-  else{ds.textContent=`${net} sucesso${net>1?'s':''}`;ds.style.color='#8c8';}
-  document.getElementById('cmDres').style.display='block';
-
-  // Envia pro Discord se webhook configurado
-  (async()=>{
-    try{
-      const sucEnvio=botch?-1:net;
-      const dEnvio=rawDiff==='fdv'?'fdv':(rawDiff==='var'?'var':(+rawDiff||6));
-      const h=await hashRolagem(_cd,_cp,rs,dEnvio);
-      enviarRolagemDiscord(_cd,_cp,rs,sucEnvio,dEnvio,h);
-    }catch(e){console.warn(e);}
-  })();
-}
-
-// ═══════════════════════════════════════════════════════════
-// ONLINE / SUPABASE
-// ═══════════════════════════════════════════════════════════
-let APP={client:null,user:null,fichaId:null,status:'rascunho',role:'local',saving:false};
-function canEdit(){return APP.role==='local'||APP.status==='rascunho'||APP.status==='reaberta';}
-function setLockedUi(){document.body.classList.toggle('locked',!canEdit());const b=document.getElementById('statusBadge');if(!b)return;b.className='pill '+(APP.client?'ok ':'')+(!canEdit()?'lock':'');b.textContent=(APP.client?'online ':'local ')+(APP.status||'rascunho')+(APP.role&&APP.role!=='local'?' / '+APP.role:'');}
-function flashMsg(msg,ok=true){const b=document.getElementById('saveBadge');b.textContent=msg;b.className=ok?'ok':'';setTimeout(()=>{b.textContent='salvo';b.className='';},1700);}
-function touchRender(){renderFicha();renderDiscs();setLockedUi();}
-function openSetup(){document.getElementById('sbUrl').value=localStorage.getItem('vtm_sb_url')||'';document.getElementById('sbKey').value=localStorage.getItem('vtm_sb_key')||'';document.getElementById('sheetId').value=APP.fichaId||localStorage.getItem('vtm_ficha_id')||'';document.getElementById('setupMod').style.display='flex';}
-function closeSetup(){document.getElementById('setupMod').style.display='none';}function closeSetupBg(e){if(e.target.id==='setupMod')closeSetup();}
-function saveSetup(){localStorage.setItem('vtm_sb_url',document.getElementById('sbUrl').value.trim());localStorage.setItem('vtm_sb_key',document.getElementById('sbKey').value.trim());localStorage.setItem('vtm_ficha_id',document.getElementById('sheetId').value.trim());initSupabase();closeSetup();}
-function initSupabase(){const url=localStorage.getItem('vtm_sb_url'),key=localStorage.getItem('vtm_sb_key');APP.fichaId=localStorage.getItem('vtm_ficha_id')||APP.fichaId;if(url&&key&&window.supabase){APP.client=window.supabase.createClient(url,key);APP.client.auth.getUser().then(({data})=>{APP.user=data.user||null;setLockedUi();});}setLockedUi();}
-async function loadOnlineFicha(){initSupabase();const id=document.getElementById('sheetId').value.trim()||APP.fichaId;if(!APP.client||!id){openSetup();return;}const {data,error}=await APP.client.from('fichas').select('*').eq('id',id).single();if(error){alert(error.message);return;}APP.fichaId=data.id;APP.status=data.status;APP.role=data.jogador_id===APP.user?.id?'jogador':'mestre';localStorage.setItem('vtm_ficha_id',data.id);D=Object.assign(defaultData(),data.dados||{});D.info=D.info||{};D.info.name=data.nome||D.info.name||'';closeSetup();touchRender();flashMsg('ficha carregada');}
-async function saveOnlineNow(){if(!APP.client||!APP.fichaId||APP.saving||!canEdit())return;APP.saving=true;const {error}=await APP.client.from('fichas').update({nome:D.info.name||'',dados:D}).eq('id',APP.fichaId);APP.saving=false;if(error)flashMsg('erro online',false);else flashMsg('salvo online');}
-async function acceptMestreToken(){initSupabase();if(!APP.client){openSetup();return;}const token=prompt('Cole o token que o jogador mandou');if(!token)return;const {data,error}=await APP.client.rpc('aceitar_token_mestre',{p_token:token.trim()});if(error){alert(error.message);return;}APP.fichaId=data.id;APP.status=data.status;APP.role='mestre';localStorage.setItem('vtm_ficha_id',data.id);D=Object.assign(defaultData(),data.dados||{});closeSetup();touchRender();}
-async function reopenWithToken(){initSupabase();if(!APP.client){openSetup();return;}const token=prompt('Cole o token de edição dado pelo mestre');if(!token)return;const {data,error}=await APP.client.rpc('reabrir_ficha_com_token',{p_token:token.trim()});if(error){alert(error.message);return;}APP.fichaId=data.id;APP.status=data.status;APP.role='jogador';D=Object.assign(defaultData(),data.dados||{});closeSetup();touchRender();}
-async function mestreEditToken(){if(!APP.client||!APP.fichaId){openSetup();return;}const {data,error}=await APP.client.rpc('gerar_token_edicao',{p_ficha_id:APP.fichaId});if(error){alert(error.message);return;}prompt('Token de edição para o jogador:',data);}
-
-const _oldSave=save;
-save=function(){_oldSave();clearTimeout(window._onlineSaveTimer);window._onlineSaveTimer=setTimeout(saveOnlineNow,900);};
-const _oldMkDots=mkDots;
-mkDots=function(val,max,onChange,vt=false){return _oldMkDots(val,max,(v)=>{if(!canEdit())return alert('Ficha finalizada.');onChange(v);},vt);};
-const _oldRenderFicha=renderFicha;
-renderFicha=function(){_oldRenderFicha();document.querySelectorAll('#pane-ficha input,#charName').forEach(el=>el.disabled=!canEdit());};
-const _oldRenderDiscs=renderDiscs;
-renderDiscs=function(){_oldRenderDiscs();document.querySelectorAll('#pane-disciplinas input,#pane-disciplinas button').forEach(el=>el.disabled=!canEdit());};
-const _oldNewDisc=newDisc;newDisc=function(){if(!canEdit())return alert('Ficha finalizada.');_oldNewDisc();};
-const _oldOpenNewPW=openNewPW;openNewPW=function(id){if(!canEdit())return alert('Ficha finalizada.');_oldOpenNewPW(id);};
-const _oldOpenEditPW=openEditPW;openEditPW=function(d,p){if(!canEdit())return alert('Ficha finalizada.');_oldOpenEditPW(d,p);};
-const _oldSavePW=savePW;savePW=function(){if(!canEdit())return alert('Ficha finalizada.');_oldSavePW();};
-
-// ═══════════════════════════════════════════════════════════
-// HASH / EXPORT
-// ═══════════════════════════════════════════════════════════
-async function sha256(str){
-  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-function sortKeys(obj){
-  if(Array.isArray(obj))return obj.map(sortKeys);
-  if(obj!==null&&typeof obj==='object')return Object.keys(obj).sort().reduce((r,k)=>{r[k]=sortKeys(obj[k]);return r;},{});
-  return obj;
-}
-function snapshotCanonico(d){
-  return {
-    info:d.info, attrs:d.attrs, skills:d.skills, skillNames:d.skillNames,
-    virtues:d.virtues, willpower:d.willpower, humanidade:d.humanidade, bloodMax:d.bloodMax,
-    disciplines:d.disciplines, merits:d.merits||[], flaws:d.flaws||[],
-    backgrounds:d.backgrounds||[], preludio:d.preludio||'', versao:d.versao||0
-  };
-}
-async function hashCanonico(d){return await sha256(JSON.stringify(sortKeys(snapshotCanonico(d))));}
-async function exportarJSON(){
-  const versao=(D.versao||0)+1;D.versao=versao;save();
-  const hash=await hashCanonico(D);
-  const exportData={...snapshotCanonico(D),hashCanonico:hash,exportadoEm:Date.now()};
-  const nome=(D.info&&D.info.name||'personagem').replace(/\s+/g,'_').toLowerCase();
-  const blob=new Blob([JSON.stringify(exportData,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='ficha_'+nome+'_v'+versao+'.json';a.click();
-  URL.revokeObjectURL(url);
-  const b=document.getElementById('saveBadge');b.textContent='✓ exportado v'+versao;b.className='ok';
-  setTimeout(()=>{b.textContent='salvo ◦';b.className='';},2200);
-}
-async function computarHash(){
-  const hash=await hashCanonico(D);
-  const el=document.getElementById('hashAtualDisplay');
-  if(el){el.textContent=hash;el.style.color='var(--gd2)';}
-  localStorage.setItem('vtm_hash_atual',hash);
-  verificarIntegridade();return hash;
-}
-function verificarIntegridade(){
-  const el=document.getElementById('hashVerResult');const input=document.getElementById('hashAprovadoInput');
-  if(!el||!input)return;
-  const aprovado=(input.value||localStorage.getItem('vtm_hash_aprovado')||'').trim();
-  if(aprovado&&input.value)localStorage.setItem('vtm_hash_aprovado',aprovado);
-  const hashAtual=localStorage.getItem('vtm_hash_atual')||'';
-  if(!aprovado||!hashAtual){el.style.display='none';return;}
-  el.style.display='block';
-  if(aprovado===hashAtual){
-    el.style.cssText='display:block;background:rgba(45,106,63,.2);color:var(--gr);border:1px solid var(--gr);border-radius:2px;padding:5px 8px;font-size:11px;';
-    el.textContent='✓ ÍNTEGRA — hash bate com o aprovado pelo mestre';
-  }else{
-    el.style.cssText='display:block;background:rgba(139,0,0,.2);color:#f88;border:1px solid var(--blood);border-radius:2px;padding:5px 8px;font-size:11px;';
-    el.textContent='✕ ADULTERADA — ficha modificada desde a última aprovação';
-  }
-}
-function initHashVerif(){
-  const saved=localStorage.getItem('vtm_hash_aprovado');
-  if(saved){const el=document.getElementById('hashAprovadoInput');if(el)el.value=saved;}
-  const hashSaved=localStorage.getItem('vtm_hash_atual');
-  if(hashSaved){const el=document.getElementById('hashAtualDisplay');if(el)el.textContent=hashSaved;}
-}
-
-// ═══════════════════════════════════════════════════════════
-// DISCORD
-// ═══════════════════════════════════════════════════════════
-function openDiscordCfg(){
-  document.getElementById('dscUrl').value=localStorage.getItem('vtm_dsc_url')||'';
-  document.getElementById('dscNome').value=localStorage.getItem('vtm_dsc_nome')||'';
-  document.getElementById('dscMod').style.display='flex';
-}
-function closeDiscord(){document.getElementById('dscMod').style.display='none';}
-function closeDiscordBg(e){if(e.target.id==='dscMod')closeDiscord();}
-function salvarDiscord(){
-  localStorage.setItem('vtm_dsc_url',document.getElementById('dscUrl').value.trim());
-  localStorage.setItem('vtm_dsc_nome',document.getElementById('dscNome').value.trim());
-  closeDiscord();
-  const b=document.getElementById('saveBadge');b.textContent='✓ webhook salvo';b.className='ok';
-  setTimeout(()=>{b.textContent='salvo ◦';b.className='';},1500);
-}
-async function testarDiscord(){
-  const url=document.getElementById('dscUrl').value.trim();
-  if(!url){alert('Cole a URL do webhook primeiro');return;}
-  const nome=document.getElementById('dscNome').value.trim()||'Jogador';
-  try{
-    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:'RPG Chain',content:'✓ Webhook configurado por **'+nome+'** — pronto para enviar rolagens.'})});
-    if(r.ok)alert('Funcionou!');else alert('Erro '+r.status);
-  }catch(e){alert('Erro: '+e.message);}
-}
-async function enviarRolagemDiscord(disc,pwr,dados,sucessos,diff,hash){
-  const url=localStorage.getItem('vtm_dsc_url');if(!url)return;
-  const nomeJogador=localStorage.getItem('vtm_dsc_nome')||(D.info&&D.info.name)||'Jogador';
-  const corResultado=sucessos<0?15548997:sucessos===0?9803157:5763719;
-  const dadosStr=dados.map(d=>d>=diff?'**'+d+'**':d===1?'~~'+d+'~~':d).join(', ');
-  const txtResultado=sucessos<0?'💀 Falha Crítica':sucessos===0?'Falha':sucessos+' sucesso'+(sucessos>1?'s':'');
-  const dStr=diff==='fdv'?'FdV ('+(D.willpower||0)+')':diff;
-  const embed={
-    title:'🩸 '+nomeJogador+' — '+pwr.name,
-    description:'**'+disc.name+'** · Nível '+pwr.level,
-    color:corResultado,
-    fields:[{name:'Pool',value:dados.length+' dados (Dif. '+dStr+')',inline:true},{name:'Resultado',value:txtResultado,inline:true},{name:'Dados',value:dadosStr||'—',inline:false}],
-    footer:{text:'Hash: '+(hash||'').slice(0,16)+'… · '+new Date().toLocaleTimeString('pt-BR')}
-  };
-  try{await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:'RPG Chain',embeds:[embed]})});}
-  catch(e){console.warn('Discord webhook falhou:',e);}
-}
-async function hashRolagem(disc,pwr,dados,diff){
-  const obj={pj:D.info&&D.info.name||'?',disc:disc.name,pwr:pwr.name,nivel:pwr.level,dados,diff,t:Date.now()};
-  return await sha256(JSON.stringify(obj));
-}
-
-// ═══════════════════════════════════════════════════════════
-// ANTECEDENTES
-// ═══════════════════════════════════════════════════════════
-function renderBackgrounds(){
-  const el=document.getElementById('antBody');if(!el)return;el.innerHTML='';
-  (D.backgrounds||[]).forEach(b=>{
-    const row=document.createElement('div');row.className='row';
-    const inp=document.createElement('input');inp.className='row-label editable';
-    inp.value=b.nome;inp.placeholder='Antecedente...';inp.oninput=()=>{b.nome=inp.value;save();};
-    const dots=document.createElement('div');dots.className='dots';
-    for(let i=1;i<=5;i++){const d=document.createElement('div');d.className='dot'+(i<=b.valor?' on':'');d.onclick=()=>{b.valor=i===b.valor?i-1:i;save();renderBackgrounds();};dots.appendChild(d);}
-    const val=document.createElement('div');val.className='row-val';val.textContent=b.valor;
-    const del=document.createElement('button');del.style.cssText='background:none;border:none;color:var(--tx3);cursor:pointer;font-size:13px;margin-left:6px;';
-    del.textContent='✕';del.onclick=()=>{D.backgrounds=D.backgrounds.filter(x=>x.id!==b.id);save();renderBackgrounds();};
-    row.appendChild(inp);row.appendChild(dots);row.appendChild(val);row.appendChild(del);el.appendChild(row);
-  });
-}
-function adicionarAntecedente(){
-  D.backgrounds.push({id:D.nbi++,nome:'Antecedente',valor:0});
-  save();renderBackgrounds();
-}
-
-// ═══════════════════════════════════════════════════════════
-// QUALIDADES E DEFEITOS
-// ═══════════════════════════════════════════════════════════
-function novaTrait(type){
-  const name=prompt(type==='merit'?'Nome da qualidade:':'Nome do defeito:');
-  if(!name)return;
-  const nivel=Math.max(1,Math.min(5,parseInt(prompt('Nível (1-5):','1'))||1));
-  const desc=prompt('Descrição (opcional):','')||'';
-  const arr=type==='merit'?D.merits:D.flaws;
-  arr.push({id:Date.now(),nome:name,nivel,desc});
-  save();renderTraits();calcBonusPoints();
-}
-function removerTrait(type,id){
-  if(!confirm('Remover?'))return;
-  if(type==='merit')D.merits=D.merits.filter(x=>x.id!==id);
-  else D.flaws=D.flaws.filter(x=>x.id!==id);
-  save();renderTraits();calcBonusPoints();
-}
-function setTraitNivel(type,id,nivel){
-  const arr=type==='merit'?D.merits:D.flaws;
-  const t=arr.find(x=>x.id===id);
-  if(t){t.nivel=nivel;save();renderTraits();calcBonusPoints();}
-}
-function renderTraits(){
-  function renderList(arr,elId,type){
-    const el=document.getElementById(elId);if(!el)return;
-    const isFlaw=type==='flaw';
-    if(!arr||!arr.length){el.innerHTML='<div class="empty-traits">'+(isFlaw?'Nenhum defeito':'Nenhuma qualidade')+' cadastrado.</div>';return;}
-    el.innerHTML=arr.map(t=>`<div class="trait-item">
-      <div class="trait-dots">${Array.from({length:5},(_,i)=>`<div class="trait-dot${i<t.nivel?' on':''}${isFlaw?' flaw':''}" onclick="setTraitNivel('${type}',${t.id},${i+1})"></div>`).join('')}</div>
-      <div class="trait-body"><div class="trait-name">${t.nome} <span style="font-family:'Cinzel',serif;font-size:10px;color:${isFlaw?'var(--gd2)':'var(--blood2)'};">[${t.nivel}pt]</span></div>${t.desc?`<div class="trait-desc">${t.desc}</div>`:''}</div>
-      <button class="trait-del" onclick="removerTrait('${type}',${t.id})">✕</button>
-    </div>`).join('');
-  }
-  renderList(D.merits||[],'meritsList','merit');
-  renderList(D.flaws||[],'flawsList','flaw');
-}
-function calcBonusPoints(){
-  const qualPts=(D.merits||[]).reduce((s,m)=>s+m.nivel,0);
-  const defPts=(D.flaws||[]).reduce((s,f)=>s+f.nivel,0);
-  const saldo=15+defPts-qualPts;
-  const el=document.getElementById('bonusPoints');if(!el)return;
-  el.innerHTML='Qualidades: <strong>'+qualPts+'pts</strong> &nbsp;|&nbsp; Defeitos: <strong>'+defPts+'pts</strong> (máx 7 na criação) &nbsp;|&nbsp; Saldo bônus: <strong style="color:'+(saldo>=0?'var(--gr)':'#f88')+'">'+( saldo>=0?'+':'')+saldo+'</strong>';
-}
-
-// ═══════════════════════════════════════════════════════════
-// ANOTAÇÕES E PRELÚDIO
-// ═══════════════════════════════════════════════════════════
-let _notasSt,_preSt;
-function initNotas(){
-  const saved=localStorage.getItem('vtm_notas');
-  const el=document.getElementById('notasText');
-  if(saved&&el)el.value=saved;
-  if(!el)return;
-  el.addEventListener('input',()=>{clearTimeout(_notasSt);_notasSt=setTimeout(()=>localStorage.setItem('vtm_notas',el.value),600);});
-}
-function initPreludio(){
-  const el=document.getElementById('preludioText');if(!el)return;
-  if(typeof D.preludio==='string')el.value=D.preludio;
-  el.addEventListener('input',()=>{clearTimeout(_preSt);_preSt=setTimeout(()=>{D.preludio=el.value;save();},500);});
-}
-
-// ═══════════════════════════════════════════════════════════
-// SALVAR MANUAL
-// ═══════════════════════════════════════════════════════════
-function salvarManual(){
-  try{localStorage.setItem('vtm2',JSON.stringify(D));}catch(e){}
-  const b=document.getElementById('saveBadge');
-  if(b){b.textContent='✓ salvo';b.className='ok';setTimeout(()=>{b.textContent='salvo ◦';b.className='';},1500);}
-}
-
-// ═══════════════════════════════════════════════════════════
-// CARREGAR JSON
-// ═══════════════════════════════════════════════════════════
-function carregarJSON(input){
-  const file=input.files&&input.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=function(e){
-    try{
-      const json=JSON.parse(e.target.result);
-      if(!confirm('Isto vai substituir a ficha atual. Continuar?')){input.value='';return;}
-      D=Object.assign(defaultData(),json);
-      D.merits=D.merits||[];D.flaws=D.flaws||[];D.backgrounds=D.backgrounds||[];
-      try{localStorage.setItem('vtm2',JSON.stringify(D));}catch(e){}
-      renderFicha();renderDiscs();renderTraits();calcBonusPoints();renderBackgrounds();
-      const cn=document.getElementById('charName');if(cn)cn.value=(D.info&&D.info.name)||'';
-      if(D.info&&D.info.name)document.title=D.info.name+' — VtM';
-      const pre=document.getElementById('preludioText');if(pre)pre.value=D.preludio||'';
-      const b=document.getElementById('saveBadge');
-      if(b){b.textContent='✓ ficha carregada';b.className='ok';setTimeout(()=>{b.textContent='salvo ◦';b.className='';},1800);}
-    }catch(err){alert('JSON inválido: '+err.message);}
-    input.value='';
-  };
-  reader.readAsText(file);
-}
-
-// ═══════════════════════════════════════════════════════════
-// LINK TOKEN — ficha codificada na URL (opcional)
-// ═══════════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════════
-// SISTEMA DE ACESSO POR PIN
-// ═══════════════════════════════════════════════════════════
-let ACCESS_LEVEL='master'; // 'view' | 'master'
-let LINK_PINS={masterPinHash:null};
-
-// Override do canEdit existente para respeitar o sistema de PIN
-const _canEditBase=canEdit;
-canEdit=function(){
-  if(LINK_PINS.masterPinHash) return ACCESS_LEVEL==='master';
-  return _canEditBase();
-};
-
-// Combate: view-only quando link com PIN — ninguém usa, só lê
-function guardCombat(){
-  if(!LINK_PINS.masterPinHash) return true; // sem PIN = acesso total
-  if(ACCESS_LEVEL==='master') return true;
-  openPinModal();
-  return false;
-}
-
-function setAccessUI(){
-  const badge=document.getElementById('accessBadge');
-  if(!badge) return;
-  if(!LINK_PINS.masterPinHash){badge.style.display='none';return;}
-  badge.style.display='block';
-  if(ACCESS_LEVEL==='master'){
-    badge.textContent='🔓 Mestre';badge.className='access-badge master';
-  }else{
-    badge.textContent='👁 Somente leitura';badge.className='access-badge view';
-  }
-  document.body.classList.toggle('locked',!canEdit());
-}
-
-function openPinModal(){
-  document.getElementById('pinEntryInput').value='';
-  document.getElementById('pinError').style.display='none';
-  document.getElementById('pinMod').style.display='flex';
-  setTimeout(()=>document.getElementById('pinEntryInput').focus(),100);
-}
-function closePinMod(){document.getElementById('pinMod').style.display='none';}
-function closePinModBg(e){if(e.target.id==='pinMod')closePinMod();}
-
-async function submitPin(){
-  const pin=document.getElementById('pinEntryInput').value.trim();
-  if(!pin) return;
-  const h=await sha256(pin);
-  if(LINK_PINS.masterPinHash&&h===LINK_PINS.masterPinHash){
-    ACCESS_LEVEL='master';
-    closePinMod();
-    setAccessUI();
-    renderFicha();renderDiscs();
-    const b=document.getElementById('saveBadge');
-    b.textContent='🔓 acesso mestre';b.className='ok';
-    setTimeout(()=>{b.textContent='salvo ◦';b.className='';},1800);
-  }else{
-    document.getElementById('pinError').style.display='block';
-    document.getElementById('pinEntryInput').value='';
-    document.getElementById('pinEntryInput').focus();
-  }
-}
-
-// ═══════════════════════════════════════════════════════════
-// LINK TOKEN — ficha codificada na URL (opcional)
-// ═══════════════════════════════════════════════════════════
-function abrirModalLink(){
-  document.getElementById('pinMestreInput').value='';
-  document.getElementById('linkTokenUrl').value='';
-  document.getElementById('gerarLinkBtn').style.display='block';
-  document.getElementById('copiarLinkBtn').style.display='none';
-  document.getElementById('linkTokenMod').style.display='flex';
-}
-
-function gerarLinkToken(){
-  try{
-    const snap=snapshotCanonico(D);
-    const pinM=document.getElementById('pinMestreInput').value.trim();
-    (pinM?sha256(pinM):Promise.resolve(null)).then(masterHash=>{
-      if(masterHash) snap._pinMaster=masterHash;
-      const json=JSON.stringify(snap);
-      const token=btoa(unescape(encodeURIComponent(json)));
-      const url=location.origin+location.pathname+'#vtm='+token;
-      document.getElementById('linkTokenUrl').value=url;
-      document.getElementById('gerarLinkBtn').style.display='none';
-      document.getElementById('copiarLinkBtn').style.display='block';
-      // Copia automaticamente
-      navigator.clipboard.writeText(url).then(()=>{
-        document.getElementById('copiarLinkBtn').textContent='✓ Copiado!';
-        document.getElementById('copiarLinkBtn').style.background='rgba(58,138,62,.4)';
-        const b=document.getElementById('saveBadge');
-        b.textContent='🔗 link copiado!';b.className='ok';
-        setTimeout(()=>{
-          b.textContent='salvo ◦';b.className='';
-          document.getElementById('copiarLinkBtn').textContent='📋 Copiar de novo';
-          document.getElementById('copiarLinkBtn').style.background='';
-        },2500);
-      }).catch(()=>{
-        document.getElementById('linkTokenUrl').select();
-      });
-    });
-  }catch(e){alert('Erro ao gerar link: '+e.message);}
-}
-
-function copiarLinkToken(){
-  const input=document.getElementById('linkTokenUrl');
-  navigator.clipboard.writeText(input.value).then(()=>{
-    const btn=document.getElementById('copiarLinkBtn');
-    btn.textContent='✓ Copiado!';btn.style.background='rgba(58,138,62,.4)';
-    setTimeout(()=>{btn.textContent='📋 Copiar de novo';btn.style.background='';},2000);
-  }).catch(()=>{input.select();});
-}
-
-function closeLinkToken(){document.getElementById('linkTokenMod').style.display='none';}
-function closeLinkTokenBg(e){if(e.target.id==='linkTokenMod')closeLinkToken();}
-
-// Verifica se a URL tem um token de ficha ao abrir a página
-function verificarLinkToken(){
-  const hash=location.hash;
-  if(!hash.startsWith('#vtm='))return;
-  const token=hash.slice(5);
-  try{
-    const json=decodeURIComponent(escape(atob(token)));
-    const data=JSON.parse(json);
-    const nome=(data.info&&data.info.name)||'personagem sem nome';
-    history.replaceState(null,'',location.pathname);
-    // Extrai PIN e remove do data
-    LINK_PINS.masterPinHash=data._pinMaster||null;
-    delete data._pinMaster;
-    // Sem PIN no link = acesso total; com PIN = começa somente leitura
-    ACCESS_LEVEL=LINK_PINS.masterPinHash?'view':'master';
-    if(confirm(`🔗 Link de ficha detectado!\n\n"${nome}"\n\nCarregar esta ficha?`)){
-      D=Object.assign(defaultData(),data);
-      D.merits=D.merits||[];D.flaws=D.flaws||[];D.backgrounds=D.backgrounds||[];
-      try{localStorage.setItem('vtm2',JSON.stringify(D));}catch(e){}
-      renderFicha();renderDiscs();renderTraits();calcBonusPoints();renderBackgrounds();
-      const cn=document.getElementById('charName');
-      if(cn)cn.value=(D.info&&D.info.name)||'';
-      if(D.info&&D.info.name)document.title=D.info.name+' — VtM';
-      const pre=document.getElementById('preludioText');
-      if(pre)pre.value=D.preludio||'';
-      setAccessUI();
-      if(LINK_PINS.masterPinHash){
-        const b=document.getElementById('saveBadge');
-        b.textContent='👁 somente leitura';b.className='ok';
-        setTimeout(()=>{b.textContent='salvo ◦';b.className='';},2200);
-      }
-    }
-  }catch(e){
-    console.warn('Link token inválido:',e);
-    history.replaceState(null,'',location.pathname);
-  }
-}
-
-// ═══════════════════════════════════════════════════════════
-// SALA DE COMBATE — jogador entra e sincroniza status
-// ═══════════════════════════════════════════════════════════
-let SALA={sb:null,salaId:null,partId:null,codigo:'',nome:'',intervalo:null};
-
-function abrirModalSala(){
-  document.getElementById('salaUrlInput').value=localStorage.getItem('sala_sb_url')||'';
-  document.getElementById('salaKeyInput').value=localStorage.getItem('sala_sb_key')||'';
-  document.getElementById('salaCodigoInput').value='';
-  document.getElementById('salaPinInput').value='';
-  document.getElementById('salaErro').style.display='none';
-  if(SALA.salaId){
-    document.getElementById('salaModTitle').textContent='⚔ Sala de Combate';
-    document.getElementById('salaModConteudo').style.display='none';
-    document.getElementById('salaModStatus').style.display='block';
-    document.getElementById('salaAtivaCodigo').textContent=SALA.codigo;
-    document.getElementById('salaAtivaNome').textContent=SALA.nome;
-  }else{
-    document.getElementById('salaModTitle').textContent='⚔ Entrar na Sala de Combate';
-    document.getElementById('salaModConteudo').style.display='block';
-    document.getElementById('salaModStatus').style.display='none';
-  }
-  document.getElementById('salaMod').style.display='flex';
-}
-function fecharModalSala(){document.getElementById('salaMod').style.display='none';}
-
-async function entrarNaSala(){
-  const url=document.getElementById('salaUrlInput').value.trim();
-  const key=document.getElementById('salaKeyInput').value.trim();
-  const codigo=document.getElementById('salaCodigoInput').value.trim().toUpperCase();
-  const pin=document.getElementById('salaPinInput').value;
-  const erroEl=document.getElementById('salaErro');
-  erroEl.style.display='none';
-  if(!url||!key){erroEl.textContent='Configure o Supabase (URL e Key).';erroEl.style.display='block';return;}
-  if(!codigo){erroEl.textContent='Digite o código da sala.';erroEl.style.display='block';return;}
-  if(!pin){erroEl.textContent='Digite o PIN da sala.';erroEl.style.display='block';return;}
-  localStorage.setItem('sala_sb_url',url);
-  localStorage.setItem('sala_sb_key',key);
-  try{SALA.sb=window.supabase.createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});}
-  catch(e){erroEl.textContent='Erro ao conectar: '+e.message;erroEl.style.display='block';return;}
-  const {data:sala,error:errSala}=await SALA.sb.from('salas_combate').select('*').eq('codigo',codigo).eq('ativa',true).single();
-  if(errSala||!sala){erroEl.textContent='Sala não encontrada ou encerrada.';erroEl.style.display='block';return;}
-  const pinHash=await sha256(pin);
-  if(pinHash!==sala.pin_hash){erroEl.textContent='PIN incorreto.';erroEl.style.display='block';return;}
-  const {data:part,error:errPart}=await SALA.sb.from('participantes_sala').insert({
-    sala_id:sala.id,char_name:D.info.name||'Personagem',player_name:D.info.player||'',
-    online:true,blood_cur:CS.bloodCur,blood_max:D.bloodMax,
-    health:CS.health,wp_temp:CS.wpTemp,willpower:D.willpower
-  }).select().single();
-  if(errPart){erroEl.textContent='Erro ao entrar: '+errPart.message;erroEl.style.display='block';return;}
-  SALA.salaId=sala.id;SALA.partId=part.id;SALA.codigo=codigo;SALA.nome=sala.nome;
-  document.getElementById('salaBadgeHeader').style.display='block';
-  if(SALA.intervalo) clearInterval(SALA.intervalo);
-  SALA.intervalo=setInterval(pushStatusSala,3000);
-  fecharModalSala();
-  setTimeout(abrirModalSala,100);
-  const b=document.getElementById('saveBadge');
-  b.textContent='⚔ Entrou em '+codigo;b.className='ok';
-  setTimeout(()=>{b.textContent='salvo ◦';b.className='';},2500);
-}
-
-async function pushStatusSala(){
-  if(!SALA.sb||!SALA.partId) return;
-  try{
-    await SALA.sb.from('participantes_sala').update({
-      online:true,blood_cur:CS.bloodCur,blood_max:D.bloodMax,
-      health:CS.health,wp_temp:CS.wpTemp,willpower:D.willpower,
-      atualizado_em:new Date().toISOString()
-    }).eq('id',SALA.partId);
-  }catch(e){console.warn('Sync falhou:',e);}
-}
-
-async function sairDaSala(){
-  if(SALA.sb&&SALA.partId) await SALA.sb.from('participantes_sala').update({online:false}).eq('id',SALA.partId);
-  if(SALA.intervalo) clearInterval(SALA.intervalo);
-  SALA={sb:null,salaId:null,partId:null,codigo:'',nome:'',intervalo:null};
-  document.getElementById('salaBadgeHeader').style.display='none';
-  fecharModalSala();
-}
-
-// Push automático quando status muda no combate
-const _spBOrig=spBlood;spBlood=function(n,l){_spBOrig(n,l);pushStatusSala();};
-const _gnBOrig=gnBlood;gnBlood=function(n){_gnBOrig(n);pushStatusSala();};
-const _cHOrig=cycleH;cycleH=function(i){_cHOrig(i);pushStatusSala();};
-const _spWOrig=spWP;spWP=function(n=1){_spWOrig(n);pushStatusSala();};
-const _gnWOrig=gnWP;gnWP=function(n=1){_gnWOrig(n);pushStatusSala();};
-const _boostOrig=boostAttr;boostAttr=function(k){_boostOrig(k);pushStatusSala();};
-
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════════════════
-load();
-D.merits=D.merits||[];
-D.flaws=D.flaws||[];
+// ═══════════════════════════════════════
+loadLocal();
+loadHistorico();
 initSupabase();
-renderFicha();
-renderDiscs();
-setLockedUi();
-initNotas();
-initPreludio();
-
-CS.bloodCur=D.bloodMax;
-CS.wpTemp=D.willpower;
-setAccessUI();
-
-document.getElementById('charName').addEventListener('input',function(){
-  D.info.name=this.value;save();document.title=(this.value||'Vampiro')+' — VtM';
-});
-if(D.info.name) document.title=D.info.name+' — VtM';
-
-// Verifica link token na URL (roda depois de tudo estar renderizado)
-verificarLinkToken();
+renderPersonagens();
 </script>
-<!-- SALA MODAL -->
-<div class="ov" id="salaMod" style="display:none;" onclick="if(event.target.id==='salaMod')fecharModalSala()">
-<div class="modal" style="max-width:420px;">
-  <button class="modal-close" onclick="fecharModalSala()">✕</button>
-  <h3 id="salaModTitle">⚔ Entrar na Sala de Combate</h3>
-  <div id="salaModConteudo">
-    <div style="font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:14px;">
-      O mestre te enviou um código e um PIN de sala. Digite abaixo para entrar e sincronizar seu status ao vivo.
-    </div>
-    <div class="fg2">
-      <div class="frow"><label>Código da Sala</label><input id="salaCodigoInput" placeholder="Ex: TREVAS-47" style="text-transform:uppercase;letter-spacing:3px;font-family:'Cinzel',serif;font-size:16px;"/></div>
-      <div class="frow"><label>PIN da Sala</label><input id="salaPinInput" type="password" placeholder="••••"/></div>
-    </div>
-    <div style="border-top:1px solid var(--br);padding-top:12px;margin-top:4px;">
-      <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--blood);margin-bottom:10px;text-transform:uppercase;">Configuração Supabase (uma vez)</div>
-      <div class="frow"><label>URL do Supabase</label><input id="salaUrlInput" placeholder="https://...supabase.co"/></div>
-      <div class="frow"><label>Publishable Key</label><input id="salaKeyInput" placeholder="sb_publishable_..."/></div>
-      <div style="font-size:11px;color:var(--tx3);line-height:1.5;">O mestre te passa esses dados. Ficam salvos neste dispositivo.</div>
-    </div>
-    <div id="salaErro" style="display:none;background:rgba(139,0,0,.15);border:1px solid var(--blood);border-radius:2px;padding:8px 10px;font-size:12px;color:#f88;margin-top:8px;"></div>
-    <div class="modal-btns">
-      <button class="btn btn-prim" onclick="entrarNaSala()">⚔ Entrar</button>
-      <button class="btn btn-sec" onclick="fecharModalSala()">Cancelar</button>
-    </div>
-  </div>
-  <!-- Status quando na sala -->
-  <div id="salaModStatus" style="display:none;">
-    <div style="text-align:center;margin-bottom:12px;">
-      <div style="font-family:'Cinzel',serif;font-size:24px;color:var(--gd);letter-spacing:4px;" id="salaAtivaCodigo"></div>
-      <div style="font-size:13px;color:var(--tx2);margin-top:4px;" id="salaAtivaNome"></div>
-      <div style="font-size:11px;color:var(--gr);margin-top:6px;">● Sincronizando ao vivo com o mestre</div>
-    </div>
-    <div style="background:var(--card);border:1px solid var(--br);border-radius:2px;padding:10px;font-size:12px;color:var(--tx2);line-height:1.7;margin-bottom:12px;">
-      Seu sangue, vitalidade e FdV aparecem no painel do mestre em tempo real.<br>
-      A cada ação no combate, o status é enviado automaticamente.
-    </div>
-    <div class="modal-btns">
-      <button class="btn btn-del" onclick="sairDaSala()">Sair da Sala</button>
-      <button class="btn btn-sec" onclick="fecharModalSala()">Fechar</button>
-    </div>
-  </div>
-</div>
-</div>
-
 </body>
 </html>
-
-
