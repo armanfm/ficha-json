@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vampiro: A MÃ¡scara</title>
+<title>Vampiro: A Máscara</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
 :root{
@@ -16,8 +16,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--ink);font-family:'Crimson Text',serif;color:var(--tx);min-height:100vh;display:flex;flex-direction:column;}
-
-/* â”€â”€ HEADER â”€â”€ */
 header{background:var(--surf);border-bottom:2px solid var(--blood);padding:8px 18px;display:flex;align-items:center;gap:16px;flex-shrink:0;}
 .htitle{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--blood2);text-transform:uppercase;}
 #charName{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gd);background:transparent;border:none;outline:none;flex:1;letter-spacing:2px;}
@@ -25,26 +23,18 @@ header{background:var(--surf);border-bottom:2px solid var(--blood);padding:8px 1
 #charName:focus{border-bottom:1px solid var(--gd2);}
 #saveBadge{font-size:10px;color:var(--tx3);font-style:italic;transition:color .4s;}
 #saveBadge.ok{color:var(--gr);}
-
-/* â”€â”€ TABS â”€â”€ */
 nav{background:var(--ink);border-bottom:1px solid var(--br);display:flex;padding:0 18px;flex-shrink:0;}
 .tab{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:10px 18px;border:none;background:transparent;color:var(--tx3);cursor:pointer;border-bottom:2px solid transparent;}
 .tab:hover{color:var(--tx2);}
 .tab.on{color:var(--blood2);border-bottom-color:var(--blood);}
-
-/* â”€â”€ CONTENT â”€â”€ */
 main{flex:1;overflow-y:auto;padding:18px;}
 .pane{display:none;} .pane.on{display:block;}
-
-/* â”€â”€ SHARED â”€â”€ */
 .card{background:var(--surf);border:1px solid var(--br);border-radius:2px;overflow:hidden;margin-bottom:12px;}
 .card-hd{display:flex;align-items:center;justify-content:space-between;padding:6px 14px;background:var(--card);border-bottom:1px solid var(--br);}
 .card-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gd2);}
 .card-body{padding:10px 14px;}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-
-/* â”€â”€ DOTS â”€â”€ */
 .row{display:flex;align-items:center;padding:3px 0;border-bottom:1px dotted rgba(58,42,26,.35);}
 .row:last-child{border-bottom:none;}
 .row-label{flex:1;font-size:13px;color:var(--tx);}
@@ -57,15 +47,11 @@ main{flex:1;overflow-y:auto;padding:18px;}
 .dot.vt{border-color:var(--wp);}
 .dot.vt.on{background:var(--wp);}
 .row-val{font-family:'Cinzel',serif;font-size:11px;color:var(--tx3);width:14px;text-align:right;margin-left:4px;}
-
-/* â”€â”€ INFO FIELDS â”€â”€ */
 .info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 16px;padding:10px 14px;}
 .if-wrap{display:flex;flex-direction:column;gap:2px;}
 .if-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--blood);}
 .if-input{background:transparent;border:none;border-bottom:1px solid var(--br);padding:2px 0;font-family:'Crimson Text',serif;font-size:14px;color:var(--tx);outline:none;width:100%;}
 .if-input:focus{border-bottom-color:var(--blood);}
-
-/* â”€â”€ DISC LIST â”€â”€ */
 .disc-item{background:var(--surf);border:1px solid var(--br);border-radius:2px;margin-bottom:10px;overflow:hidden;}
 .disc-hd{display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--card);border-bottom:1px solid var(--br);}
 .disc-name-in{font-family:'Cinzel',serif;font-size:13px;letter-spacing:2px;color:var(--gd);background:transparent;border:none;outline:none;flex:1;text-transform:uppercase;}
@@ -85,8 +71,6 @@ main{flex:1;overflow-y:auto;padding:18px;}
 .btn-prim:disabled{opacity:.4;cursor:not-allowed;}
 .btn-sec{background:transparent;border:1px solid var(--br2);color:var(--tx2);padding:9px 14px;}
 .btn-sec:hover{background:var(--card);}
-
-/* power row in disc list */
 .prow{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid var(--br);font-size:13px;}
 .prow:last-child{border-bottom:none;}
 .plvl{font-family:'Cinzel',serif;font-size:9px;color:var(--tx3);width:44px;flex-shrink:0;}
@@ -98,8 +82,7 @@ main{flex:1;overflow-y:auto;padding:18px;}
 .t-free{background:rgba(58,138,62,.3);color:#8c8;border:1px solid rgba(58,138,62,.5);}
 .t-pas{background:rgba(122,96,48,.4);color:var(--gd);border:1px solid rgba(180,140,60,.4);}
 .t-cena{background:rgba(60,80,140,.3);color:#aaf;border:1px solid rgba(60,80,140,.5);}
-
-/* â”€â”€ MODAL â”€â”€ */
+.t-cfg{background:rgba(139,0,0,.15);color:#f99;border:1px solid rgba(139,0,0,.4);}
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:100;}
 .modal{background:var(--surf);border:1px solid var(--br2);border-top:3px solid var(--blood);border-radius:2px;width:480px;max-width:96vw;max-height:92vh;overflow-y:auto;padding:22px;position:relative;}
 .modal-close{position:absolute;top:10px;right:14px;background:none;border:none;color:var(--tx3);font-size:20px;cursor:pointer;}
@@ -113,13 +96,9 @@ main{flex:1;overflow-y:auto;padding:18px;}
 .fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
 .modal-btns{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--br);}
-
-/* â”€â”€ COMBATE â”€â”€ */
 .combat-wrap{display:grid;grid-template-columns:1fr 260px;gap:14px;align-items:start;}
 .cleft{display:flex;flex-direction:column;gap:12px;}
 .csidebar{display:flex;flex-direction:column;gap:12px;}
-
-/* scene/turn row */
 .scene-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .trackers{display:flex;gap:8px;align-items:center;}
 .tbox{background:var(--card);border:1px solid var(--br);border-radius:3px;padding:4px 10px;text-align:center;}
@@ -130,8 +109,6 @@ main{flex:1;overflow-y:auto;padding:18px;}
 .tbtn:hover{background:var(--br2);}
 .scene-adv{background:rgba(139,0,0,.25);border:1px solid var(--blood);color:#f99;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;cursor:pointer;border-radius:2px;}
 .scene-adv:hover{background:rgba(139,0,0,.5);color:#fff;}
-
-/* attr boosts */
 .boost-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .bblock{background:var(--card);border:1px solid var(--br);border-radius:2px;padding:7px 8px;text-align:center;}
 .bblock-name{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--tx2);margin-bottom:3px;}
@@ -141,15 +118,11 @@ main{flex:1;overflow-y:auto;padding:18px;}
 .bblock-btn{width:100%;background:rgba(212,160,23,.15);border:1px solid rgba(212,160,23,.4);color:var(--bo);font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;padding:3px 0;cursor:pointer;border-radius:2px;}
 .bblock-btn:hover{background:rgba(212,160,23,.3);}
 .bblock-btn:disabled{opacity:.3;cursor:not-allowed;}
-
-/* effects */
 .eff-item{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--br);border-left:3px solid var(--blood2);border-radius:2px;padding:5px 10px;margin-bottom:4px;}
 .eff-name{flex:1;font-size:13px;}
 .eff-dur{font-size:10px;color:var(--tx3);font-family:'Cinzel',serif;}
 .eff-rm{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:13px;}
 .eff-rm:hover{color:#f66;}
-
-/* power cards in combat */
 .pcard{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--br);cursor:pointer;transition:background .12s;}
 .pcard:last-child{border-bottom:none;}
 .pcard:hover{background:var(--card);}
@@ -161,8 +134,8 @@ main{flex:1;overflow-y:auto;padding:18px;}
 .use-btn:hover{background:var(--blood2);}
 .use-btn.pas{background:var(--gd2);}
 .use-btn.pas:hover{background:var(--gd);color:var(--ink);}
-
-/* sidebar res cards */
+.use-btn.cfg{background:rgba(139,0,0,.3);border:1px solid rgba(139,0,0,.6);color:#f99;}
+.use-btn.cfg:hover{background:rgba(139,0,0,.6);color:#fff;}
 .res{background:var(--surf);border:1px solid var(--br);border-radius:2px;overflow:hidden;}
 .res-hd{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:var(--card);border-bottom:1px solid var(--br);}
 .res-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gd2);}
@@ -191,17 +164,13 @@ main{flex:1;overflow-y:auto;padding:18px;}
 .wp-temp{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px;}
 .wpt{width:15px;height:8px;border:1.5px solid var(--wp);border-radius:1px;cursor:pointer;}
 .wpt.on{background:var(--wp);}
-
-/* log */
 .log-body{max-height:170px;overflow-y:auto;padding:6px 10px;}
 .lentry{padding:4px 0;border-bottom:1px solid rgba(58,42,26,.3);font-size:12px;line-height:1.4;color:var(--tx2);}
 .lentry:last-child{border-bottom:none;}
 .lr{font-family:'Cinzel',serif;font-size:9px;color:var(--tx3);margin-right:3px;}
 .lp{color:var(--gd);font-style:italic;}.lc{color:#f88;}.lo{color:#8c8;}.lw{color:#fa5;}.ls{color:#aaf;}
-
-/* combat detail modal */
 .cov{position:fixed;inset:0;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;z-index:200;}
-.cmodal{background:var(--surf);border:1px solid var(--br2);border-top:3px solid var(--blood);border-radius:2px;width:420px;max-width:96vw;max-height:92vh;overflow-y:auto;padding:20px;position:relative;}
+.cmodal{background:var(--surf);border:1px solid var(--br2);border-top:3px solid var(--blood);border-radius:2px;width:440px;max-width:96vw;max-height:92vh;overflow-y:auto;padding:20px;position:relative;}
 .cm-disc{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--blood2);text-transform:uppercase;margin-bottom:3px;}
 .cm-title{font-family:'Cinzel',serif;font-size:20px;color:var(--gd);font-weight:700;margin-bottom:12px;}
 .cm-sec{margin-bottom:10px;}
@@ -219,20 +188,21 @@ main{flex:1;overflow-y:auto;padding:18px;}
 .cm-act{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--br);flex-wrap:wrap;}
 .roll-btn{background:rgba(201,168,76,.12);border:1px solid var(--gd2);color:var(--gd);font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:9px 14px;cursor:pointer;border-radius:2px;}
 .roll-btn:hover{background:rgba(201,168,76,.25);}
-
+/* pool editor no modal de combate */
+.cm-pool-editor{background:var(--card);border:1px solid var(--br);border-radius:2px;padding:14px;margin-bottom:6px;}
+.cm-pool-warn{background:rgba(139,0,0,.12);border:1px solid rgba(139,0,0,.4);border-left:3px solid var(--blood);border-radius:2px;padding:10px 12px;margin-bottom:12px;font-size:13px;color:#f99;line-height:1.6;}
+.cm-pool-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
+.cm-pool-sel{background:var(--surf);border:1px solid var(--br2);border-radius:2px;padding:5px 8px;color:var(--tx);font-family:'Crimson Text',serif;font-size:13px;width:100%;outline:none;cursor:pointer;}
+.cm-pool-sel:focus{border-color:var(--blood);}
+.cm-pool-sel option{background:var(--card);}
+.cm-pool-preview{background:var(--surf);border:1px solid var(--br);border-radius:2px;padding:9px 14px;font-family:'Cinzel',serif;font-size:12px;text-align:center;letter-spacing:1px;transition:color .2s;}
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:var(--surf);}
 ::-webkit-scrollbar-thumb{background:var(--br2);border-radius:2px;}
-
-/* ONLINE */
 .top-actions{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end;}
 .pill{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--br2);color:var(--tx2);padding:4px 8px;border-radius:2px;white-space:nowrap;}
 .pill.ok{border-color:var(--gr);color:#8c8;}.pill.lock{border-color:var(--blood);color:#f99;}
 body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.locked .dot,body.locked .ddot,body.locked .btn-add,body.locked .btn-del{cursor:not-allowed;filter:grayscale(.35);}
-
-@media(max-width:900px){header{align-items:flex-start;flex-wrap:wrap}.top-actions{width:100%;justify-content:flex-start}.g2,.g3{grid-template-columns:1fr}.info-grid{grid-template-columns:1fr 1fr}.combat-wrap{grid-template-columns:1fr}}
-
-/* ── QUAL/DEF ── */
 .trait-item{background:var(--surf);border:1px solid var(--br);border-radius:2px;padding:8px 12px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;}
 .trait-dots{display:flex;gap:3px;flex-shrink:0;margin-top:3px;}
 .trait-dot{width:10px;height:10px;border-radius:50%;border:1px solid var(--blood);cursor:pointer;}
@@ -245,26 +215,38 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
 .trait-del{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:14px;padding:0;flex-shrink:0;}
 .trait-del:hover{color:#f88;}
 .empty-traits{text-align:center;color:var(--tx3);font-style:italic;padding:16px 0;font-size:13px;}
-.health-row{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px dotted rgba(58,42,26,.3);}
-.health-row:last-child{border-bottom:none;}
-.hlbl{flex:1;font-size:12px;color:var(--tx2);}
-.hpen{font-family:'Cinzel',serif;font-size:10px;color:var(--tx3);width:24px;text-align:center;}
-.hbox{width:22px;height:22px;border:1.5px solid var(--br2);border-radius:2px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;}
-.hbox.ba{background:rgba(122,90,0,.4);border-color:#7a5a00;color:#c8a020;}
-.hbox.le{background:rgba(139,0,0,.35);border-color:var(--blood);color:#f88;}
-.hbox.ag{background:#111;border-color:#666;color:#999;}
+@media(max-width:900px){header{align-items:flex-start;flex-wrap:wrap}.top-actions{width:100%;justify-content:flex-start}.g2,.g3{grid-template-columns:1fr}.info-grid{grid-template-columns:1fr 1fr}.combat-wrap{grid-template-columns:1fr}}
+/* ── ACCESS BADGE ── */
+.access-badge{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;border:1px solid;border-radius:2px;padding:4px 9px;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.access-badge.view{border-color:var(--br2);color:var(--tx3);}
+.access-badge.view:hover{border-color:var(--gd2);color:var(--gd);}
+.access-badge.player{border-color:var(--wp);color:#8af;}
+.access-badge.player:hover{border-color:#6af;color:#adf;}
+.access-badge.master{border-color:var(--gr);color:#8c8;}
+/* PIN MODAL */
+.pin-input{background:var(--card);border:1px solid var(--br2);border-radius:2px;padding:10px 14px;color:var(--tx);font-family:'Cinzel',serif;font-size:20px;letter-spacing:6px;text-align:center;width:100%;outline:none;}
+.pin-input:focus{border-color:var(--blood);}
+.pin-level{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--br);border-radius:2px;margin-bottom:6px;cursor:pointer;transition:background .15s;}
+.pin-level:hover{background:var(--card);}
+.pin-level.active{border-color:var(--blood);background:rgba(139,0,0,.1);}
+.pin-lbl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;}
+.pin-desc{font-size:12px;color:var(--tx3);margin-top:1px;}
 </style>
 </head>
 <body>
 
 <header>
   <div>
-    <div class="htitle">Vampiro: A MÃ¡scara</div>
+    <div class="htitle">Vampiro: A Máscara</div>
     <input id="charName" placeholder="Nome do Personagem" spellcheck="false"/>
   </div>
   <span id="saveBadge">salvo</span>
   <span id="statusBadge" class="pill">local</span>
+  <button id="accessBadge" class="access-badge view" onclick="openPinModal()" title="Clique para entrar com PIN" style="display:none;">👁 Somente leitura</button>
+  <span id="salaBadgeHeader" style="display:none;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;padding:4px 9px;border-radius:2px;border:1px solid var(--gr);color:#8c8;cursor:pointer;" onclick="abrirModalSala()" title="Na sala — clique para ver detalhes">⚔ Sala ativa</span>
   <div class="top-actions">
+    <button class="btn btn-ghost" onclick="abrirModalLink()" title="Gerar link da ficha" style="border-color:rgba(201,168,76,.4);color:var(--gd2);">🔗 Gerar Link</button>
+    <button class="btn btn-ghost" onclick="abrirModalSala()" title="Entrar em uma sala de combate" style="border-color:rgba(58,106,170,.4);color:#8af;">⚔ Entrar na Sala</button>
     <button class="btn btn-ghost" onclick="openDiscordCfg()" title="Configurar webhook do Discord">🎮 Discord</button>
     <button class="btn btn-ghost" onclick="document.getElementById('fileLoadInput').click()" title="Carregar ficha de um arquivo JSON">⬆ Carregar JSON</button>
     <input type="file" id="fileLoadInput" accept=".json" style="display:none;" onchange="carregarJSON(this)"/>
@@ -277,7 +259,6 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
 <nav>
   <button class="tab on" onclick="goTab('ficha',this)">Ficha</button>
   <button class="tab" onclick="goTab('disciplinas',this)">Disciplinas</button>
-  
   <button class="tab" onclick="goTab('antecedentes',this)">Antecedentes</button>
   <button class="tab" onclick="goTab('qualdef',this)">Qual &amp; Def</button>
   <button class="tab" onclick="goTab('preludio',this)">Prelúdio</button>
@@ -287,40 +268,35 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
 
 <main>
 
-<!-- â•â•â• FICHA â•â•â• -->
+<!-- FICHA -->
 <div class="pane on" id="pane-ficha">
-
   <div class="card">
-    <div class="card-hd"><span class="card-title">â¬¥ Personagem</span></div>
+    <div class="card-hd"><span class="card-title">⬥ Personagem</span></div>
     <div class="info-grid" id="infoGrid"></div>
   </div>
-
   <div class="g3">
-    <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">FÃ­sicos</span></div><div class="card-body" id="fisicos"></div></div>
+    <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">Físicos</span></div><div class="card-body" id="fisicos"></div></div>
     <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">Social</span></div><div class="card-body" id="social"></div></div>
     <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">Mentais</span></div><div class="card-body" id="mentais"></div></div>
   </div>
-
   <div class="g3" style="margin-top:12px;">
     <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">Talentos</span></div><div class="card-body" id="talentos"></div></div>
-    <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">PerÃ­cias</span></div><div class="card-body" id="pericias"></div></div>
+    <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">Perícias</span></div><div class="card-body" id="pericias"></div></div>
     <div class="card" style="margin:0"><div class="card-hd"><span class="card-title">Conhecimentos</span></div><div class="card-body" id="conhecimentos"></div></div>
   </div>
-
   <div class="g2" style="margin-top:12px;">
     <div class="card" style="margin:0">
-      <div class="card-hd"><span class="card-title">â¬¥ Virtudes</span></div>
+      <div class="card-hd"><span class="card-title">⬥ Virtudes</span></div>
       <div class="card-body" id="virtudes"></div>
     </div>
     <div class="card" style="margin:0">
-      <div class="card-hd"><span class="card-title">â¬¥ ForÃ§a de Vontade Â· Humanidade Â· Sangue</span></div>
+      <div class="card-hd"><span class="card-title">⬥ Força de Vontade · Humanidade · Sangue</span></div>
       <div class="card-body" id="pools"></div>
     </div>
   </div>
-
 </div>
 
-<!-- â•â•â• DISCIPLINAS â•â•â• -->
+<!-- DISCIPLINAS -->
 <div class="pane" id="pane-disciplinas">
   <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
     <button class="btn btn-add" onclick="newDisc()">+ Nova Disciplina</button>
@@ -331,29 +307,21 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
   </div>
 </div>
 
-
-
-
-
-
-
-
-
 <!-- ANTECEDENTES -->
 <div class="pane" id="pane-antecedentes">
   <div class="card">
     <div class="card-hd">
-      <span class="card-title">â¬¥ Antecedentes</span>
+      <span class="card-title">⬥ Antecedentes</span>
       <button class="btn btn-add" onclick="adicionarAntecedente()">+ Adicionar</button>
     </div>
     <div class="card-body" id="antBody"></div>
   </div>
   <div style="font-size:12px;color:var(--tx3);line-height:1.6;margin-top:8px;">
-    Clique nos pontos para definir o nÃ­vel. Edite o nome livremente. Antecedentes sÃ£o incluÃ­dos no JSON exportado.
+    Clique nos pontos para definir o nível. Edite o nome livremente.
   </div>
 </div>
 
-<!-- ═══ QUALIDADES E DEFEITOS ═══ -->
+<!-- QUALIDADES E DEFEITOS -->
 <div class="pane" id="pane-qualdef">
   <div class="g2">
     <div class="card" style="margin:0">
@@ -376,34 +344,25 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
     </div>
   </div>
   <div class="card" style="margin-top:12px;">
-    <div class="card-hd"><span class="card-title">⬥ Pontos de Bônus</span></div>
-    <div class="card-body">
-      <div id="bonusPoints" style="font-family:'Cinzel',serif;font-size:13px;color:var(--gd);"></div>
-      <div style="font-size:12px;color:var(--tx3);margin-top:6px;line-height:1.6;">
-        Qualidades custam pontos bônus. Defeitos devolvem pontos bônus (máx 7 pts de defeitos na criação).
-        Qualidades e defeitos são incluídos no JSON exportado para o mestre.
-      </div>
-    </div>
+    <div class="card-hd"><span class="card-title">⬥ Pontos Bônus</span></div>
+    <div class="card-body"><div id="bonusPoints" style="font-size:13px;color:var(--tx2);"></div></div>
   </div>
 </div>
-
-
 
 <!-- PRELUDIO -->
 <div class="pane" id="pane-preludio">
   <div class="card">
     <div class="card-hd">
-      <span class="card-title">â¬¥ PrelÃºdio do Personagem</span>
-      <span style="font-size:10px;color:var(--tx3);font-style:italic;">incluÃ­do no JSON exportado</span>
+      <span class="card-title">⬥ Prelúdio do Personagem</span>
+      <span style="font-size:10px;color:var(--tx3);font-style:italic;">incluído no JSON exportado</span>
     </div>
     <div class="card-body">
-      <textarea id="preludioText" rows="22" style="width:100%;background:var(--card);border:1px solid var(--br);border-radius:2px;padding:10px 14px;color:var(--tx);font-family:'Crimson Text',serif;font-size:15px;resize:vertical;line-height:1.7;outline:none;" placeholder="A histÃ³ria do seu personagem antes do inÃ­cio da crÃ´nica.&#10;&#10;Como era a vida humana? Quem o Abraçou? Quais sÃ£o suas motivaÃ§Ãµes, traumas, objetivos?&#10;&#10;Este texto serÃ¡ enviado ao narrador junto com a ficha."></textarea>
-      <div style="font-size:12px;color:var(--tx3);margin-top:6px;">Salvo automaticamente. Aparece no JSON quando vocÃª exportar a ficha.</div>
+      <textarea id="preludioText" rows="22" style="width:100%;background:var(--card);border:1px solid var(--br);border-radius:2px;padding:10px 14px;color:var(--tx);font-family:'Crimson Text',serif;font-size:15px;resize:vertical;line-height:1.7;outline:none;" placeholder="A história do seu personagem antes do início da crônica."></textarea>
     </div>
   </div>
 </div>
 
-<!-- ═══ ANOTAÇÕES ═══ -->
+<!-- ANOTAÇÕES -->
 <div class="pane" id="pane-notas">
   <div class="card">
     <div class="card-hd">
@@ -411,37 +370,33 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
       <span style="font-size:10px;color:var(--tx3);font-style:italic;">não exportado no JSON</span>
     </div>
     <div class="card-body">
-      <textarea id="notasText" rows="20" style="width:100%;background:var(--card);border:1px solid var(--br);border-radius:2px;padding:10px 14px;color:var(--tx);font-family:'Crimson Text',serif;font-size:15px;resize:vertical;line-height:1.7;outline:none;" placeholder="Segredos do personagem, planos, relações, lore pessoal...&#10;&#10;Estas anotações ficam APENAS neste dispositivo e não são enviadas ao mestre."></textarea>
-      <div style="font-size:12px;color:var(--tx3);margin-top:6px;">Salvo automaticamente neste dispositivo.</div>
+      <textarea id="notasText" rows="20" style="width:100%;background:var(--card);border:1px solid var(--br);border-radius:2px;padding:10px 14px;color:var(--tx);font-family:'Crimson Text',serif;font-size:15px;resize:vertical;line-height:1.7;outline:none;" placeholder="Segredos do personagem, planos, relações..."></textarea>
     </div>
   </div>
 </div>
 
-<!-- â•â•â• COMBATE â•â•â• -->
+<!-- COMBATE -->
 <div class="pane" id="pane-combate">
-
   <div class="scene-row">
     <div style="font-family:'Cinzel',serif;font-size:11px;color:var(--tx3);letter-spacing:2px;text-transform:uppercase;">Modo Combate</div>
     <div class="trackers">
       <div class="tbox">
         <div class="tbox-lbl">Turno</div>
-        <div class="tbox-num"><button class="tbtn" onclick="chT(-1)">âˆ’</button><span id="tNum">1</span><button class="tbtn" onclick="chT(1)">+</button></div>
+        <div class="tbox-num"><button class="tbtn" onclick="chT(-1)">−</button><span id="tNum">1</span><button class="tbtn" onclick="chT(1)">+</button></div>
       </div>
       <div class="tbox">
         <div class="tbox-lbl">Cena</div>
         <div class="tbox-num sc"><span id="sNum">1</span></div>
       </div>
-      <button class="scene-adv" onclick="advScene()">âŸ¶ Nova Cena</button>
+      <button class="scene-adv" onclick="advScene()">⟶ Nova Cena</button>
     </div>
   </div>
-
   <div class="combat-wrap">
     <div class="cleft">
-
       <div class="card">
         <div class="card-hd">
-          <span class="card-title">â¬¥ Atributos FÃ­sicos</span>
-          <span style="font-size:11px;color:var(--tx3);font-style:italic;">1 sangue â†’ +1 (atÃ© fim da cena)</span>
+          <span class="card-title">⬥ Atributos Físicos</span>
+          <span style="font-size:11px;color:var(--tx3);font-style:italic;">1 sangue → +1 (até fim da cena)</span>
         </div>
         <div class="card-body">
           <div class="boost-grid" id="boostGrid"></div>
@@ -450,82 +405,71 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
           </div>
         </div>
       </div>
-
       <div class="card">
         <div class="card-hd">
-          <span class="card-title">â¬¥ Efeitos Ativos</span>
+          <span class="card-title">⬥ Efeitos Ativos</span>
           <span id="effCnt" style="font-family:'Cinzel',serif;font-size:10px;color:var(--tx3);">0</span>
         </div>
         <div class="card-body">
           <div id="effList"><div style="font-size:12px;color:var(--tx3);font-style:italic;text-align:center;padding:6px 0;">Nenhum efeito ativo.</div></div>
         </div>
       </div>
-
       <div id="combatDiscs"></div>
-
     </div>
-
     <div class="csidebar">
-
       <div class="res">
-        <div class="res-hd"><span class="res-title">â¬¥ Sangue</span><span class="res-val" id="bpCnt">â€”</span></div>
+        <div class="res-hd"><span class="res-title">⬥ Sangue</span><span class="res-val" id="bpCnt">—</span></div>
         <div class="res-body">
           <div class="bp-grid" id="bpGrid"></div>
           <div class="qrow">
-            <button class="qb sp" onclick="spBlood(1,true)">âˆ’ 1</button>
+            <button class="qb sp" onclick="spBlood(1,true)">− 1</button>
             <button class="qb rg" onclick="gnBlood(1)">+ 1</button>
           </div>
         </div>
       </div>
-
       <div class="res">
-        <div class="res-hd"><span class="res-title">â¬¥ Vitalidade</span><span class="res-val" id="hStat" style="font-size:11px;font-style:italic;color:var(--tx2);">Ileso</span></div>
+        <div class="res-hd"><span class="res-title">⬥ Vitalidade</span><span class="res-val" id="hStat" style="font-size:11px;font-style:italic;color:var(--tx2);">Ileso</span></div>
         <div class="res-body">
           <div id="hRows"></div>
           <div style="display:flex;gap:8px;margin-top:6px;font-size:10px;color:var(--tx3);">
-            <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;background:#7a5a00;border-radius:1px;display:inline-block;"></span>ContusÃ£o</span>
+            <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;background:#7a5a00;border-radius:1px;display:inline-block;"></span>Contusão</span>
             <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;background:var(--blood);border-radius:1px;display:inline-block;"></span>Letal</span>
             <span style="display:flex;align-items:center;gap:3px;"><span style="width:9px;height:9px;background:#1a0a0a;border:1px solid #888;border-radius:1px;display:inline-block;"></span>Agravado</span>
           </div>
         </div>
       </div>
-
       <div class="res">
-        <div class="res-hd"><span class="res-title">â¬¥ ForÃ§a de Vontade</span><span class="res-val" id="wpCnt">â€”</span></div>
+        <div class="res-hd"><span class="res-title">⬥ Força de Vontade</span><span class="res-val" id="wpCnt">—</span></div>
         <div class="res-body">
           <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:4px;">Permanente</div>
           <div class="wp-track" id="wpPerm"></div>
-          <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:4px;">TemporÃ¡ria</div>
+          <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:4px;">Temporária</div>
           <div class="wp-temp" id="wpTemp"></div>
           <div class="qrow">
-            <button class="qb sp" onclick="spWP()">âˆ’ 1 FdV</button>
+            <button class="qb sp" onclick="spWP()">− 1 FdV</button>
             <button class="qb rg" onclick="gnWP()">+ 1 FdV</button>
           </div>
         </div>
       </div>
-
       <div class="res">
         <div class="res-hd">
-          <span class="res-title">â¬¥ Registro</span>
+          <span class="res-title">⬥ Registro</span>
           <button style="background:none;border:none;color:var(--tx3);font-size:10px;cursor:pointer;font-family:'Crimson Text',serif;" onclick="clearLog()">limpar</button>
         </div>
         <div class="log-body" id="log">
-          <div class="lentry" style="color:var(--tx3);font-style:italic;text-align:center;padding:8px 0;">Os atos desta noite serÃ£o registrados aqui.</div>
+          <div class="lentry" style="color:var(--tx3);font-style:italic;text-align:center;padding:8px 0;">Os atos desta noite serão registrados aqui.</div>
         </div>
       </div>
-
       <div class="res">
-        <div class="res-hd"><span class="res-title">&#x2B25; Integridade</span></div>
+        <div class="res-hd"><span class="res-title">⬥ Integridade</span></div>
         <div class="res-body">
           <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:3px;">Hash atual da ficha</div>
-          <div id="hashAtualDisplay" onclick="computarHash()" title="Clique para calcular" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gd2);word-break:break-all;background:var(--card);padding:5px 8px;border-radius:2px;margin-bottom:6px;cursor:pointer;">&#8212; clique para calcular &#8212;</div>
+          <div id="hashAtualDisplay" onclick="computarHash()" title="Clique para calcular" style="font-family:monospace;font-size:9px;color:var(--gd2);word-break:break-all;background:var(--card);padding:5px 8px;border-radius:2px;margin-bottom:6px;cursor:pointer;">— clique para calcular —</div>
           <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:3px;">Hash aprovado (mestre)</div>
-          <input id="hashAprovadoInput" type="text" placeholder="Cole o hash aprovado..." oninput="verificarIntegridade()" style="width:100%;background:var(--card);border:1px solid var(--br);padding:4px 8px;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:9px;border-radius:2px;outline:none;margin-bottom:6px;"/>
+          <input id="hashAprovadoInput" type="text" placeholder="Cole o hash aprovado..." oninput="verificarIntegridade()" style="width:100%;background:var(--card);border:1px solid var(--br);padding:4px 8px;color:var(--tx);font-family:monospace;font-size:9px;border-radius:2px;outline:none;margin-bottom:6px;"/>
           <div id="hashVerResult" style="display:none;border-radius:2px;padding:5px 8px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.04em;"></div>
-          <div style="font-size:10px;color:var(--tx3);line-height:1.4;">Se divergirem, a ficha foi alterada desde a aprovac&#807;&#771;o.</div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
@@ -535,14 +479,14 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
 <!-- POWER EDIT MODAL -->
 <div class="ov" id="pwMod" style="display:none;" onclick="closePWBg(event)">
 <div class="modal">
-  <button class="modal-close" onclick="closePW()">âœ•</button>
+  <button class="modal-close" onclick="closePW()">✕</button>
   <h3 id="pwModTitle">Novo Poder</h3>
   <div class="fg2">
     <div class="frow"><label>Nome do Poder</label><input id="pmName"/></div>
-    <div class="frow"><label>NÃ­vel (1â€“5)</label><select id="pmLvl"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+    <div class="frow"><label>Nível (1–5)</label><select id="pmLvl"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
   </div>
-  <div class="frow"><label>DescriÃ§Ã£o / Efeito em Combate</label><textarea id="pmDesc"></textarea></div>
-  <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--blood);margin:4px 0 10px;padding-top:8px;border-top:1px solid var(--br);">Pool de Dados â€” selecione o que este poder usa</div>
+  <div class="frow"><label>Descrição / Efeito em Combate</label><textarea id="pmDesc"></textarea></div>
+  <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--blood);margin:4px 0 10px;padding-top:8px;border-top:1px solid var(--br);">Pool de Dados — selecione o que este poder usa</div>
   <div class="fg3">
     <div class="frow"><label>Atributo</label><select id="pmAttr"></select></div>
     <div class="frow"><label>Habilidade (opcional)</label><select id="pmSkill"></select></div>
@@ -551,7 +495,7 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
   <div class="fg3">
     <div class="frow"><label>Custo Sangue</label><select id="pmBB"><option value="0">0</option><option>1</option><option>2</option><option>3</option></select></div>
     <div class="frow"><label>Custo FdV</label><select id="pmBW"><option value="0">0</option><option>1</option></select></div>
-    <div class="frow"><label>DuraÃ§Ã£o</label><select id="pmDur"><option value="inst">InstantÃ¢neo</option><option value="turno">1 Turno</option><option value="cena">1 Cena</option><option value="perm">Permanente</option></select></div>
+    <div class="frow"><label>Duração</label><select id="pmDur"><option value="inst">Instantâneo</option><option value="turno">1 Turno</option><option value="cena">1 Cena</option><option value="perm">Permanente</option></select></div>
   </div>
   <div class="frow"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="pmPas" style="width:auto;"> Poder Passivo (sem rolagem, sempre ativo)</label></div>
   <div class="modal-btns">
@@ -564,15 +508,52 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
 <!-- COMBAT MODAL -->
 <div class="cov" id="cmOv" style="display:none;" onclick="closeCMBg(event)">
 <div class="cmodal">
-  <button class="modal-close" onclick="closeCM()">âœ•</button>
+  <button class="modal-close" onclick="closeCM()">✕</button>
   <div class="cm-disc" id="cmDisc"></div>
   <div class="cm-title" id="cmTitle"></div>
-  <div class="cm-sec"><div class="cm-sec-t">DescriÃ§Ã£o / Efeito</div><div class="cm-text" id="cmDesc"></div></div>
+  <div class="cm-sec"><div class="cm-sec-t">Descrição / Efeito</div><div class="cm-text" id="cmDesc"></div></div>
   <div class="cm-sec">
-    <div class="cm-sec-t">Custo Â· DuraÃ§Ã£o Â· Dados</div>
+    <div class="cm-sec-t">Custo · Duração · Dados</div>
     <div class="cm-tags" id="cmTags"></div>
     <div class="cm-text" id="cmRoll" style="margin-top:5px;font-size:13px;font-style:italic;"></div>
   </div>
+
+  <!-- ═══ POOL EDITOR — aparece quando o poder não tem atributo configurado ═══ -->
+  <div class="cm-sec" id="cmPoolEditorSec" style="display:none;">
+    <div class="cm-sec-t">⚙ Parada de Dados — Preencher Agora</div>
+    <div class="cm-pool-editor">
+      <div class="cm-pool-warn">
+        ⚠ Este poder não tem parada de dados configurada.<br>
+        <span style="color:var(--tx2);font-size:12px;">Preencha abaixo para rolar — os valores serão salvos no poder automaticamente.</span>
+      </div>
+      <div class="cm-pool-grid">
+        <div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;">Atributo</div>
+          <select id="cmAttrSel" class="cm-pool-sel" onchange="updateCMPoolLive()"></select>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;">Habilidade</div>
+          <select id="cmSkillSel" class="cm-pool-sel" onchange="updateCMPoolLive()"></select>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;">Dificuldade</div>
+          <select id="cmDiffSel" class="cm-pool-sel" onchange="updateCMPoolLive()">
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6" selected>6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="fdv">Força de Vontade</option>
+          </select>
+        </div>
+      </div>
+      <div id="cmPoolPreview" class="cm-pool-preview" style="color:var(--tx3);">
+        — selecione um atributo para calcular —
+      </div>
+    </div>
+  </div>
+
   <div class="cm-warn" id="cmWarn" style="display:none;"></div>
   <div class="dice-res" id="cmDres" style="display:none;">
     <div style="font-size:9px;color:var(--tx3);letter-spacing:1px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:4px;">Resultado</div>
@@ -580,323 +561,120 @@ body.locked input,body.locked textarea,body.locked select{opacity:.72;}body.lock
     <div class="dsum" id="cmDsum"></div>
   </div>
   <div class="cm-act">
-    <button class="btn btn-prim" id="cmUse" onclick="activatePwr()">â–¶ Ativar</button>
-    <button class="roll-btn" id="cmRollBtn" onclick="rollCM()">ðŸŽ² Rolar</button>
+    <button class="btn btn-prim" id="cmUse" onclick="activatePwr()">▶ Ativar</button>
+    <button class="roll-btn" id="cmRollBtn" onclick="rollCM()">🎲 Rolar</button>
     <button class="btn btn-sec" onclick="closeCM()">Fechar</button>
   </div>
 </div>
 </div>
 
-
 <!-- SETUP MODAL -->
 <div class="ov" id="setupMod" style="display:none;" onclick="closeSetupBg(event)"><div class="modal"><button class="modal-close" onclick="closeSetup()">x</button><h3>Conectar Supabase</h3><div class="frow"><label>URL do projeto</label><input id="sbUrl" placeholder="https://...supabase.co"/></div><div class="frow"><label>Anon public key</label><textarea id="sbKey" style="height:92px;"></textarea></div><div class="frow"><label>ID da ficha atual</label><input id="sheetId" placeholder="vazio ate criar online"/></div><div class="modal-btns"><button class="btn btn-prim" onclick="saveSetup()">Salvar conexao</button><button class="btn btn-sec" onclick="loadOnlineFicha()">Carregar ficha</button><button class="btn btn-sec" onclick="acceptMestreToken()">Aceitar token mestre</button><button class="btn btn-sec" onclick="reopenWithToken()">Reabrir com token</button><button class="btn btn-sec" onclick="mestreEditToken()">Token edicao</button></div></div></div>
 
+<!-- DISCORD CFG MODAL -->
+<div class="ov" id="dscMod" style="display:none;" onclick="closeDiscordBg(event)">
+<div class="modal">
+  <button class="modal-close" onclick="closeDiscord()">✕</button>
+  <h3>Discord Webhook</h3>
+  <p style="font-size:13px;color:var(--tx2);line-height:1.55;margin-bottom:14px;">
+    Cole aqui o webhook URL do canal do Discord da crônica. Toda rolagem em combate é enviada automaticamente.
+  </p>
+  <div class="frow">
+    <label>Webhook URL</label>
+    <input type="text" id="dscUrl" placeholder="https://discord.com/api/webhooks/..."/>
+  </div>
+  <div class="frow">
+    <label>Seu nome no Discord (opcional)</label>
+    <input type="text" id="dscNome" placeholder="Como vai aparecer nas rolagens"/>
+  </div>
+  <div class="modal-btns">
+    <button class="btn btn-prim" onclick="salvarDiscord()">Salvar</button>
+    <button class="btn btn-sec" onclick="testarDiscord()">Testar conexão</button>
+    <button class="btn btn-sec" onclick="closeDiscord()">Cancelar</button>
+  </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-// ════════════════════════════════
-// SALVAR MANUAL (botÃ£o verde)
-// ════════════════════════════════
-function salvarManual(){
-  try{
-    if(typeof ensureMeta==='function') 
-    localStorage.setItem('vtm2',JSON.stringify(D));
-  }catch(e){}
-  const b=document.getElementById('saveBadge');
-  if(b){b.textContent='âœ“ salvo';b.className='ok';
-  setTimeout(()=>{b.textContent='salvo â—¦';b.className='';},1500);}
-}
+</div>
 
-// ════════════════════════════════
-// ANTECEDENTES
-// ════════════════════════════════
-const ANTECEDENTES_PADRAO=[
-  'Aliados','Contatos','DomÃ­nio','Fama','GregÃ¡rio',
-  'InfluÃªncia','Mentor','Recursos','SÃ©quito','Status'
-];
+<!-- LINK TOKEN MODAL -->
+<div class="ov" id="linkTokenMod" style="display:none;" onclick="closeLinkTokenBg(event)">
+<div class="modal" style="max-width:460px;">
+  <button class="modal-close" onclick="closeLinkToken()">✕</button>
+  <h3>🔗 Link da Ficha</h3>
+  <p style="font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:14px;">
+    Gera um link de <strong style="color:var(--tx);">somente leitura</strong> da ficha. Quem abrir só consegue visualizar — para editar precisa do PIN do mestre.
+  </p>
+  <div style="background:var(--card);border:1px solid var(--br);border-radius:2px;padding:12px 14px;margin-bottom:14px;">
+    <div class="frow" style="margin:0;">
+      <label>PIN do Mestre <span style="color:var(--tx3);font-style:italic;font-family:'Crimson Text',serif;">(opcional — protege a edição)</span></label>
+      <input type="password" id="pinMestreInput" placeholder="deixe vazio para link sem proteção" class="pin-input" style="font-size:14px;letter-spacing:3px;margin-top:6px;"/>
+    </div>
+    <div style="font-size:11px;color:var(--tx3);line-height:1.5;margin-top:8px;">
+      O PIN fica como hash no link — ninguém consegue descobrir o valor original.
+    </div>
+  </div>
+  <div class="frow">
+    <label>Link gerado</label>
+    <input type="text" id="linkTokenUrl" readonly style="font-size:10px;font-family:monospace;color:var(--gd2);"/>
+  </div>
+  <div class="modal-btns">
+    <button class="btn btn-prim" id="gerarLinkBtn" onclick="gerarLinkToken()">⚙ Gerar e Copiar Link</button>
+    <button class="btn btn-prim" id="copiarLinkBtn" onclick="copiarLinkToken()" style="display:none;">📋 Copiar de novo</button>
+    <button class="btn btn-sec" onclick="closeLinkToken()">Fechar</button>
+  </div>
+</div>
+</div>
 
-function _ensureBgs(){
-  if(!Array.isArray(D.backgrounds)){
-    D.backgrounds=ANTECEDENTES_PADRAO.map((nome,i)=>({id:i+1,nome,valor:0}));
-    D.nbi=D.backgrounds.length+1;
-  }
-  if(!D.nbi) D.nbi=(D.backgrounds.length||0)+1;
-}
+<!-- PIN ENTRY MODAL -->
+<div class="ov" id="pinMod" style="display:none;" onclick="closePinModBg(event)">
+<div class="modal" style="max-width:360px;">
+  <button class="modal-close" onclick="closePinMod()">✕</button>
+  <h3>🔐 PIN do Mestre</h3>
+  <p id="pinModDesc" style="font-size:13px;color:var(--tx2);line-height:1.5;margin-bottom:16px;">Digite o PIN para habilitar a edição desta ficha.</p>
+  <div class="frow">
+    <label>PIN</label>
+    <input type="password" id="pinEntryInput" class="pin-input" placeholder="••••" onkeydown="if(event.key==='Enter')submitPin()"/>
+  </div>
+  <div id="pinError" style="display:none;background:rgba(139,0,0,.15);border:1px solid var(--blood);border-radius:2px;padding:7px 10px;font-size:12px;color:#f88;margin-bottom:8px;">PIN incorreto.</div>
+  <div class="modal-btns">
+    <button class="btn btn-prim" onclick="submitPin()">Entrar</button>
+    <button class="btn btn-sec" onclick="closePinMod()">Cancelar</button>
+  </div>
+</div>
+</div>
 
-function renderBackgrounds(){
-  _ensureBgs();
-  const el=document.getElementById('antBody');
-  if(!el)return;
-  el.innerHTML='';
-  D.backgrounds.forEach(b=>{
-    const row=document.createElement('div');row.className='row';
-    const inp=document.createElement('input');inp.className='row-label editable';
-    inp.value=b.nome;inp.placeholder='Antecedente...';
-    inp.oninput=()=>{b.nome=inp.value;save();};
-    const dots=document.createElement('div');dots.className='dots';
-    for(let i=1;i<=5;i++){
-      const d=document.createElement('div');d.className='dot'+(i<=b.valor?' on':'');
-      d.onclick=()=>{b.valor=i===b.valor?i-1:i;save();renderBackgrounds();};
-      dots.appendChild(d);
-    }
-    const val=document.createElement('div');val.className='row-val';val.textContent=b.valor;
-    const del=document.createElement('button');
-    del.style.cssText='background:none;border:none;color:var(--tx3);cursor:pointer;font-size:13px;margin-left:6px;';
-    del.textContent='âœ•';del.title='Remover';
-    del.onclick=()=>{D.backgrounds=D.backgrounds.filter(x=>x.id!==b.id);save();renderBackgrounds();};
-    row.appendChild(inp);row.appendChild(dots);row.appendChild(val);row.appendChild(del);
-    el.appendChild(row);
-  });
-}
-
-function adicionarAntecedente(){
-  _ensureBgs();
-  D.backgrounds.push({id:D.nbi++,nome:'Antecedente',valor:0});
-  save();renderBackgrounds();
-}
-
-// inclui antecedentes no hash canÃ´nico
-if(typeof snapshotCanonico==='function'){
-  const _oldSnap=snapshotCanonico;
-  snapshotCanonico=function(d){
-    const s=_oldSnap(d);
-    s.backgrounds=d.backgrounds||[];
-    return s;
-  };
-}
-
-// adiciona o "antecedentes" no goTab existente sem reescrever ele
-if(typeof goTab==='function'){
-  const _oldGoTab=goTab;
-  goTab=function(id,btn){
-    _oldGoTab(id,btn);
-    if(id==='antecedentes') renderBackgrounds();
-  };
-}
-
-// inicializa antecedentes no load
-_ensureBgs();
-
-
-// ════════════════════════════════
-// CARREGAR JSON (importar ficha)
-// ════════════════════════════════
-function carregarJSON(input){
-  const file=input.files&&input.files[0];
-  if(!file)return;
-  const reader=new FileReader();
-  reader.onload=function(e){
-    try{
-      const json=JSON.parse(e.target.result);
-      if(!confirm('Isto vai substituir a ficha atual. Continuar?')){
-        input.value='';return;
-      }
-      // mescla com defaultData pra garantir campos
-      D=Object.assign(defaultData(),json);
-      D.merits=D.merits||[];
-      D.flaws=D.flaws||[];
-      D.backgrounds=D.backgrounds||[];
-      if(typeof ensureMeta==='function') 
-      try{localStorage.setItem('vtm2',JSON.stringify(D));}catch(e){}
-      // re-render tudo
-      if(typeof renderFicha==='function') renderFicha();
-      if(typeof renderDiscs==='function') renderDiscs();
-      if(typeof renderXp==='function') renderXp();
-      if(typeof renderTraits==='function') renderTraits();
-      if(typeof calcBonusPoints==='function') calcBonusPoints();
-      if(typeof renderBackgrounds==='function') renderBackgrounds();
-      // atualiza nome no header e título
-      const cn=document.getElementById('charName');
-      if(cn) cn.value=(D.info&&D.info.name)||'';
-      if(D.info&&D.info.name) document.title=D.info.name+' â€” VtM';
-      // atualizar textarea do prelúdio se a aba existir
-      const pre=document.getElementById('preludioText');
-      if(pre) pre.value=D.preludio||'';
-      const b=document.getElementById('saveBadge');
-      if(b){b.textContent='âœ“ ficha carregada';b.className='ok';
-      setTimeout(()=>{b.textContent='salvo â—¦';b.className='';},1800);}
-    }catch(err){
-      alert('JSON invÃ¡lido: '+err.message);
-    }
-    input.value=''; // reset pra permitir recarregar o mesmo arquivo
-  };
-  reader.readAsText(file);
-}
-
-
-// ════════════════════════════════
-// DISCORD WEBHOOK
-// ════════════════════════════════
-function openDiscordCfg(){
-  document.getElementById('dscUrl').value=localStorage.getItem('vtm_dsc_url')||'';
-  document.getElementById('dscNome').value=localStorage.getItem('vtm_dsc_nome')||'';
-  document.getElementById('dscMod').style.display='flex';
-}
-function closeDiscord(){document.getElementById('dscMod').style.display='none';}
-function closeDiscordBg(e){if(e.target.id==='dscMod')closeDiscord();}
-function salvarDiscord(){
-  const url=document.getElementById('dscUrl').value.trim();
-  const nome=document.getElementById('dscNome').value.trim();
-  localStorage.setItem('vtm_dsc_url',url);
-  localStorage.setItem('vtm_dsc_nome',nome);
-  closeDiscord();
-  const b=document.getElementById('saveBadge');
-  if(b){b.textContent='âœ“ webhook salvo';b.className='ok';
-  setTimeout(()=>{b.textContent='salvo â—¦';b.className='';},1500);}
-}
-async function testarDiscord(){
-  const url=document.getElementById('dscUrl').value.trim();
-  if(!url){alert('Cole a URL do webhook primeiro');return;}
-  const nome=document.getElementById('dscNome').value.trim()||'Jogador';
-  try{
-    const r=await fetch(url,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        username:'RPG Chain',
-        content:'âœ“ Webhook configurado por **'+nome+'** â€” pronto para enviar rolagens.'
-      })
-    });
-    if(r.ok) alert('Funcionou! Veja a mensagem no canal do Discord.');
-    else alert('Erro '+r.status+': verifique a URL.');
-  }catch(e){alert('Erro: '+e.message);}
-}
-
-async function enviarRolagemDiscord(disc,pwr,dados,sucessos,diff,hash){
-  const url=localStorage.getItem('vtm_dsc_url');
-  if(!url)return; // sem webhook configurado, ignora silenciosamente
-  const nomeJogador=localStorage.getItem('vtm_dsc_nome')||(D.info&&D.info.name)||'Jogador';
-  const corResultado=sucessos<0?15548997:sucessos===0?9803157:5763719;
-  const dadosStr=dados.map(d=>d>=diff?'**'+d+'**':d===1?'~~'+d+'~~':d).join(', ');
-  const txtResultado=sucessos<0?'ðŸ’€ Falha CrÃ­tica':sucessos===0?'Falha':sucessos+' sucesso'+(sucessos>1?'s':'');
-  const dStr=diff==='fdv'?'FdV ('+(D.willpower||0)+')':diff;
-  const embed={
-    title:'ðŸ©¸ '+nomeJogador+' â€” '+pwr.name,
-    description:'**'+disc.name+'** Â· NÃ­vel '+pwr.level,
-    color:corResultado,
-    fields:[
-      {name:'Pool',value:dados.length+' dados (Dif. '+dStr+')',inline:true},
-      {name:'Resultado',value:txtResultado,inline:true},
-      {name:'Dados',value:dadosStr||'â€”',inline:false}
-    ],
-    footer:{text:'Hash: '+(hash||'').slice(0,16)+'â€¦ Â· '+new Date().toLocaleTimeString('pt-BR')}
-  };
-  try{
-    await fetch(url,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({username:'RPG Chain',embeds:[embed]})
-    });
-  }catch(e){console.warn('Discord webhook falhou:',e);}
-}
-
-// Faz o hash da rolagem (determinÃ­stico, prova que aquela rolagem aconteceu naquele momento)
-async function hashRolagem(disc,pwr,dados,diff){
-  const obj={pj:D.info&&D.info.name||'?',disc:disc.name,pwr:pwr.name,nivel:pwr.level,dados,diff,t:Date.now()};
-  return await sha256(JSON.stringify(obj));
-}
-
-
-// ════════════════════════════════
-// DISCIPLINAS RESUMO (aba visual)
-// ════════════════════════════════
-function _ensureDiscResumo(){
-  if(!Array.isArray(D.discResumo)){
-    D.discResumo=[];
-    D.ndri=1;
-  }
-  if(!D.ndri) D.ndri=(D.discResumo.length||0)+1;
-}
-
-function renderDiscResumo(){
-  _ensureDiscResumo();
-  const el=document.getElementById('discResumoBody');
-  if(!el)return;
-  el.innerHTML='';
-  if(!D.discResumo.length){
-    el.innerHTML='<div style="text-align:center;color:var(--tx3);font-style:italic;padding:20px 0;font-size:13px;">Nenhuma disciplina. Clique em "+ Adicionar".</div>';
-    return;
-  }
-  D.discResumo.forEach(d=>{
-    const row=document.createElement('div');row.className='row';
-    const inp=document.createElement('input');inp.className='row-label editable';
-    inp.value=d.nome;inp.placeholder='Nome da disciplina...';
-    inp.oninput=()=>{d.nome=inp.value;save();};
-    const dots=document.createElement('div');dots.className='dots';
-    for(let i=1;i<=5;i++){
-      const dt=document.createElement('div');dt.className='dot'+(i<=d.valor?' on':'');
-      dt.onclick=()=>{d.valor=i===d.valor?i-1:i;save();renderDiscResumo();};
-      dots.appendChild(dt);
-    }
-    const val=document.createElement('div');val.className='row-val';val.textContent=d.valor;
-    const del=document.createElement('button');
-    del.style.cssText='background:none;border:none;color:var(--tx3);cursor:pointer;font-size:13px;margin-left:6px;';
-    del.textContent='âœ•';del.title='Remover';
-    del.onclick=()=>{D.discResumo=D.discResumo.filter(x=>x.id!==d.id);save();renderDiscResumo();};
-    row.appendChild(inp);row.appendChild(dots);row.appendChild(val);row.appendChild(del);
-    el.appendChild(row);
-  });
-}
-
-function adicionarDiscResumo(){
-  _ensureDiscResumo();
-  D.discResumo.push({id:D.ndri++,nome:'',valor:0});
-  save();renderDiscResumo();
-}
-
-// inclui no hash canÃ´nico
-if(typeof snapshotCanonico==='function'){
-  const _oldSnap2=snapshotCanonico;
-  snapshotCanonico=function(d){
-    const s=_oldSnap2(d);
-    s.discResumo=d.discResumo||[];
-    return s;
-  };
-}
-
-// adiciona no goTab existente
-if(typeof goTab==='function'){
-  const _oldGoTab2=goTab;
-  goTab=function(id,btn){
-    _oldGoTab2(id,btn);
-    if(id==='discResumo') renderDiscResumo();
-  };
-}
-
-_ensureDiscResumo();
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 // STATIC DEFINITIONS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 const ATTRS=[
-  {k:'forca',l:'ForÃ§a',g:'fisico'},{k:'destreza',l:'Destreza',g:'fisico'},{k:'vigor',l:'Vigor',g:'fisico'},
-  {k:'carisma',l:'Carisma',g:'social'},{k:'manipulacao',l:'ManipulaÃ§Ã£o',g:'social'},{k:'aparencia',l:'AparÃªncia',g:'social'},
-  {k:'percepcao',l:'PercepÃ§Ã£o',g:'mental'},{k:'inteligencia',l:'InteligÃªncia',g:'mental'},{k:'raciocinio',l:'RaciocÃ­nio',g:'mental'}
+  {k:'forca',l:'Força',g:'fisico'},{k:'destreza',l:'Destreza',g:'fisico'},{k:'vigor',l:'Vigor',g:'fisico'},
+  {k:'carisma',l:'Carisma',g:'social'},{k:'manipulacao',l:'Manipulação',g:'social'},{k:'aparencia',l:'Aparência',g:'social'},
+  {k:'percepcao',l:'Percepção',g:'mental'},{k:'inteligencia',l:'Inteligência',g:'mental'},{k:'raciocinio',l:'Raciocínio',g:'mental'}
 ];
 const SKILLS=[
-  {k:'prontidao',l:'ProntidÃ£o',g:'t'},{k:'esportes',l:'Esportes',g:'t'},{k:'presciencia',l:'PresciÃªncia',g:'t'},
-  {k:'briga',l:'Briga',g:'t'},{k:'empatia',l:'Empatia',g:'t'},{k:'expressao',l:'ExpressÃ£o',g:'t'},
-  {k:'intimidacao',l:'IntimidaÃ§Ã£o',g:'t'},{k:'lideranca',l:'LideranÃ§a',g:'t'},{k:'manha',l:'Manha',g:'t'},
-  {k:'labia',l:'LÃ¡bia',g:'t'},{k:'sk_t_c',l:'',g:'t'},
-  {k:'animais',l:'Empatia c/Animais',g:'p'},{k:'oficios',l:'OfÃ­cios',g:'p'},{k:'conducao',l:'ConduÃ§Ã£o',g:'p'},
+  {k:'prontidao',l:'Prontidão',g:'t'},{k:'esportes',l:'Esportes',g:'t'},{k:'presciencia',l:'Presciência',g:'t'},
+  {k:'briga',l:'Briga',g:'t'},{k:'empatia',l:'Empatia',g:'t'},{k:'expressao',l:'Expressão',g:'t'},
+  {k:'intimidacao',l:'Intimidação',g:'t'},{k:'lideranca',l:'Liderança',g:'t'},{k:'manha',l:'Manha',g:'t'},
+  {k:'labia',l:'Lábia',g:'t'},{k:'sk_t_c',l:'',g:'t'},
+  {k:'animais',l:'Empatia c/Animais',g:'p'},{k:'oficios',l:'Ofícios',g:'p'},{k:'conducao',l:'Condução',g:'p'},
   {k:'etiqueta',l:'Etiqueta',g:'p'},{k:'armas_fogo',l:'Armas de Fogo',g:'p'},{k:'furto',l:'Furto',g:'p'},
   {k:'armas_brancas',l:'Armas Brancas',g:'p'},{k:'performance',l:'Performance',g:'p'},
-  {k:'furtividade',l:'Furtividade',g:'p'},{k:'sobrevivencia',l:'SobrevivÃªncia',g:'p'},{k:'sk_p_c',l:'',g:'p'},
-  {k:'academicos',l:'AcadÃªmicos',g:'c'},{k:'computador',l:'Computador',g:'c'},{k:'financas',l:'FinanÃ§as',g:'c'},
-  {k:'investigacao',l:'InvestigaÃ§Ã£o',g:'c'},{k:'direito',l:'Direito',g:'c'},{k:'medicina',l:'Medicina',g:'c'},
-  {k:'ocultismo',l:'Ocultismo',g:'c'},{k:'politica',l:'PolÃ­tica',g:'c'},{k:'ciencia',l:'CiÃªncia',g:'c'},
+  {k:'furtividade',l:'Furtividade',g:'p'},{k:'sobrevivencia',l:'Sobrevivência',g:'p'},{k:'sk_p_c',l:'',g:'p'},
+  {k:'academicos',l:'Acadêmicos',g:'c'},{k:'computador',l:'Computador',g:'c'},{k:'financas',l:'Finanças',g:'c'},
+  {k:'investigacao',l:'Investigação',g:'c'},{k:'direito',l:'Direito',g:'c'},{k:'medicina',l:'Medicina',g:'c'},
+  {k:'ocultismo',l:'Ocultismo',g:'c'},{k:'politica',l:'Política',g:'c'},{k:'ciencia',l:'Ciência',g:'c'},
   {k:'tecnologia',l:'Tecnologia',g:'c'},{k:'sk_c_c',l:'',g:'c'}
 ];
-const VIRTUES=[{k:'consciencia',l:'ConsciÃªncia / ConvicÃ§Ã£o'},{k:'autocontrole',l:'Autocontrole / Instinto'},{k:'coragem',l:'Coragem'}];
-const HL=[{l:'Escoriado',p:'â€”'},{l:'Machucado',p:'-1'},{l:'Ferido',p:'-1'},{l:'Ferido Grav.',p:'-2'},{l:'Espancado',p:'-2'},{l:'Aleijado',p:'-5'},{l:'Incapacitado',p:'Inc'}];
-const DUR={inst:'InstantÃ¢neo',turno:'1 Turno',cena:'1 Cena',perm:'Permanente'};
+const VIRTUES=[{k:'consciencia',l:'Consciência / Convicção'},{k:'autocontrole',l:'Autocontrole / Instinto'},{k:'coragem',l:'Coragem'}];
+const HL=[{l:'Escoriado',p:'—'},{l:'Machucado',p:'-1'},{l:'Ferido',p:'-1'},{l:'Ferido Grav.',p:'-2'},{l:'Espancado',p:'-2'},{l:'Aleijado',p:'-5'},{l:'Incapacitado',p:'Inc'}];
+const DUR={inst:'Instantâneo',turno:'1 Turno',cena:'1 Cena',perm:'Permanente'};
 const FISICOS=['forca','destreza','vigor'];
-const PL={forca:'ForÃ§a',destreza:'Destreza',vigor:'Vigor'};
+const PL={forca:'Força',destreza:'Destreza',vigor:'Vigor'};
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 // STATE
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 function defaultData(){
   const a={},s={},sn={};
   ATTRS.forEach(x=>a[x.k]=1);
@@ -906,7 +684,9 @@ function defaultData(){
     attrs:a, skills:s, skillNames:sn,
     virtues:{consciencia:1,autocontrole:1,coragem:1},
     willpower:5, humanidade:7, bloodMax:10,
-    disciplines:[], merits:[], flaws:[], ndi:1, npi:1
+    disciplines:[], merits:[], flaws:[], backgrounds:[],
+    ndi:1, npi:1, nbi:1,
+    preludio:'', versao:0
   };
 }
 
@@ -914,9 +694,9 @@ let D=defaultData();
 const CS={turn:1,scene:1,boosts:{forca:0,destreza:0,vigor:0},
   health:[null,null,null,null,null,null,null],wpTemp:5,bloodCur:10,effects:[],eid:1};
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 // STORAGE
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 let _st;
 function save(){
   clearTimeout(_st);
@@ -927,34 +707,31 @@ function save(){
 function load(){
   try{const r=localStorage.getItem('vtm2');if(r){const p=JSON.parse(r);D=Object.assign(defaultData(),p);}}
   catch(e){}
-  // normaliza IDs de disciplinas (evita IDs duplicados ou faltando)
   if(Array.isArray(D.disciplines)){
     let maxId=0;
     D.disciplines.forEach((d,i)=>{
       if(!d.id||typeof d.id!=='number'){d.id=i+1;}
       if(d.id>maxId) maxId=d.id;
-      if(Array.isArray(d.powers)){
-        let maxPw=0;
-        d.powers.forEach((p,j)=>{
-          if(!p.id||typeof p.id!=='number'){p.id=Date.now()+j;}
-          if(p.id>maxPw) maxPw=p.id;
-        });
-      }
     });
-    // garante ndi maior que qualquer ID existente
     if(!D.ndi||D.ndi<=maxId) D.ndi=maxId+1;
   }
   if(!D.npi||typeof D.npi!=='number') D.npi=Date.now();
+  if(!Array.isArray(D.backgrounds)){
+    const ANTECEDENTES_PADRAO=['Aliados','Contatos','Domínio','Fama','Gregário','Influência','Mentor','Recursos','Séquito','Status'];
+    D.backgrounds=ANTECEDENTES_PADRAO.map((nome,i)=>({id:i+1,nome,valor:0}));
+    D.nbi=D.backgrounds.length+1;
+  }
+  if(!D.nbi) D.nbi=(D.backgrounds.length||0)+1;
 }
 function flash(){
   const b=document.getElementById('saveBadge');
-  b.textContent='âœ“ salvo';b.className='ok';
-  setTimeout(()=>{b.textContent='salvo â—';b.className='';},1400);
+  b.textContent='✓ salvo';b.className='ok';
+  setTimeout(()=>{b.textContent='salvo ◦';b.className='';},1400);
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 // TABS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 function goTab(id,btn){
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
@@ -962,11 +739,13 @@ function goTab(id,btn){
   btn.classList.add('on');
   if(id==='combate'){renderCombat();initHashVerif();}
   if(id==='qualdef'){renderTraits();calcBonusPoints();}
+  if(id==='antecedentes') renderBackgrounds();
+  if(id==='preludio'){const el=document.getElementById('preludioText');if(el&&typeof D.preludio==='string')el.value=D.preludio;}
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 // DOTS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 function mkDots(val,max,onChange,vt=false){
   const w=document.createElement('div');w.className='dots';
   for(let i=1;i<=max;i++){
@@ -978,15 +757,13 @@ function mkDots(val,max,onChange,vt=false){
   return w;
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 // FICHA RENDER
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 function renderFicha(){
   document.getElementById('charName').value=D.info.name||'';
-
-  // info
   const ig=document.getElementById('infoGrid');ig.innerHTML='';
-  const IF=[{k:'clan',l:'ClÃ£'},{k:'gen',l:'GeraÃ§Ã£o'},{k:'nature',l:'Natureza'},{k:'demeanor',l:'Comportamento'},{k:'haven',l:'RefÃºgio'},{k:'concept',l:'Conceito'},{k:'player',l:'Jogador'}];
+  const IF=[{k:'clan',l:'Clã'},{k:'gen',l:'Geração'},{k:'nature',l:'Natureza'},{k:'demeanor',l:'Comportamento'},{k:'haven',l:'Refúgio'},{k:'concept',l:'Conceito'},{k:'player',l:'Jogador'}];
   IF.forEach(f=>{
     const w=document.createElement('div');w.className='if-wrap';
     w.innerHTML=`<div class="if-label">${f.l}</div>`;
@@ -994,8 +771,6 @@ function renderFicha(){
     inp.oninput=()=>{D.info[f.k]=inp.value;save();};
     w.appendChild(inp);ig.appendChild(w);
   });
-
-  // attrs
   [{id:'fisicos',g:'fisico'},{id:'social',g:'social'},{id:'mentais',g:'mental'}].forEach(({id,g})=>{
     const el=document.getElementById(id);el.innerHTML='';
     ATTRS.filter(a=>a.g===g).forEach(a=>{
@@ -1006,15 +781,13 @@ function renderFicha(){
       row.appendChild(lbl);row.appendChild(dots);row.appendChild(val);el.appendChild(row);
     });
   });
-
-  // skills
   [{id:'talentos',g:'t'},{id:'pericias',g:'p'},{id:'conhecimentos',g:'c'}].forEach(({id,g})=>{
     const el=document.getElementById(id);el.innerHTML='';
     SKILLS.filter(s=>s.g===g).forEach(s=>{
       const row=document.createElement('div');row.className='row';
       if(!s.l){
         const inp=document.createElement('input');inp.className='row-label editable';
-        inp.placeholder='EspecializaÃ§Ã£o...';inp.value=D.skillNames[s.k]||'';
+        inp.placeholder='Especialização...';inp.value=D.skillNames[s.k]||'';
         inp.oninput=()=>{D.skillNames[s.k]=inp.value;save();};
         row.appendChild(inp);
       } else {
@@ -1025,8 +798,6 @@ function renderFicha(){
       row.appendChild(dots);row.appendChild(val);el.appendChild(row);
     });
   });
-
-  // virtues
   const ve=document.getElementById('virtudes');ve.innerHTML='';
   VIRTUES.forEach(v=>{
     const row=document.createElement('div');row.className='row';
@@ -1035,10 +806,8 @@ function renderFicha(){
     const val=document.createElement('div');val.className='row-val';val.textContent=D.virtues[v.k];
     row.appendChild(lbl);row.appendChild(dots);row.appendChild(val);ve.appendChild(row);
   });
-
-  // pools
   const pe=document.getElementById('pools');pe.innerHTML='';
-  [{label:'ForÃ§a de Vontade',key:'willpower',max:10},{label:'Humanidade / Caminho',key:'humanidade',max:10},{label:'Sangue mÃ¡ximo',key:'bloodMax',max:20}].forEach(({label,key,max})=>{
+  [{label:'Força de Vontade',key:'willpower',max:10},{label:'Humanidade / Caminho',key:'humanidade',max:10},{label:'Sangue máximo',key:'bloodMax',max:20}].forEach(({label,key,max})=>{
     const row=document.createElement('div');row.className='row';
     const lbl=document.createElement('div');lbl.className='row-label';lbl.textContent=label;
     const dots=mkDots(D[key],max,v=>{D[key]=v;save();renderFicha();});
@@ -1047,9 +816,9 @@ function renderFicha(){
   });
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 // DISCIPLINES
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 let _pwDiscId=null,_pwId=null;
 
 function renderDiscs(){
@@ -1057,17 +826,13 @@ function renderDiscs(){
   const emp=document.getElementById('emptyDisc');
   if(!D.disciplines.length){emp.style.display='block';return;}
   emp.style.display='none';
-  // detecta e corrige IDs duplicados em runtime
   const seen=new Set();
   D.disciplines.forEach((d,i)=>{
-    if(!d.id||seen.has(d.id)){
-      d.id=Math.max(0,...D.disciplines.map(x=>x.id||0))+1+i;
-    }
+    if(!d.id||seen.has(d.id)){d.id=Math.max(0,...D.disciplines.map(x=>x.id||0))+1+i;}
     seen.add(d.id);
   });
   D.disciplines.forEach(disc=>{
     const item=document.createElement('div');item.className='disc-item';
-    // header
     const hd=document.createElement('div');hd.className='disc-hd';
     const ni=document.createElement('input');ni.className='disc-name-in';ni.value=disc.name;ni.placeholder='Nome da Disciplina';
     ni.onclick=e=>e.stopPropagation();
@@ -1076,25 +841,26 @@ function renderDiscs(){
     for(let i=1;i<=5;i++){const d=document.createElement('div');d.className='ddot'+(i<=disc.dots?' on':'');d.onclick=e=>{e.stopPropagation();disc.dots=i===disc.dots?i-1:i;save();renderDiscs();};dd.appendChild(d);}
     const addBtn=document.createElement('button');addBtn.className='btn btn-add';addBtn.textContent='+ Poder';
     addBtn.onclick=e=>{e.stopPropagation();openNewPW(disc.id);};
-    const delBtn=document.createElement('button');delBtn.className='btn btn-del';delBtn.textContent='âœ•';
+    const delBtn=document.createElement('button');delBtn.className='btn btn-del';delBtn.textContent='✕';
     delBtn.onclick=e=>{e.stopPropagation();if(confirm('Remover disciplina "'+disc.name+'"?')){D.disciplines=D.disciplines.filter(d=>d.id!==disc.id);save();renderDiscs();}};
     hd.appendChild(ni);hd.appendChild(dd);hd.appendChild(addBtn);hd.appendChild(delBtn);
     item.appendChild(hd);
-    // powers
     if(disc.powers&&disc.powers.length){
       disc.powers.forEach(p=>{
         const pr=document.createElement('div');pr.className='prow';
         const pool=fmtPool(p);
-        pr.innerHTML=`<span class="plvl">${Array.from({length:5},(_,i)=>`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:1px solid var(--blood);margin-right:2px;${i<p.level?'background:var(--blood);':''}"></span>`).join('')}</span><span class="pname">${p.name||'â€”'}</span><span class="ppool">${pool}</span>`;
+        const hasPool=!p.passive&&p.attr&&p.attr!=='';
+        pr.innerHTML=`<span class="plvl">${Array.from({length:5},(_,i)=>`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:1px solid var(--blood);margin-right:2px;${i<p.level?'background:var(--blood);':''}"></span>`).join('')}</span><span class="pname">${p.name||'—'}</span><span class="ppool">${hasPool?pool:'<span style="color:#f99;font-size:10px;">⚙ pool não config.</span>'}</span>`;
         if(p.passive) pr.innerHTML+=`<span class="tag t-pas">Passivo</span>`;
         else{
-          if(p.bb>0) pr.innerHTML+=`<span class="tag t-blood">ðŸ©¸${p.bb}</span>`;
-          if(p.bw>0) pr.innerHTML+=`<span class="tag t-wp">ðŸ’™${p.bw}</span>`;
-          if(!p.bb&&!p.bw) pr.innerHTML+=`<span class="tag t-free">GrÃ¡tis</span>`;
+          if(!hasPool) pr.innerHTML+=`<span class="tag t-cfg">⚙ config.</span>`;
+          if(p.bb>0) pr.innerHTML+=`<span class="tag t-blood">🩸${p.bb}</span>`;
+          if(p.bw>0) pr.innerHTML+=`<span class="tag t-wp">💙${p.bw}</span>`;
+          if(!p.bb&&!p.bw) pr.innerHTML+=`<span class="tag t-free">Grátis</span>`;
           pr.innerHTML+=`<span class="tag t-cena">${DUR[p.dur]||p.dur}</span>`;
         }
         const eb=document.createElement('button');eb.className='btn btn-ghost';eb.textContent='Editar';eb.onclick=()=>openEditPW(disc.id,p.id);
-        const db=document.createElement('button');db.className='btn btn-del';db.textContent='âœ•';
+        const db=document.createElement('button');db.className='btn btn-del';db.textContent='✕';
         db.onclick=()=>{if(confirm('Remover poder?')){disc.powers=disc.powers.filter(x=>x.id!==p.id);save();renderDiscs();}};
         pr.appendChild(eb);pr.appendChild(db);
         item.appendChild(pr);
@@ -1108,17 +874,17 @@ function renderDiscs(){
 
 function fmtPool(p){
   if(p.passive) return 'Passivo';
+  if(!p.attr||p.attr==='') return '— pool não configurada';
   const a=ATTRS.find(x=>x.k===p.attr)||{l:p.attr==='fdv'?'FdV':''};
   const s=SKILLS.find(x=>x.k===p.skill);
   const sn=s?(s.l||D.skillNames[s.k]||'?'):'';
   let r=a.l||(p.attr==='fdv'?'FdV':'');
   if(sn) r+=' + '+sn;
   if(p.diff){const ds=p.diff==='fdv'?'Dif.FdV':(p.diff==='var'?'Dif.Var':'Dif.'+p.diff);r+=` (${ds})`;}
-  return r||'â€”';
+  return r||'—';
 }
 
 function newDisc(){
-  // garante ID único mesmo se ndi estiver bagunçado ou faltando
   if(!D.ndi||typeof D.ndi!=='number') D.ndi=1;
   const existing=D.disciplines.map(d=>d.id||0);
   while(existing.includes(D.ndi)) D.ndi++;
@@ -1126,23 +892,22 @@ function newDisc(){
   save();renderDiscs();
 }
 
-// power modal
 function buildAttrSel(sel){
-  sel.innerHTML='<option value="">â€” Nenhum â€”</option>';
-  [['fisico','â”€â”€ FÃ­sicos â”€â”€'],['social','â”€â”€ Social â”€â”€'],['mental','â”€â”€ Mentais â”€â”€']].forEach(([g,lbl])=>{
+  sel.innerHTML='<option value="">— Nenhum —</option>';
+  [['fisico','── Físicos ──'],['social','── Social ──'],['mental','── Mentais ──']].forEach(([g,lbl])=>{
     const og=document.createElement('optgroup');og.label=lbl;
     ATTRS.filter(a=>a.g===g).forEach(a=>{const o=document.createElement('option');o.value=a.k;o.textContent=a.l;og.appendChild(o);});
     sel.appendChild(og);
   });
-  const o=document.createElement('option');o.value='fdv';o.textContent='ForÃ§a de Vontade';sel.appendChild(o);
+  const o=document.createElement('option');o.value='fdv';o.textContent='Força de Vontade';sel.appendChild(o);
 }
 function buildSkillSel(sel){
-  sel.innerHTML='<option value="">â€” Nenhuma â€”</option>';
-  [['t','â”€â”€ Talentos â”€â”€'],['p','â”€â”€ PerÃ­cias â”€â”€'],['c','â”€â”€ Conhecimentos â”€â”€']].forEach(([g,lbl])=>{
+  sel.innerHTML='<option value="">— Nenhuma —</option>';
+  [['t','── Talentos ──'],['p','── Perícias ──'],['c','── Conhecimentos ──']].forEach(([g,lbl])=>{
     const og=document.createElement('optgroup');og.label=lbl;
     SKILLS.filter(s=>s.g===g).forEach(s=>{
       const o=document.createElement('option');o.value=s.k;
-      o.textContent=s.l||(D.skillNames[s.k]||'EspecializaÃ§Ã£o');
+      o.textContent=s.l||(D.skillNames[s.k]||'Especialização');
       og.appendChild(o);
     });
     sel.appendChild(og);
@@ -1183,7 +948,7 @@ function closePW(){document.getElementById('pwMod').style.display='none';}
 function closePWBg(e){if(e.target.id==='pwMod')closePW();}
 function savePW(){
   const name=document.getElementById('pmName').value.trim();
-  if(!name){alert('Nome obrigatÃ³rio');return;}
+  if(!name){alert('Nome obrigatório');return;}
   const disc=D.disciplines.find(d=>d.id===_pwDiscId);if(!disc) return;
   const pwr={
     id:_pwId||D.npi++,name,level:+document.getElementById('pmLvl').value,
@@ -1200,9 +965,9 @@ function savePW(){
   save();closePW();renderDiscs();
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 // COMBAT
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ═══════════════════════════════════════════════════════════
 function getAttrV(k){
   if(k==='fdv') return D.willpower;
   return (D.attrs[k]||0)+(CS.boosts[k]||0);
@@ -1215,8 +980,9 @@ function calcDice(p){
 }
 function poolStr(p){
   if(p.passive) return 'Passivo';
+  if(!p.attr||p.attr==='') return '⚙ pool não configurada';
   const dice=calcDice(p);
-  return fmtPool(p)+(dice?` â†’ ${dice} dados`:'');
+  return fmtPool(p)+(dice?` → ${dice} dados`:'');
 }
 
 function renderCombat(){
@@ -1225,7 +991,6 @@ function renderCombat(){
   renderBoosts();renderEffects();renderCombatDiscs();renderBlood();renderHealth();renderWP();
 }
 
-// boosts
 function renderBoosts(){
   const g=document.getElementById('boostGrid');g.innerHTML='';
   FISICOS.forEach(k=>{
@@ -1235,42 +1000,41 @@ function renderBoosts(){
       <div class="bblock-num" style="color:${boost>0?'var(--bo)':'var(--gd)'}">${total}</div>
       <div class="bblock-sub">${boost>0?`${base}+${boost}`:' '}</div>
       <div class="bblock-dots">${Array.from({length:5},(_,i)=>`<div class="dot${i<base?' on':i<total?' on':''}${i>=base&&i<total?' style="background:var(--bo);border-color:var(--bo);"':''}"></div>`).join('')}</div>
-      <button class="bblock-btn" ${canB?'':'disabled'} onclick="boostAttr('${k}')">ðŸ©¸ +1 ${PL[k]}</button>`;
+      <button class="bblock-btn" ${canB?'':'disabled'} onclick="boostAttr('${k}')">🩸 +1 ${PL[k]}</button>`;
     g.appendChild(b);
   });
 }
 function boostAttr(k){
-  if(CS.bloodCur<=0){lg('<span class="lw">âš  Sem sangue!</span>');return;}
+  if(!guardCombat())return;
+  if(CS.bloodCur<=0){lg('<span class="lw">⚠ Sem sangue!</span>');return;}
   CS.bloodCur--;CS.boosts[k]=(CS.boosts[k]||0)+1;
   renderBoosts();renderBlood();
-  lg(`<span class="lo">${PL[k]}</span> bombado <span class="lc">-1 sangue</span> â†’ total ${(D.attrs[k]||0)+CS.boosts[k]}`);
+  lg(`<span class="lo">${PL[k]}</span> bombado <span class="lc">-1 sangue</span> → total ${(D.attrs[k]||0)+CS.boosts[k]}`);
 }
-function resetBoosts(){CS.boosts={forca:0,destreza:0,vigor:0};renderBoosts();lg('<span class="lw">Boosts resetados.</span>');}
+function resetBoosts(){if(!guardCombat())return;CS.boosts={forca:0,destreza:0,vigor:0};renderBoosts();lg('<span class="lw">Boosts resetados.</span>');}
 
-// effects
 function addFx(name,dur,disc){
   if(dur==='inst'||dur==='perm') return;
   CS.effects.push({id:CS.eid++,name,dur,disc,sc:CS.scene,t:CS.turn});renderEffects();
 }
-function rmFx(id){CS.effects=CS.effects.filter(e=>e.id!==id);renderEffects();}
+function rmFx(id){if(!guardCombat())return;CS.effects=CS.effects.filter(e=>e.id!==id);renderEffects();}
 function renderEffects(){
   const el=document.getElementById('effList');el.innerHTML='';
   document.getElementById('effCnt').textContent=CS.effects.length;
   if(!CS.effects.length){el.innerHTML='<div style="font-size:12px;color:var(--tx3);font-style:italic;text-align:center;padding:6px 0;">Nenhum efeito ativo.</div>';return;}
   CS.effects.forEach(e=>{
     const d=document.createElement('div');d.className='eff-item';
-    d.innerHTML=`<div class="eff-name"><span style="color:var(--gd);font-size:11px;">${e.disc}</span> â€” ${e.name}</div>
+    d.innerHTML=`<div class="eff-name"><span style="color:var(--gd);font-size:11px;">${e.disc}</span> — ${e.name}</div>
       <div class="eff-dur" style="color:${e.dur==='cena'?'#aaf':'#fca'}">${e.dur==='cena'?'Cena '+e.sc:'T'+e.t}</div>
-      <button class="eff-rm" onclick="rmFx(${e.id})">âœ•</button>`;
+      <button class="eff-rm" onclick="rmFx(${e.id})">✕</button>`;
     el.appendChild(d);
   });
 }
 
-// combat disc list
 function renderCombatDiscs(){
   const el=document.getElementById('combatDiscs');el.innerHTML='';
   if(!D.disciplines.length){
-    el.innerHTML='<div style="text-align:center;color:var(--tx3);font-style:italic;padding:20px 0;font-size:13px;">VÃ¡ Ã  aba Disciplinas para cadastrar seus poderes.</div>';
+    el.innerHTML='<div style="text-align:center;color:var(--tx3);font-style:italic;padding:20px 0;font-size:13px;">Vá à aba Disciplinas para cadastrar seus poderes.</div>';
     return;
   }
   const barC={1:'#4a1a1a',2:'var(--blood)',3:'var(--blood2)',4:'#e67e22',5:'#f39c12'};
@@ -1281,13 +1045,16 @@ function renderCombatDiscs(){
     block.appendChild(hd);
     const pl=document.createElement('div');
     (disc.powers||[]).forEach(p=>{
+      const hasPool=p.passive||(!(!p.attr||p.attr===''));
       const c=document.createElement('div');c.className='pcard';
       c.innerHTML=`<div class="pbar" style="background:${barC[p.level]||'var(--blood)'}"></div>
-        <div class="pcard-info"><div class="pcard-name">${p.name}</div><div class="pcard-pool">${poolStr(p)}</div></div>
-        ${p.bb>0?`<span class="tag t-blood">ðŸ©¸${p.bb}</span>`:''}
-        ${p.bw>0?`<span class="tag t-wp">ðŸ’™${p.bw}</span>`:''}
-        <button class="use-btn${p.passive?' pas':''}">${p.passive?'Ver':'Usar'}</button>`;
-      c.onclick=(e)=>{if(!e.target.classList.contains('use-btn'))return;openCM(disc,p);};
+        <div class="pcard-info">
+          <div class="pcard-name">${p.name}</div>
+          <div class="pcard-pool">${hasPool?poolStr(p):'<span style="color:#f99;">⚙ pool não configurada — clique para preencher</span>'}</div>
+        </div>
+        ${p.bb>0?`<span class="tag t-blood">🩸${p.bb}</span>`:''}
+        ${p.bw>0?`<span class="tag t-wp">💙${p.bw}</span>`:''}
+        <button class="use-btn${p.passive?' pas':(!hasPool?' cfg':'')}">${p.passive?'Ver':(!hasPool?'⚙ Config.':'Usar')}</button>`;
       c.querySelector('.use-btn').onclick=(e)=>{e.stopPropagation();openCM(disc,p);};
       pl.appendChild(c);
     });
@@ -1295,9 +1062,8 @@ function renderCombatDiscs(){
   });
 }
 
-// turn/scene
-function chT(d){CS.turn=Math.max(1,CS.turn+d);document.getElementById('tNum').textContent=CS.turn;if(d>0)lg(`â”â” <span style="color:var(--gd2);font-family:'Cinzel',serif;">Turno ${CS.turn}</span> â”â”`);}
-function advScene(){
+function chT(d){if(!guardCombat())return;CS.turn=Math.max(1,CS.turn+d);document.getElementById('tNum').textContent=CS.turn;if(d>0)lg(`┄┄ <span style="color:var(--gd2);font-family:'Cinzel',serif;">Turno ${CS.turn}</span> ┄┄`);}
+function advScene(){if(!guardCombat())return;
   CS.scene++;CS.turn=1;
   document.getElementById('sNum').textContent=CS.scene;
   document.getElementById('tNum').textContent='1';
@@ -1305,27 +1071,25 @@ function advScene(){
   CS.effects=CS.effects.filter(e=>e.dur!=='cena');
   let hb=false;FISICOS.forEach(k=>{if(CS.boosts[k]>0){hb=true;CS.boosts[k]=0;}});
   renderBoosts();renderEffects();
-  lg(`<span class="ls">â”â” Cena ${CS.scene} â”â”</span>`);
-  if(hb) lg('<span class="lw">âš  Boosts expiraram.</span>');
-  if(exp.length) lg(`<span class="lw">âš  Expirado: ${exp.join(', ')}</span>`);
+  lg(`<span class="ls">┄┄ Cena ${CS.scene} ┄┄</span>`);
+  if(hb) lg('<span class="lw">⚠ Boosts expiraram.</span>');
+  if(exp.length) lg(`<span class="lw">⚠ Expirado: ${exp.join(', ')}</span>`);
 }
 
-// blood
 function renderBlood(){
   const g=document.getElementById('bpGrid');g.innerHTML='';
   for(let i=0;i<D.bloodMax;i++){const d=document.createElement('div');d.className='bp'+(i<CS.bloodCur?' on':'');d.onclick=()=>i<CS.bloodCur?spBlood(1,true):gnBlood(1);g.appendChild(d);}
   document.getElementById('bpCnt').textContent=`${CS.bloodCur}/${D.bloodMax}`;
 }
-function spBlood(n,doLog){if(CS.bloodCur<=0){lg('<span class="lw">âš  Sem sangue!</span>');return;}CS.bloodCur=Math.max(0,CS.bloodCur-n);renderBlood();renderBoosts();if(doLog)lg(`<span class="lc">-${n} sangue</span> (${CS.bloodCur} rest.)`);}
-function gnBlood(n){CS.bloodCur=Math.min(D.bloodMax,CS.bloodCur+n);renderBlood();renderBoosts();lg(`<span class="lo">+${n} sangue</span>`);}
+function spBlood(n,doLog){if(!guardCombat())return;if(CS.bloodCur<=0){lg('<span class="lw">⚠ Sem sangue!</span>');return;}CS.bloodCur=Math.max(0,CS.bloodCur-n);renderBlood();renderBoosts();if(doLog)lg(`<span class="lc">-${n} sangue</span> (${CS.bloodCur} rest.)`);}
+function gnBlood(n){if(!guardCombat())return;CS.bloodCur=Math.min(D.bloodMax,CS.bloodCur+n);renderBlood();renderBoosts();lg(`<span class="lo">+${n} sangue</span>`);}
 
-// health
 function renderHealth(){
   const el=document.getElementById('hRows');el.innerHTML='';
   HL.forEach((h,i)=>{
     const dmg=CS.health[i];
     const cls=dmg==='b'?'ba':dmg==='l'?'le':dmg==='a'?'ag':'';
-    const ch=dmg==='b'?'/':dmg==='l'?'âœ•':dmg==='a'?'*':'';
+    const ch=dmg==='b'?'/':dmg==='l'?'✕':dmg==='a'?'*':'';
     const row=document.createElement('div');row.className='health-row';
     row.innerHTML=`<div class="hlbl">${h.l}</div><div class="hpen">${h.p}</div><div class="hbox ${cls}" onclick="cycleH(${i})">${ch}</div>`;
     el.appendChild(row);
@@ -1338,12 +1102,12 @@ function renderHealth(){
   else{st.textContent=sl[w];st.style.color=w>4?'#f88':w>2?'#fa5':'var(--tx2)';}
 }
 function cycleH(i){
+  if(!guardCombat())return;
   const c={'null':'b',b:'l',l:'a',a:null};CS.health[i]=c[String(CS.health[i])];renderHealth();
-  const t={b:'ContusÃ£o',l:'Letal',a:'Agravado',null:'Curado'};
+  const t={b:'Contusão',l:'Letal',a:'Agravado',null:'Curado'};
   lg(`${HL[i].l}: <span class="lc">${t[String(CS.health[i])]||'Curado'}</span>`);
 }
 
-// willpower
 function renderWP(){
   CS.wpTemp=Math.min(CS.wpTemp,D.willpower);
   const pe=document.getElementById('wpPerm');pe.innerHTML='';
@@ -1352,55 +1116,129 @@ function renderWP(){
   for(let i=0;i<D.willpower;i++){const d=document.createElement('div');d.className='wpt'+(i<CS.wpTemp?' on':'');d.onclick=()=>i<CS.wpTemp?spWP():gnWP();te.appendChild(d);}
   document.getElementById('wpCnt').textContent=`${CS.wpTemp}/${D.willpower}`;
 }
-function spWP(n=1){if(CS.wpTemp<=0){lg('<span class="lw">âš  Sem FdV!</span>');return;}CS.wpTemp=Math.max(0,CS.wpTemp-n);renderWP();}
-function gnWP(n=1){CS.wpTemp=Math.min(D.willpower,CS.wpTemp+n);renderWP();}
+function spWP(n=1){if(!guardCombat())return;if(CS.wpTemp<=0){lg('<span class="lw">⚠ Sem FdV!</span>');return;}CS.wpTemp=Math.max(0,CS.wpTemp-n);renderWP();}
+function gnWP(n=1){if(!guardCombat())return;CS.wpTemp=Math.min(D.willpower,CS.wpTemp+n);renderWP();}
 
-// log
 function lg(msg){
   const l=document.getElementById('log');
   if(l.children[0]&&l.children[0].style.textAlign==='center') l.innerHTML='';
   const e=document.createElement('div');e.className='lentry';
-  e.innerHTML=`<span class="lr">C${CS.scene}Â·T${CS.turn}</span> ${msg}`;
+  e.innerHTML=`<span class="lr">C${CS.scene}·T${CS.turn}</span> ${msg}`;
   l.prepend(e);
 }
-function clearLog(){document.getElementById('log').innerHTML='<div class="lentry" style="color:var(--tx3);font-style:italic;text-align:center;padding:8px 0;">Os atos desta noite serÃ£o registrados aqui.</div>';}
+function clearLog(){document.getElementById('log').innerHTML='<div class="lentry" style="color:var(--tx3);font-style:italic;text-align:center;padding:8px 0;">Os atos desta noite serão registrados aqui.</div>';}
 
-// combat modal
+// ═══════════════════════════════════════════════════════════
+// COMBAT MODAL — com pool editor inline
+// ═══════════════════════════════════════════════════════════
 let _cd=null,_cp=null;
+
 function openCM(disc,p){
   _cd=disc;_cp=p;
-  document.getElementById('cmDisc').textContent=`${disc.name} Â· NÃ­vel ${p.level}`;
+  document.getElementById('cmDisc').textContent=`${disc.name} · Nível ${p.level}`;
   document.getElementById('cmTitle').textContent=p.name;
   document.getElementById('cmDesc').textContent=p.desc||'';
+
   const dice=calcDice(p);
   const tags=document.getElementById('cmTags');tags.innerHTML='';
-  if(p.passive){tags.innerHTML='<span class="tag t-pas">Passivo â€” Sempre ativo</span>';}
-  else{
+  if(p.passive){
+    tags.innerHTML='<span class="tag t-pas">Passivo — Sempre ativo</span>';
+  } else {
     if(!p.bb&&!p.bw) tags.innerHTML+='<span class="tag t-free">Sem custo</span>';
-    if(p.bb>0) tags.innerHTML+=`<span class="tag t-blood">ðŸ©¸ ${p.bb} Sangue</span>`;
-    if(p.bw>0) tags.innerHTML+=`<span class="tag t-wp">ðŸ’™ ${p.bw} FdV</span>`;
-    tags.innerHTML+=`<span class="tag t-cena">â± ${DUR[p.dur]||p.dur}</span>`;
+    if(p.bb>0) tags.innerHTML+=`<span class="tag t-blood">🩸 ${p.bb} Sangue</span>`;
+    if(p.bw>0) tags.innerHTML+=`<span class="tag t-wp">💙 ${p.bw} FdV</span>`;
+    tags.innerHTML+=`<span class="tag t-cena">⏱ ${DUR[p.dur]||p.dur}</span>`;
   }
-  document.getElementById('cmRoll').textContent=p.passive?'':
-    `${fmtPool(p)} â†’ ${dice} dados`;
+
+  const rollEl=document.getElementById('cmRoll');
+  rollEl.style.color='';
+
   const w=document.getElementById('cmWarn');let wt='';
-  if(p.bb>0&&CS.bloodCur<p.bb) wt+=`âš  Sangue insuficiente (${CS.bloodCur}/${p.bb}). `;
-  if(p.bw>0&&CS.wpTemp<p.bw) wt+='âš  FdV insuficiente. ';
+  if(p.bb>0&&CS.bloodCur<p.bb) wt+=`⚠ Sangue insuficiente (${CS.bloodCur}/${p.bb}). `;
+  if(p.bw>0&&CS.wpTemp<p.bw) wt+='⚠ FdV insuficiente. ';
   w.style.display=wt?'block':'none';w.textContent=wt;
   document.getElementById('cmDres').style.display='none';
-  const ub=document.getElementById('cmUse'),rb=document.getElementById('cmRollBtn');
+
+  const ub=document.getElementById('cmUse');
+  const rb=document.getElementById('cmRollBtn');
   ub.style.display=p.passive?'none':'block';
-  rb.style.display=(p.passive||dice===0)?'none':'block';
-  ub.textContent='â–¶ Ativar';ub.disabled=false;
+  ub.textContent='▶ Ativar';
+  ub.disabled=false;
+
+  // ── Pool editor: aparece quando poder não tem atributo configurado ──
+  const editorSec=document.getElementById('cmPoolEditorSec');
+  const noPool=!p.passive&&(!p.attr||p.attr==='');
+
+  if(noPool){
+    editorSec.style.display='block';
+    // Popula os selects
+    buildAttrSel(document.getElementById('cmAttrSel'));
+    buildSkillSel(document.getElementById('cmSkillSel'));
+    document.getElementById('cmAttrSel').value='';
+    document.getElementById('cmSkillSel').value='';
+    document.getElementById('cmDiffSel').value='6';
+    document.getElementById('cmPoolPreview').textContent='— selecione um atributo para calcular —';
+    document.getElementById('cmPoolPreview').style.color='var(--tx3)';
+    // Rolar fica escondido até selecionar atributo
+    rb.style.display='none';
+    // Sinaliza no texto principal
+    rollEl.textContent='⚠ Parada não configurada — preencha abaixo';
+    rollEl.style.color='#f99';
+  } else {
+    editorSec.style.display='none';
+    rollEl.textContent=p.passive?'':(`${fmtPool(p)} → ${dice} dados`);
+    rb.style.display=(p.passive||dice===0)?'none':'block';
+  }
+
   document.getElementById('cmOv').style.display='flex';
 }
+
+// Atualiza preview em tempo real enquanto jogador seleciona atributo/habilidade
+function updateCMPoolLive(){
+  if(!_cp) return;
+  const attr=document.getElementById('cmAttrSel').value;
+  const skill=document.getElementById('cmSkillSel').value;
+  const diff=document.getElementById('cmDiffSel').value;
+
+  let dice=0;
+  if(attr) dice+=getAttrV(attr);
+  if(skill) dice+=D.skills[skill]||0;
+  dice=Math.max(0,dice);
+
+  const preview=document.getElementById('cmPoolPreview');
+  const rb=document.getElementById('cmRollBtn');
+  const rollEl=document.getElementById('cmRoll');
+
+  if(!attr){
+    preview.textContent='— selecione um atributo para calcular —';
+    preview.style.color='var(--tx3)';
+    rb.style.display='none';
+    rollEl.textContent='⚠ Parada não configurada — preencha abaixo';
+    rollEl.style.color='#f99';
+    return;
+  }
+
+  const aLbl=ATTRS.find(x=>x.k===attr)?.l||attr;
+  const sLbl=skill?(SKILLS.find(x=>x.k===skill)?.l||D.skillNames[skill]||skill):'';
+  const dLbl=diff==='fdv'?'Dif. FdV':'Dif. '+diff;
+  const poolTxt=sLbl?`${aLbl} + ${sLbl}`:aLbl;
+
+  preview.textContent=`${poolTxt} (${dLbl}) → ${dice} dados`;
+  preview.style.color=dice>0?'var(--gd)':'#f88';
+
+  rollEl.textContent=`${poolTxt} (${dLbl}) → ${dice} dados`;
+  rollEl.style.color='';
+
+  rb.style.display=dice>0?'block':'none';
+}
+
 function closeCM(){document.getElementById('cmOv').style.display='none';_cd=null;_cp=null;}
 function closeCMBg(e){if(e.target.id==='cmOv')closeCM();}
 
 function activatePwr(){
   if(!_cp) return;
-  if(_cp.bb>0&&CS.bloodCur<_cp.bb){const w=document.getElementById('cmWarn');w.style.display='block';w.textContent='âš  Sangue insuficiente!';return;}
-  if(_cp.bw>0&&CS.wpTemp<_cp.bw){const w=document.getElementById('cmWarn');w.style.display='block';w.textContent='âš  FdV insuficiente!';return;}
+  if(_cp.bb>0&&CS.bloodCur<_cp.bb){const w=document.getElementById('cmWarn');w.style.display='block';w.textContent='⚠ Sangue insuficiente!';return;}
+  if(_cp.bw>0&&CS.wpTemp<_cp.bw){const w=document.getElementById('cmWarn');w.style.display='block';w.textContent='⚠ FdV insuficiente!';return;}
   if(_cp.bb>0) spBlood(_cp.bb,false);
   if(_cp.bw>0) spWP(_cp.bw);
   addFx(_cp.name,_cp.dur,_cd.name);
@@ -1409,95 +1247,246 @@ function activatePwr(){
   if(_cp.bb>0) m+=` <span class="lc">-${_cp.bb} sangue</span>`;
   if(_cp.bw>0) m+=` <span class="lc">-${_cp.bw} FdV</span>`;
   lg(m);
-  document.getElementById('cmUse').textContent='âœ“ Ativado';
+  document.getElementById('cmUse').textContent='✓ Ativado';
   document.getElementById('cmUse').disabled=true;
 }
 
+// ── rollCM: usa pool editor se poder não tiver atributo ──
 function rollCM(){
   if(!_cp) return;
-  const num=calcDice(_cp);
-  if(num===0){lg('<span class="lw">Pool 0 â€” sem dados.</span>');return;}
-  const diff=(_cp.diff==='fdv')?(D.willpower||6):(_cp.diff==='var')?6:(+_cp.diff||6);
+
+  const editorVisible=document.getElementById('cmPoolEditorSec')?.style.display!=='none';
+  let num, rawDiff;
+
+  if(editorVisible&&(!_cp.attr||_cp.attr==='')){
+    const attr=document.getElementById('cmAttrSel').value;
+    const skill=document.getElementById('cmSkillSel').value;
+    rawDiff=document.getElementById('cmDiffSel').value;
+
+    // Sem atributo = ativa mas não rola
+    if(!attr) return;
+
+    let d=0;
+    if(attr) d+=getAttrV(attr);
+    if(skill) d+=D.skills[skill]||0;
+    num=Math.max(0,d);
+
+    // Salva de volta no poder APENAS se for mestre
+    if(canEdit()){
+      _cp.attr=attr;
+      if(skill)_cp.skill=skill;
+      _cp.diff=rawDiff==='fdv'?'fdv':(+rawDiff||6);
+      save();renderCombatDiscs();
+      document.getElementById('cmPoolEditorSec').style.display='none';
+      document.getElementById('cmRoll').textContent=poolStr(_cp);
+      document.getElementById('cmRoll').style.color='';
+      document.getElementById('cmRollBtn').style.display='block';
+    }
+
+  } else {
+    num=calcDice(_cp);
+    rawDiff=_cp.diff;
+  }
+
+  if(num===0){lg('<span class="lw">Pool 0 — sem dados.</span>');return;}
+
+  const diff=(rawDiff==='fdv')?(D.willpower||6):(rawDiff==='var')?6:(+rawDiff||6);
   const rs=Array.from({length:num},()=>Math.floor(Math.random()*10)+1);
-  let suc=0,ones=0;rs.forEach(r=>{if(r>=diff)suc++;if(r===1)ones++;});
+  let suc=0,ones=0;
+  rs.forEach(r=>{if(r>=diff)suc++;if(r===1)ones++;});
   const botch=!suc&&ones>0,net=Math.max(0,suc-ones);
+
   const dn=document.getElementById('cmDnums');dn.innerHTML='';
   rs.forEach(r=>{const d=document.createElement('div');d.className='die '+(r===1?'b':r>=diff?'s':'f');d.textContent=r;dn.appendChild(d);});
+
   const ds=document.getElementById('cmDsum');
-  if(botch){ds.textContent='ðŸ’€ Falha CrÃ­tica!';ds.style.color='#f44';lg(`<span class="lw">ðŸ’€ Falha CrÃ­tica â€” ${_cp.name}!</span>`);}
-  else if(!net){ds.textContent='Falha â€” 0 sucessos';ds.style.color='var(--tx3)';}
+  if(botch){ds.textContent='💀 Falha Crítica!';ds.style.color='#f44';lg(`<span class="lw">💀 Falha Crítica — ${_cp.name}!</span>`);}
+  else if(!net){ds.textContent='Falha — 0 sucessos';ds.style.color='var(--tx3)';}
   else{ds.textContent=`${net} sucesso${net>1?'s':''}`;ds.style.color='#8c8';}
   document.getElementById('cmDres').style.display='block';
-  // envia automaticamente pro Discord (se webhook configurado)
+
+  // Envia pro Discord se webhook configurado
   (async()=>{
     try{
       const sucEnvio=botch?-1:net;
-      const dEnvio=(_cp.diff==='fdv')?'fdv':(_cp.diff==='var'?'var':(+_cp.diff||6));
+      const dEnvio=rawDiff==='fdv'?'fdv':(rawDiff==='var'?'var':(+rawDiff||6));
       const h=await hashRolagem(_cd,_cp,rs,dEnvio);
       enviarRolagemDiscord(_cd,_cp,rs,sucEnvio,dEnvio,h);
     }catch(e){console.warn(e);}
   })();
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-
-// ONLINE / LOCK (XP removido)
+// ═══════════════════════════════════════════════════════════
+// ONLINE / SUPABASE
+// ═══════════════════════════════════════════════════════════
 let APP={client:null,user:null,fichaId:null,status:'rascunho',role:'local',saving:false};
 function canEdit(){return APP.role==='local'||APP.status==='rascunho'||APP.status==='reaberta';}
 function setLockedUi(){document.body.classList.toggle('locked',!canEdit());const b=document.getElementById('statusBadge');if(!b)return;b.className='pill '+(APP.client?'ok ':'')+(!canEdit()?'lock':'');b.textContent=(APP.client?'online ':'local ')+(APP.status||'rascunho')+(APP.role&&APP.role!=='local'?' / '+APP.role:'');}
-function safeChange(fn){if(!canEdit()){alert('Ficha finalizada. Peca ao mestre um token de edicao.');return false;}fn();return true;}
 function flashMsg(msg,ok=true){const b=document.getElementById('saveBadge');b.textContent=msg;b.className=ok?'ok':'';setTimeout(()=>{b.textContent='salvo';b.className='';},1700);}
 function touchRender(){renderFicha();renderDiscs();setLockedUi();}
 function openSetup(){document.getElementById('sbUrl').value=localStorage.getItem('vtm_sb_url')||'';document.getElementById('sbKey').value=localStorage.getItem('vtm_sb_key')||'';document.getElementById('sheetId').value=APP.fichaId||localStorage.getItem('vtm_ficha_id')||'';document.getElementById('setupMod').style.display='flex';}
 function closeSetup(){document.getElementById('setupMod').style.display='none';}function closeSetupBg(e){if(e.target.id==='setupMod')closeSetup();}
 function saveSetup(){localStorage.setItem('vtm_sb_url',document.getElementById('sbUrl').value.trim());localStorage.setItem('vtm_sb_key',document.getElementById('sbKey').value.trim());localStorage.setItem('vtm_ficha_id',document.getElementById('sheetId').value.trim());initSupabase();closeSetup();}
 function initSupabase(){const url=localStorage.getItem('vtm_sb_url'),key=localStorage.getItem('vtm_sb_key');APP.fichaId=localStorage.getItem('vtm_ficha_id')||APP.fichaId;if(url&&key&&window.supabase){APP.client=window.supabase.createClient(url,key);APP.client.auth.getUser().then(({data})=>{APP.user=data.user||null;setLockedUi();});}setLockedUi();}
-async function loginEmail(){initSupabase();if(!APP.client){openSetup();return;}const email=prompt('Email para entrar');if(!email)return;const {error}=await APP.client.auth.signInWithOtp({email});if(error)alert(error.message);else alert('Veja seu email para confirmar o login.');}
-async function logoutUser(){if(APP.client)await APP.client.auth.signOut();APP.user=null;APP.role='local';setLockedUi();}
-async function createOnlineFicha(){initSupabase();if(!APP.client){openSetup();return;}const {data,error}=await APP.client.rpc('criar_ficha',{p_nome:D.info.name||'Ficha sem nome',p_dados:D});if(error){alert(error.message);return;}APP.fichaId=data.id;APP.status=data.status;APP.role='jogador';localStorage.setItem('vtm_ficha_id',data.id);flashMsg('ficha online criada');setLockedUi();}
 async function loadOnlineFicha(){initSupabase();const id=document.getElementById('sheetId').value.trim()||APP.fichaId;if(!APP.client||!id){openSetup();return;}const {data,error}=await APP.client.from('fichas').select('*').eq('id',id).single();if(error){alert(error.message);return;}APP.fichaId=data.id;APP.status=data.status;APP.role=data.jogador_id===APP.user?.id?'jogador':'mestre';localStorage.setItem('vtm_ficha_id',data.id);D=Object.assign(defaultData(),data.dados||{});D.info=D.info||{};D.info.name=data.nome||D.info.name||'';closeSetup();touchRender();flashMsg('ficha carregada');}
 async function saveOnlineNow(){if(!APP.client||!APP.fichaId||APP.saving||!canEdit())return;APP.saving=true;const {error}=await APP.client.from('fichas').update({nome:D.info.name||'',dados:D}).eq('id',APP.fichaId);APP.saving=false;if(error)flashMsg('erro online',false);else flashMsg('salvo online');}
-async function shareWithMestre(){if(!APP.client||!APP.fichaId){openSetup();return;}const {data,error}=await APP.client.rpc('gerar_token_mestre',{p_ficha_id:APP.fichaId});if(error){alert(error.message);return;}prompt('Token do mestre. Envie para ele:',data);}
 async function acceptMestreToken(){initSupabase();if(!APP.client){openSetup();return;}const token=prompt('Cole o token que o jogador mandou');if(!token)return;const {data,error}=await APP.client.rpc('aceitar_token_mestre',{p_token:token.trim()});if(error){alert(error.message);return;}APP.fichaId=data.id;APP.status=data.status;APP.role='mestre';localStorage.setItem('vtm_ficha_id',data.id);D=Object.assign(defaultData(),data.dados||{});closeSetup();touchRender();}
-async function finishFicha(){if(!APP.client||!APP.fichaId){alert('Crie ou carregue a ficha online antes de finalizar.');return;}if(!confirm('Finalizar trava a ficha para o jogador. Continuar?'))return;await saveOnlineNow();const {data,error}=await APP.client.rpc('finalizar_ficha',{p_ficha_id:APP.fichaId});if(error){alert(error.message);return;}APP.status=data.status;touchRender();flashMsg('ficha finalizada');}
-async function reopenWithToken(){initSupabase();if(!APP.client){openSetup();return;}const token=prompt('Cole o token de edicao dado pelo mestre');if(!token)return;const {data,error}=await APP.client.rpc('reabrir_ficha_com_token',{p_token:token.trim()});if(error){alert(error.message);return;}APP.fichaId=data.id;APP.status=data.status;APP.role='jogador';D=Object.assign(defaultData(),data.dados||{});closeSetup();touchRender();}
-async function mestreEditToken(){if(!APP.client||!APP.fichaId){openSetup();return;}const {data,error}=await APP.client.rpc('gerar_token_edicao',{p_ficha_id:APP.fichaId});if(error){alert(error.message);return;}prompt('Token de edicao para o jogador:',data);}
+async function reopenWithToken(){initSupabase();if(!APP.client){openSetup();return;}const token=prompt('Cole o token de edição dado pelo mestre');if(!token)return;const {data,error}=await APP.client.rpc('reabrir_ficha_com_token',{p_token:token.trim()});if(error){alert(error.message);return;}APP.fichaId=data.id;APP.status=data.status;APP.role='jogador';D=Object.assign(defaultData(),data.dados||{});closeSetup();touchRender();}
+async function mestreEditToken(){if(!APP.client||!APP.fichaId){openSetup();return;}const {data,error}=await APP.client.rpc('gerar_token_edicao',{p_ficha_id:APP.fichaId});if(error){alert(error.message);return;}prompt('Token de edição para o jogador:',data);}
 
-const _oldSave=save;save=function(){_oldSave();clearTimeout(window._onlineSaveTimer);window._onlineSaveTimer=setTimeout(saveOnlineNow,900);};
-const _oldMkDots=mkDots;mkDots=function(val,max,onChange,vt=false){return _oldMkDots(val,max,(v)=>safeChange(()=>onChange(v)),vt);};
-const _oldRenderFicha=renderFicha;renderFicha=function(){_oldRenderFicha();document.querySelectorAll('#pane-ficha input,#charName').forEach(el=>el.disabled=!canEdit());};
-const _oldRenderDiscs=renderDiscs;renderDiscs=function(){_oldRenderDiscs();document.querySelectorAll('#pane-disciplinas input,#pane-disciplinas button').forEach(el=>el.disabled=!canEdit());};
+const _oldSave=save;
+save=function(){_oldSave();clearTimeout(window._onlineSaveTimer);window._onlineSaveTimer=setTimeout(saveOnlineNow,900);};
+const _oldMkDots=mkDots;
+mkDots=function(val,max,onChange,vt=false){return _oldMkDots(val,max,(v)=>{if(!canEdit())return alert('Ficha finalizada.');onChange(v);},vt);};
+const _oldRenderFicha=renderFicha;
+renderFicha=function(){_oldRenderFicha();document.querySelectorAll('#pane-ficha input,#charName').forEach(el=>el.disabled=!canEdit());};
+const _oldRenderDiscs=renderDiscs;
+renderDiscs=function(){_oldRenderDiscs();document.querySelectorAll('#pane-disciplinas input,#pane-disciplinas button').forEach(el=>el.disabled=!canEdit());};
 const _oldNewDisc=newDisc;newDisc=function(){if(!canEdit())return alert('Ficha finalizada.');_oldNewDisc();};
 const _oldOpenNewPW=openNewPW;openNewPW=function(id){if(!canEdit())return alert('Ficha finalizada.');_oldOpenNewPW(id);};
 const _oldOpenEditPW=openEditPW;openEditPW=function(d,p){if(!canEdit())return alert('Ficha finalizada.');_oldOpenEditPW(d,p);};
 const _oldSavePW=savePW;savePW=function(){if(!canEdit())return alert('Ficha finalizada.');_oldSavePW();};
-// INIT
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-load();
-D.merits=D.merits||[];
-D.flaws=D.flaws||[];
-initSupabase();
-renderFicha();
-renderDiscs();
-setLockedUi();
-initNotas();
 
-CS.bloodCur=D.bloodMax;
-CS.wpTemp=D.willpower;
+// ═══════════════════════════════════════════════════════════
+// HASH / EXPORT
+// ═══════════════════════════════════════════════════════════
+async function sha256(str){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function sortKeys(obj){
+  if(Array.isArray(obj))return obj.map(sortKeys);
+  if(obj!==null&&typeof obj==='object')return Object.keys(obj).sort().reduce((r,k)=>{r[k]=sortKeys(obj[k]);return r;},{});
+  return obj;
+}
+function snapshotCanonico(d){
+  return {
+    info:d.info, attrs:d.attrs, skills:d.skills, skillNames:d.skillNames,
+    virtues:d.virtues, willpower:d.willpower, humanidade:d.humanidade, bloodMax:d.bloodMax,
+    disciplines:d.disciplines, merits:d.merits||[], flaws:d.flaws||[],
+    backgrounds:d.backgrounds||[], preludio:d.preludio||'', versao:d.versao||0
+  };
+}
+async function hashCanonico(d){return await sha256(JSON.stringify(sortKeys(snapshotCanonico(d))));}
+async function exportarJSON(){
+  const versao=(D.versao||0)+1;D.versao=versao;save();
+  const hash=await hashCanonico(D);
+  const exportData={...snapshotCanonico(D),hashCanonico:hash,exportadoEm:Date.now()};
+  const nome=(D.info&&D.info.name||'personagem').replace(/\s+/g,'_').toLowerCase();
+  const blob=new Blob([JSON.stringify(exportData,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='ficha_'+nome+'_v'+versao+'.json';a.click();
+  URL.revokeObjectURL(url);
+  const b=document.getElementById('saveBadge');b.textContent='✓ exportado v'+versao;b.className='ok';
+  setTimeout(()=>{b.textContent='salvo ◦';b.className='';},2200);
+}
+async function computarHash(){
+  const hash=await hashCanonico(D);
+  const el=document.getElementById('hashAtualDisplay');
+  if(el){el.textContent=hash;el.style.color='var(--gd2)';}
+  localStorage.setItem('vtm_hash_atual',hash);
+  verificarIntegridade();return hash;
+}
+function verificarIntegridade(){
+  const el=document.getElementById('hashVerResult');const input=document.getElementById('hashAprovadoInput');
+  if(!el||!input)return;
+  const aprovado=(input.value||localStorage.getItem('vtm_hash_aprovado')||'').trim();
+  if(aprovado&&input.value)localStorage.setItem('vtm_hash_aprovado',aprovado);
+  const hashAtual=localStorage.getItem('vtm_hash_atual')||'';
+  if(!aprovado||!hashAtual){el.style.display='none';return;}
+  el.style.display='block';
+  if(aprovado===hashAtual){
+    el.style.cssText='display:block;background:rgba(45,106,63,.2);color:var(--gr);border:1px solid var(--gr);border-radius:2px;padding:5px 8px;font-size:11px;';
+    el.textContent='✓ ÍNTEGRA — hash bate com o aprovado pelo mestre';
+  }else{
+    el.style.cssText='display:block;background:rgba(139,0,0,.2);color:#f88;border:1px solid var(--blood);border-radius:2px;padding:5px 8px;font-size:11px;';
+    el.textContent='✕ ADULTERADA — ficha modificada desde a última aprovação';
+  }
+}
+function initHashVerif(){
+  const saved=localStorage.getItem('vtm_hash_aprovado');
+  if(saved){const el=document.getElementById('hashAprovadoInput');if(el)el.value=saved;}
+  const hashSaved=localStorage.getItem('vtm_hash_atual');
+  if(hashSaved){const el=document.getElementById('hashAtualDisplay');if(el)el.textContent=hashSaved;}
+}
 
-document.getElementById('charName').addEventListener('input',function(){
-  D.info.name=this.value;save();document.title=(this.value||'Vampiro')+' â€” VtM';
-});
-if(D.info.name) document.title=D.info.name+' â€” VtM';
+// ═══════════════════════════════════════════════════════════
+// DISCORD
+// ═══════════════════════════════════════════════════════════
+function openDiscordCfg(){
+  document.getElementById('dscUrl').value=localStorage.getItem('vtm_dsc_url')||'';
+  document.getElementById('dscNome').value=localStorage.getItem('vtm_dsc_nome')||'';
+  document.getElementById('dscMod').style.display='flex';
+}
+function closeDiscord(){document.getElementById('dscMod').style.display='none';}
+function closeDiscordBg(e){if(e.target.id==='dscMod')closeDiscord();}
+function salvarDiscord(){
+  localStorage.setItem('vtm_dsc_url',document.getElementById('dscUrl').value.trim());
+  localStorage.setItem('vtm_dsc_nome',document.getElementById('dscNome').value.trim());
+  closeDiscord();
+  const b=document.getElementById('saveBadge');b.textContent='✓ webhook salvo';b.className='ok';
+  setTimeout(()=>{b.textContent='salvo ◦';b.className='';},1500);
+}
+async function testarDiscord(){
+  const url=document.getElementById('dscUrl').value.trim();
+  if(!url){alert('Cole a URL do webhook primeiro');return;}
+  const nome=document.getElementById('dscNome').value.trim()||'Jogador';
+  try{
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:'RPG Chain',content:'✓ Webhook configurado por **'+nome+'** — pronto para enviar rolagens.'})});
+    if(r.ok)alert('Funcionou!');else alert('Erro '+r.status);
+  }catch(e){alert('Erro: '+e.message);}
+}
+async function enviarRolagemDiscord(disc,pwr,dados,sucessos,diff,hash){
+  const url=localStorage.getItem('vtm_dsc_url');if(!url)return;
+  const nomeJogador=localStorage.getItem('vtm_dsc_nome')||(D.info&&D.info.name)||'Jogador';
+  const corResultado=sucessos<0?15548997:sucessos===0?9803157:5763719;
+  const dadosStr=dados.map(d=>d>=diff?'**'+d+'**':d===1?'~~'+d+'~~':d).join(', ');
+  const txtResultado=sucessos<0?'💀 Falha Crítica':sucessos===0?'Falha':sucessos+' sucesso'+(sucessos>1?'s':'');
+  const dStr=diff==='fdv'?'FdV ('+(D.willpower||0)+')':diff;
+  const embed={
+    title:'🩸 '+nomeJogador+' — '+pwr.name,
+    description:'**'+disc.name+'** · Nível '+pwr.level,
+    color:corResultado,
+    fields:[{name:'Pool',value:dados.length+' dados (Dif. '+dStr+')',inline:true},{name:'Resultado',value:txtResultado,inline:true},{name:'Dados',value:dadosStr||'—',inline:false}],
+    footer:{text:'Hash: '+(hash||'').slice(0,16)+'… · '+new Date().toLocaleTimeString('pt-BR')}
+  };
+  try{await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:'RPG Chain',embeds:[embed]})});}
+  catch(e){console.warn('Discord webhook falhou:',e);}
+}
+async function hashRolagem(disc,pwr,dados,diff){
+  const obj={pj:D.info&&D.info.name||'?',disc:disc.name,pwr:pwr.name,nivel:pwr.level,dados,diff,t:Date.now()};
+  return await sha256(JSON.stringify(obj));
+}
 
-// ════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// ANTECEDENTES
+// ═══════════════════════════════════════════════════════════
+function renderBackgrounds(){
+  const el=document.getElementById('antBody');if(!el)return;el.innerHTML='';
+  (D.backgrounds||[]).forEach(b=>{
+    const row=document.createElement('div');row.className='row';
+    const inp=document.createElement('input');inp.className='row-label editable';
+    inp.value=b.nome;inp.placeholder='Antecedente...';inp.oninput=()=>{b.nome=inp.value;save();};
+    const dots=document.createElement('div');dots.className='dots';
+    for(let i=1;i<=5;i++){const d=document.createElement('div');d.className='dot'+(i<=b.valor?' on':'');d.onclick=()=>{b.valor=i===b.valor?i-1:i;save();renderBackgrounds();};dots.appendChild(d);}
+    const val=document.createElement('div');val.className='row-val';val.textContent=b.valor;
+    const del=document.createElement('button');del.style.cssText='background:none;border:none;color:var(--tx3);cursor:pointer;font-size:13px;margin-left:6px;';
+    del.textContent='✕';del.onclick=()=>{D.backgrounds=D.backgrounds.filter(x=>x.id!==b.id);save();renderBackgrounds();};
+    row.appendChild(inp);row.appendChild(dots);row.appendChild(val);row.appendChild(del);el.appendChild(row);
+  });
+}
+function adicionarAntecedente(){
+  D.backgrounds.push({id:D.nbi++,nome:'Antecedente',valor:0});
+  save();renderBackgrounds();
+}
+
+// ═══════════════════════════════════════════════════════════
 // QUALIDADES E DEFEITOS
-// ════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function novaTrait(type){
   const name=prompt(type==='merit'?'Nome da qualidade:':'Nome do defeito:');
   if(!name)return;
-  const nivelStr=prompt('Nível (1-5):','1');
-  const nivel=Math.max(1,Math.min(5,parseInt(nivelStr)||1));
+  const nivel=Math.max(1,Math.min(5,parseInt(prompt('Nível (1-5):','1'))||1));
   const desc=prompt('Descrição (opcional):','')||'';
   const arr=type==='merit'?D.merits:D.flaws;
   arr.push({id:Date.now(),nome:name,nivel,desc});
@@ -1522,7 +1511,7 @@ function renderTraits(){
     el.innerHTML=arr.map(t=>`<div class="trait-item">
       <div class="trait-dots">${Array.from({length:5},(_,i)=>`<div class="trait-dot${i<t.nivel?' on':''}${isFlaw?' flaw':''}" onclick="setTraitNivel('${type}',${t.id},${i+1})"></div>`).join('')}</div>
       <div class="trait-body"><div class="trait-name">${t.nome} <span style="font-family:'Cinzel',serif;font-size:10px;color:${isFlaw?'var(--gd2)':'var(--blood2)'};">[${t.nivel}pt]</span></div>${t.desc?`<div class="trait-desc">${t.desc}</div>`:''}</div>
-      <button class="trait-del" onclick="removerTrait('${type}',${t.id})">&#10005;</button>
+      <button class="trait-del" onclick="removerTrait('${type}',${t.id})">✕</button>
     </div>`).join('');
   }
   renderList(D.merits||[],'meritsList','merit');
@@ -1533,13 +1522,13 @@ function calcBonusPoints(){
   const defPts=(D.flaws||[]).reduce((s,f)=>s+f.nivel,0);
   const saldo=15+defPts-qualPts;
   const el=document.getElementById('bonusPoints');if(!el)return;
-  el.innerHTML='Qualidades: <strong>'+qualPts+'pts</strong> &nbsp;|&nbsp; Defeitos: <strong>'+defPts+'pts</strong> (m&aacute;x 7 na cria&ccedil;&atilde;o) &nbsp;|&nbsp; Saldo b&ocirc;nus: <strong style="color:'+(saldo>=0?'var(--gr2)':'#f88')+'">'+( saldo>=0?'+':'')+saldo+'</strong>';
+  el.innerHTML='Qualidades: <strong>'+qualPts+'pts</strong> &nbsp;|&nbsp; Defeitos: <strong>'+defPts+'pts</strong> (máx 7 na criação) &nbsp;|&nbsp; Saldo bônus: <strong style="color:'+(saldo>=0?'var(--gr)':'#f88')+'">'+( saldo>=0?'+':'')+saldo+'</strong>';
 }
 
-// ════════════════════════════════
-// ANOTAÇÕES
-// ════════════════════════════════
-let _notasSt;
+// ═══════════════════════════════════════════════════════════
+// ANOTAÇÕES E PRELÚDIO
+// ═══════════════════════════════════════════════════════════
+let _notasSt,_preSt;
 function initNotas(){
   const saved=localStorage.getItem('vtm_notas');
   const el=document.getElementById('notasText');
@@ -1547,440 +1536,360 @@ function initNotas(){
   if(!el)return;
   el.addEventListener('input',()=>{clearTimeout(_notasSt);_notasSt=setTimeout(()=>localStorage.setItem('vtm_notas',el.value),600);});
 }
-
-// ════════════════════════════════
-// EXPORT JSON
-// ════════════════════════════════
-async function sha256(str){
-  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-function sortKeys(obj){
-  if(Array.isArray(obj))return obj.map(sortKeys);
-  if(obj!==null&&typeof obj==='object')return Object.keys(obj).sort().reduce((r,k)=>{r[k]=sortKeys(obj[k]);return r;},{});
-  return obj;
+function initPreludio(){
+  const el=document.getElementById('preludioText');if(!el)return;
+  if(typeof D.preludio==='string')el.value=D.preludio;
+  el.addEventListener('input',()=>{clearTimeout(_preSt);_preSt=setTimeout(()=>{D.preludio=el.value;save();},500);});
 }
 
-// Hash canônico — representa o ESTADO da ficha, não o arquivo
-// Campos voláteis (exportadoEm, hashAtual) ficam de fora
-function snapshotCanonico(D){
-  return {
-    info:       D.info,
-    attrs:      D.attrs,
-    skills:     D.skills,
-    skillNames: D.skillNames,
-    virtues:    D.virtues,
-    willpower:  D.willpower,
-    humanidade: D.humanidade,
-    bloodMax:   D.bloodMax,
-    disciplines:D.disciplines,
-    merits:     D.merits||[],
-    flaws:      D.flaws||[],
-    versao:     D.versao||0
-  };
-}
-async function hashCanonico(D){
-  return await sha256(JSON.stringify(sortKeys(snapshotCanonico(D))));
-}
-
-async function exportarJSON(){
-  
-  const versao=(D.versao||0)+1;
-  D.versao=versao;
-  save();
-  const hash=await hashCanonico(D);
-  const exportData={...snapshotCanonico(D),hashCanonico:hash,exportadoEm:Date.now()};
-  const nome=(D.info&&D.info.name||'personagem').replace(/\s+/g,'_').toLowerCase();
-  const blob=new Blob([JSON.stringify(exportData,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='ficha_'+nome+'_v'+versao+'.json';a.click();
-  URL.revokeObjectURL(url);
-  const b=document.getElementById('saveBadge');
-  b.textContent='&#10003; exportado v'+versao;b.className='ok';
-  setTimeout(()=>{b.textContent='salvo &#9702;';b.className='';},2200);
-}
-
-// ════════════════════════════════
-// HASH VERIFICATION (COMBATE)
-// ════════════════════════════════
-async function computarHash(){
-  const hash=await hashCanonico(D);
-  const el=document.getElementById('hashAtualDisplay');
-  if(el){el.textContent=hash;el.style.color='var(--gd2)';}
-  localStorage.setItem('vtm_hash_atual',hash);
-  verificarIntegridade();
-  return hash;
-}
-function verificarIntegridade(){
-  const el=document.getElementById('hashVerResult');
-  const input=document.getElementById('hashAprovadoInput');
-  if(!el||!input)return;
-  const aprovado=(input.value||localStorage.getItem('vtm_hash_aprovado')||'').trim();
-  if(aprovado&&input.value)localStorage.setItem('vtm_hash_aprovado',aprovado);
-  const hashAtual=localStorage.getItem('vtm_hash_atual')||'';
-  if(!aprovado||!hashAtual){el.style.display='none';return;}
-  el.style.display='block';
-  if(aprovado===hashAtual){
-    el.style.cssText='display:block;background:rgba(45,106,63,.2);color:var(--gr2);border:1px solid var(--gr);border-radius:2px;padding:5px 8px;font-size:11px;';
-    el.textContent='&#10003; ÍNTEGRA — hash bate com o aprovado pelo mestre';
-  }else{
-    el.style.cssText='display:block;background:rgba(139,0,0,.2);color:#f88;border:1px solid var(--blood);border-radius:2px;padding:5px 8px;font-size:11px;';
-    el.textContent='&#10005; ADULTERADA — ficha modificada desde a última aprovação';
-  }
-}
-function initHashVerif(){
-  const saved=localStorage.getItem('vtm_hash_aprovado');
-  if(saved){const el=document.getElementById('hashAprovadoInput');if(el)el.value=saved;}
-  const hashSaved=localStorage.getItem('vtm_hash_atual');
-  if(hashSaved){const el=document.getElementById('hashAtualDisplay');if(el)el.textContent=hashSaved;}
-}
-
-// ════════════════════════════════
-// SALVAR MANUAL (botÃ£o verde)
-// ════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// SALVAR MANUAL
+// ═══════════════════════════════════════════════════════════
 function salvarManual(){
-  try{
-    if(typeof ensureMeta==='function') 
-    localStorage.setItem('vtm2',JSON.stringify(D));
-  }catch(e){}
+  try{localStorage.setItem('vtm2',JSON.stringify(D));}catch(e){}
   const b=document.getElementById('saveBadge');
-  if(b){b.textContent='âœ“ salvo';b.className='ok';
-  setTimeout(()=>{b.textContent='salvo â—¦';b.className='';},1500);}
+  if(b){b.textContent='✓ salvo';b.className='ok';setTimeout(()=>{b.textContent='salvo ◦';b.className='';},1500);}
 }
 
-// ════════════════════════════════
-// ANTECEDENTES
-// ════════════════════════════════
-const ANTECEDENTES_BASE =[
-  'Aliados','Contatos','DomÃ­nio','Fama','GregÃ¡rio',
-  'InfluÃªncia','Mentor','Recursos','SÃ©quito','Status'
-];
-
-function _ensureBgs(){
-  if(!Array.isArray(D.backgrounds)){
-    D.backgrounds=ANTECEDENTES_PADRAO.map((nome,i)=>({id:i+1,nome,valor:0}));
-    D.nbi=D.backgrounds.length+1;
-  }
-  if(!D.nbi) D.nbi=(D.backgrounds.length||0)+1;
-}
-
-function renderBackgrounds(){
-  _ensureBgs();
-  const el=document.getElementById('antBody');
-  if(!el)return;
-  el.innerHTML='';
-  D.backgrounds.forEach(b=>{
-    const row=document.createElement('div');row.className='row';
-    const inp=document.createElement('input');inp.className='row-label editable';
-    inp.value=b.nome;inp.placeholder='Antecedente...';
-    inp.oninput=()=>{b.nome=inp.value;save();};
-    const dots=document.createElement('div');dots.className='dots';
-    for(let i=1;i<=5;i++){
-      const d=document.createElement('div');d.className='dot'+(i<=b.valor?' on':'');
-      d.onclick=()=>{b.valor=i===b.valor?i-1:i;save();renderBackgrounds();};
-      dots.appendChild(d);
-    }
-    const val=document.createElement('div');val.className='row-val';val.textContent=b.valor;
-    const del=document.createElement('button');
-    del.style.cssText='background:none;border:none;color:var(--tx3);cursor:pointer;font-size:13px;margin-left:6px;';
-    del.textContent='âœ•';del.title='Remover';
-    del.onclick=()=>{D.backgrounds=D.backgrounds.filter(x=>x.id!==b.id);save();renderBackgrounds();};
-    row.appendChild(inp);row.appendChild(dots);row.appendChild(val);row.appendChild(del);
-    el.appendChild(row);
-  });
-}
-
-function adicionarAntecedente(){
-  _ensureBgs();
-  D.backgrounds.push({id:D.nbi++,nome:'Antecedente',valor:0});
-  save();renderBackgrounds();
-}
-
-// inclui antecedentes no hash canÃ´nico
-if(typeof snapshotCanonico==='function'){
-  const _oldSnap=snapshotCanonico;
-  snapshotCanonico=function(d){
-    const s=_oldSnap(d);
-    s.backgrounds=d.backgrounds||[];
-    return s;
-  };
-}
-
-// adiciona o "antecedentes" no goTab existente sem reescrever ele
-if(typeof goTab==='function'){
-  const _oldGoTab=goTab;
-  goTab=function(id,btn){
-    _oldGoTab(id,btn);
-    if(id==='antecedentes') renderBackgrounds();
-  };
-}
-
-// inicializa antecedentes no load
-_ensureBgs();
-
-
-// ════════════════════════════════
-// CARREGAR JSON (importar ficha)
-// ════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// CARREGAR JSON
+// ═══════════════════════════════════════════════════════════
 function carregarJSON(input){
-  const file=input.files&&input.files[0];
-  if(!file)return;
+  const file=input.files&&input.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=function(e){
     try{
       const json=JSON.parse(e.target.result);
-      if(!confirm('Isto vai substituir a ficha atual. Continuar?')){
-        input.value='';return;
-      }
-      // mescla com defaultData pra garantir campos
+      if(!confirm('Isto vai substituir a ficha atual. Continuar?')){input.value='';return;}
       D=Object.assign(defaultData(),json);
-      D.merits=D.merits||[];
-      D.flaws=D.flaws||[];
-      D.backgrounds=D.backgrounds||[];
-      if(typeof ensureMeta==='function') 
+      D.merits=D.merits||[];D.flaws=D.flaws||[];D.backgrounds=D.backgrounds||[];
       try{localStorage.setItem('vtm2',JSON.stringify(D));}catch(e){}
-      // re-render tudo
-      if(typeof renderFicha==='function') renderFicha();
-      if(typeof renderDiscs==='function') renderDiscs();
-      if(typeof renderXp==='function') renderXp();
-      if(typeof renderTraits==='function') renderTraits();
-      if(typeof calcBonusPoints==='function') calcBonusPoints();
-      if(typeof renderBackgrounds==='function') renderBackgrounds();
-      // atualiza nome no header e título
-      const cn=document.getElementById('charName');
-      if(cn) cn.value=(D.info&&D.info.name)||'';
-      if(D.info&&D.info.name) document.title=D.info.name+' â€” VtM';
-      // atualizar textarea do prelúdio se a aba existir
-      const pre=document.getElementById('preludioText');
-      if(pre) pre.value=D.preludio||'';
+      renderFicha();renderDiscs();renderTraits();calcBonusPoints();renderBackgrounds();
+      const cn=document.getElementById('charName');if(cn)cn.value=(D.info&&D.info.name)||'';
+      if(D.info&&D.info.name)document.title=D.info.name+' — VtM';
+      const pre=document.getElementById('preludioText');if(pre)pre.value=D.preludio||'';
       const b=document.getElementById('saveBadge');
-      if(b){b.textContent='âœ“ ficha carregada';b.className='ok';
-      setTimeout(()=>{b.textContent='salvo â—¦';b.className='';},1800);}
-    }catch(err){
-      alert('JSON invÃ¡lido: '+err.message);
-    }
-    input.value=''; // reset pra permitir recarregar o mesmo arquivo
+      if(b){b.textContent='✓ ficha carregada';b.className='ok';setTimeout(()=>{b.textContent='salvo ◦';b.className='';},1800);}
+    }catch(err){alert('JSON inválido: '+err.message);}
+    input.value='';
   };
   reader.readAsText(file);
 }
 
+// ═══════════════════════════════════════════════════════════
+// LINK TOKEN — ficha codificada na URL (opcional)
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// SISTEMA DE ACESSO POR PIN
+// ═══════════════════════════════════════════════════════════
+let ACCESS_LEVEL='master'; // 'view' | 'master'
+let LINK_PINS={masterPinHash:null};
 
-// ════════════════════════════════
-// DISCORD WEBHOOK
-// ════════════════════════════════
-function openDiscordCfg(){
-  document.getElementById('dscUrl').value=localStorage.getItem('vtm_dsc_url')||'';
-  document.getElementById('dscNome').value=localStorage.getItem('vtm_dsc_nome')||'';
-  document.getElementById('dscMod').style.display='flex';
+// Override do canEdit existente para respeitar o sistema de PIN
+const _canEditBase=canEdit;
+canEdit=function(){
+  if(LINK_PINS.masterPinHash) return ACCESS_LEVEL==='master';
+  return _canEditBase();
+};
+
+// Combate: view-only quando link com PIN — ninguém usa, só lê
+function guardCombat(){
+  if(!LINK_PINS.masterPinHash) return true; // sem PIN = acesso total
+  if(ACCESS_LEVEL==='master') return true;
+  openPinModal();
+  return false;
 }
-function closeDiscord(){document.getElementById('dscMod').style.display='none';}
-function closeDiscordBg(e){if(e.target.id==='dscMod')closeDiscord();}
-function salvarDiscord(){
-  const url=document.getElementById('dscUrl').value.trim();
-  const nome=document.getElementById('dscNome').value.trim();
-  localStorage.setItem('vtm_dsc_url',url);
-  localStorage.setItem('vtm_dsc_nome',nome);
-  closeDiscord();
+
+function setAccessUI(){
+  const badge=document.getElementById('accessBadge');
+  if(!badge) return;
+  if(!LINK_PINS.masterPinHash){badge.style.display='none';return;}
+  badge.style.display='block';
+  if(ACCESS_LEVEL==='master'){
+    badge.textContent='🔓 Mestre';badge.className='access-badge master';
+  }else{
+    badge.textContent='👁 Somente leitura';badge.className='access-badge view';
+  }
+  document.body.classList.toggle('locked',!canEdit());
+}
+
+function openPinModal(){
+  document.getElementById('pinEntryInput').value='';
+  document.getElementById('pinError').style.display='none';
+  document.getElementById('pinMod').style.display='flex';
+  setTimeout(()=>document.getElementById('pinEntryInput').focus(),100);
+}
+function closePinMod(){document.getElementById('pinMod').style.display='none';}
+function closePinModBg(e){if(e.target.id==='pinMod')closePinMod();}
+
+async function submitPin(){
+  const pin=document.getElementById('pinEntryInput').value.trim();
+  if(!pin) return;
+  const h=await sha256(pin);
+  if(LINK_PINS.masterPinHash&&h===LINK_PINS.masterPinHash){
+    ACCESS_LEVEL='master';
+    closePinMod();
+    setAccessUI();
+    renderFicha();renderDiscs();
+    const b=document.getElementById('saveBadge');
+    b.textContent='🔓 acesso mestre';b.className='ok';
+    setTimeout(()=>{b.textContent='salvo ◦';b.className='';},1800);
+  }else{
+    document.getElementById('pinError').style.display='block';
+    document.getElementById('pinEntryInput').value='';
+    document.getElementById('pinEntryInput').focus();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// LINK TOKEN — ficha codificada na URL (opcional)
+// ═══════════════════════════════════════════════════════════
+function abrirModalLink(){
+  document.getElementById('pinMestreInput').value='';
+  document.getElementById('linkTokenUrl').value='';
+  document.getElementById('gerarLinkBtn').style.display='block';
+  document.getElementById('copiarLinkBtn').style.display='none';
+  document.getElementById('linkTokenMod').style.display='flex';
+}
+
+function gerarLinkToken(){
+  try{
+    const snap=snapshotCanonico(D);
+    const pinM=document.getElementById('pinMestreInput').value.trim();
+    (pinM?sha256(pinM):Promise.resolve(null)).then(masterHash=>{
+      if(masterHash) snap._pinMaster=masterHash;
+      const json=JSON.stringify(snap);
+      const token=btoa(unescape(encodeURIComponent(json)));
+      const url=location.origin+location.pathname+'#vtm='+token;
+      document.getElementById('linkTokenUrl').value=url;
+      document.getElementById('gerarLinkBtn').style.display='none';
+      document.getElementById('copiarLinkBtn').style.display='block';
+      // Copia automaticamente
+      navigator.clipboard.writeText(url).then(()=>{
+        document.getElementById('copiarLinkBtn').textContent='✓ Copiado!';
+        document.getElementById('copiarLinkBtn').style.background='rgba(58,138,62,.4)';
+        const b=document.getElementById('saveBadge');
+        b.textContent='🔗 link copiado!';b.className='ok';
+        setTimeout(()=>{
+          b.textContent='salvo ◦';b.className='';
+          document.getElementById('copiarLinkBtn').textContent='📋 Copiar de novo';
+          document.getElementById('copiarLinkBtn').style.background='';
+        },2500);
+      }).catch(()=>{
+        document.getElementById('linkTokenUrl').select();
+      });
+    });
+  }catch(e){alert('Erro ao gerar link: '+e.message);}
+}
+
+function copiarLinkToken(){
+  const input=document.getElementById('linkTokenUrl');
+  navigator.clipboard.writeText(input.value).then(()=>{
+    const btn=document.getElementById('copiarLinkBtn');
+    btn.textContent='✓ Copiado!';btn.style.background='rgba(58,138,62,.4)';
+    setTimeout(()=>{btn.textContent='📋 Copiar de novo';btn.style.background='';},2000);
+  }).catch(()=>{input.select();});
+}
+
+function closeLinkToken(){document.getElementById('linkTokenMod').style.display='none';}
+function closeLinkTokenBg(e){if(e.target.id==='linkTokenMod')closeLinkToken();}
+
+// Verifica se a URL tem um token de ficha ao abrir a página
+function verificarLinkToken(){
+  const hash=location.hash;
+  if(!hash.startsWith('#vtm='))return;
+  const token=hash.slice(5);
+  try{
+    const json=decodeURIComponent(escape(atob(token)));
+    const data=JSON.parse(json);
+    const nome=(data.info&&data.info.name)||'personagem sem nome';
+    history.replaceState(null,'',location.pathname);
+    // Extrai PIN e remove do data
+    LINK_PINS.masterPinHash=data._pinMaster||null;
+    delete data._pinMaster;
+    // Sem PIN no link = acesso total; com PIN = começa somente leitura
+    ACCESS_LEVEL=LINK_PINS.masterPinHash?'view':'master';
+    if(confirm(`🔗 Link de ficha detectado!\n\n"${nome}"\n\nCarregar esta ficha?`)){
+      D=Object.assign(defaultData(),data);
+      D.merits=D.merits||[];D.flaws=D.flaws||[];D.backgrounds=D.backgrounds||[];
+      try{localStorage.setItem('vtm2',JSON.stringify(D));}catch(e){}
+      renderFicha();renderDiscs();renderTraits();calcBonusPoints();renderBackgrounds();
+      const cn=document.getElementById('charName');
+      if(cn)cn.value=(D.info&&D.info.name)||'';
+      if(D.info&&D.info.name)document.title=D.info.name+' — VtM';
+      const pre=document.getElementById('preludioText');
+      if(pre)pre.value=D.preludio||'';
+      setAccessUI();
+      if(LINK_PINS.masterPinHash){
+        const b=document.getElementById('saveBadge');
+        b.textContent='👁 somente leitura';b.className='ok';
+        setTimeout(()=>{b.textContent='salvo ◦';b.className='';},2200);
+      }
+    }
+  }catch(e){
+    console.warn('Link token inválido:',e);
+    history.replaceState(null,'',location.pathname);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// SALA DE COMBATE — jogador entra e sincroniza status
+// ═══════════════════════════════════════════════════════════
+let SALA={sb:null,salaId:null,partId:null,codigo:'',nome:'',intervalo:null};
+
+function abrirModalSala(){
+  document.getElementById('salaUrlInput').value=localStorage.getItem('sala_sb_url')||'';
+  document.getElementById('salaKeyInput').value=localStorage.getItem('sala_sb_key')||'';
+  document.getElementById('salaCodigoInput').value='';
+  document.getElementById('salaPinInput').value='';
+  document.getElementById('salaErro').style.display='none';
+  if(SALA.salaId){
+    document.getElementById('salaModTitle').textContent='⚔ Sala de Combate';
+    document.getElementById('salaModConteudo').style.display='none';
+    document.getElementById('salaModStatus').style.display='block';
+    document.getElementById('salaAtivaCodigo').textContent=SALA.codigo;
+    document.getElementById('salaAtivaNome').textContent=SALA.nome;
+  }else{
+    document.getElementById('salaModTitle').textContent='⚔ Entrar na Sala de Combate';
+    document.getElementById('salaModConteudo').style.display='block';
+    document.getElementById('salaModStatus').style.display='none';
+  }
+  document.getElementById('salaMod').style.display='flex';
+}
+function fecharModalSala(){document.getElementById('salaMod').style.display='none';}
+
+async function entrarNaSala(){
+  const url=document.getElementById('salaUrlInput').value.trim();
+  const key=document.getElementById('salaKeyInput').value.trim();
+  const codigo=document.getElementById('salaCodigoInput').value.trim().toUpperCase();
+  const pin=document.getElementById('salaPinInput').value;
+  const erroEl=document.getElementById('salaErro');
+  erroEl.style.display='none';
+  if(!url||!key){erroEl.textContent='Configure o Supabase (URL e Key).';erroEl.style.display='block';return;}
+  if(!codigo){erroEl.textContent='Digite o código da sala.';erroEl.style.display='block';return;}
+  if(!pin){erroEl.textContent='Digite o PIN da sala.';erroEl.style.display='block';return;}
+  localStorage.setItem('sala_sb_url',url);
+  localStorage.setItem('sala_sb_key',key);
+  try{SALA.sb=window.supabase.createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});}
+  catch(e){erroEl.textContent='Erro ao conectar: '+e.message;erroEl.style.display='block';return;}
+  const {data:sala,error:errSala}=await SALA.sb.from('salas_combate').select('*').eq('codigo',codigo).eq('ativa',true).single();
+  if(errSala||!sala){erroEl.textContent='Sala não encontrada ou encerrada.';erroEl.style.display='block';return;}
+  const pinHash=await sha256(pin);
+  if(pinHash!==sala.pin_hash){erroEl.textContent='PIN incorreto.';erroEl.style.display='block';return;}
+  const {data:part,error:errPart}=await SALA.sb.from('participantes_sala').insert({
+    sala_id:sala.id,char_name:D.info.name||'Personagem',player_name:D.info.player||'',
+    online:true,blood_cur:CS.bloodCur,blood_max:D.bloodMax,
+    health:CS.health,wp_temp:CS.wpTemp,willpower:D.willpower
+  }).select().single();
+  if(errPart){erroEl.textContent='Erro ao entrar: '+errPart.message;erroEl.style.display='block';return;}
+  SALA.salaId=sala.id;SALA.partId=part.id;SALA.codigo=codigo;SALA.nome=sala.nome;
+  document.getElementById('salaBadgeHeader').style.display='block';
+  if(SALA.intervalo) clearInterval(SALA.intervalo);
+  SALA.intervalo=setInterval(pushStatusSala,3000);
+  fecharModalSala();
+  setTimeout(abrirModalSala,100);
   const b=document.getElementById('saveBadge');
-  if(b){b.textContent='âœ“ webhook salvo';b.className='ok';
-  setTimeout(()=>{b.textContent='salvo â—¦';b.className='';},1500);}
+  b.textContent='⚔ Entrou em '+codigo;b.className='ok';
+  setTimeout(()=>{b.textContent='salvo ◦';b.className='';},2500);
 }
-async function testarDiscord(){
-  const url=document.getElementById('dscUrl').value.trim();
-  if(!url){alert('Cole a URL do webhook primeiro');return;}
-  const nome=document.getElementById('dscNome').value.trim()||'Jogador';
+
+async function pushStatusSala(){
+  if(!SALA.sb||!SALA.partId) return;
   try{
-    const r=await fetch(url,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        username:'RPG Chain',
-        content:'âœ“ Webhook configurado por **'+nome+'** â€” pronto para enviar rolagens.'
-      })
-    });
-    if(r.ok) alert('Funcionou! Veja a mensagem no canal do Discord.');
-    else alert('Erro '+r.status+': verifique a URL.');
-  }catch(e){alert('Erro: '+e.message);}
+    await SALA.sb.from('participantes_sala').update({
+      online:true,blood_cur:CS.bloodCur,blood_max:D.bloodMax,
+      health:CS.health,wp_temp:CS.wpTemp,willpower:D.willpower,
+      atualizado_em:new Date().toISOString()
+    }).eq('id',SALA.partId);
+  }catch(e){console.warn('Sync falhou:',e);}
 }
 
-async function enviarRolagemDiscord(disc,pwr,dados,sucessos,diff,hash){
-  const url=localStorage.getItem('vtm_dsc_url');
-  if(!url)return; // sem webhook configurado, ignora silenciosamente
-  const nomeJogador=localStorage.getItem('vtm_dsc_nome')||(D.info&&D.info.name)||'Jogador';
-  const corResultado=sucessos<0?15548997:sucessos===0?9803157:5763719;
-  const dadosStr=dados.map(d=>d>=diff?'**'+d+'**':d===1?'~~'+d+'~~':d).join(', ');
-  const txtResultado=sucessos<0?'ðŸ’€ Falha CrÃ­tica':sucessos===0?'Falha':sucessos+' sucesso'+(sucessos>1?'s':'');
-  const dStr=diff==='fdv'?'FdV ('+(D.willpower||0)+')':diff;
-  const embed={
-    title:'ðŸ©¸ '+nomeJogador+' â€” '+pwr.name,
-    description:'**'+disc.name+'** Â· NÃ­vel '+pwr.level,
-    color:corResultado,
-    fields:[
-      {name:'Pool',value:dados.length+' dados (Dif. '+dStr+')',inline:true},
-      {name:'Resultado',value:txtResultado,inline:true},
-      {name:'Dados',value:dadosStr||'â€”',inline:false}
-    ],
-    footer:{text:'Hash: '+(hash||'').slice(0,16)+'â€¦ Â· '+new Date().toLocaleTimeString('pt-BR')}
-  };
-  try{
-    await fetch(url,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({username:'RPG Chain',embeds:[embed]})
-    });
-  }catch(e){console.warn('Discord webhook falhou:',e);}
+async function sairDaSala(){
+  if(SALA.sb&&SALA.partId) await SALA.sb.from('participantes_sala').update({online:false}).eq('id',SALA.partId);
+  if(SALA.intervalo) clearInterval(SALA.intervalo);
+  SALA={sb:null,salaId:null,partId:null,codigo:'',nome:'',intervalo:null};
+  document.getElementById('salaBadgeHeader').style.display='none';
+  fecharModalSala();
 }
 
-// Faz o hash da rolagem (determinÃ­stico, prova que aquela rolagem aconteceu naquele momento)
-async function hashRolagem(disc,pwr,dados,diff){
-  const obj={pj:D.info&&D.info.name||'?',disc:disc.name,pwr:pwr.name,nivel:pwr.level,dados,diff,t:Date.now()};
-  return await sha256(JSON.stringify(obj));
-}
+// Push automático quando status muda no combate
+const _spBOrig=spBlood;spBlood=function(n,l){_spBOrig(n,l);pushStatusSala();};
+const _gnBOrig=gnBlood;gnBlood=function(n){_gnBOrig(n);pushStatusSala();};
+const _cHOrig=cycleH;cycleH=function(i){_cHOrig(i);pushStatusSala();};
+const _spWOrig=spWP;spWP=function(n=1){_spWOrig(n);pushStatusSala();};
+const _gnWOrig=gnWP;gnWP=function(n=1){_gnWOrig(n);pushStatusSala();};
+const _boostOrig=boostAttr;boostAttr=function(k){_boostOrig(k);pushStatusSala();};
 
-
-// ════════════════════════════════
-// DISCIPLINAS RESUMO (aba visual)
-// ════════════════════════════════
-function _ensureDiscResumo(){
-  if(!Array.isArray(D.discResumo)){
-    D.discResumo=[];
-    D.ndri=1;
-  }
-  if(!D.ndri) D.ndri=(D.discResumo.length||0)+1;
-}
-
-function renderDiscResumo(){
-  _ensureDiscResumo();
-  const el=document.getElementById('discResumoBody');
-  if(!el)return;
-  el.innerHTML='';
-  if(!D.discResumo.length){
-    el.innerHTML='<div style="text-align:center;color:var(--tx3);font-style:italic;padding:20px 0;font-size:13px;">Nenhuma disciplina. Clique em "+ Adicionar".</div>';
-    return;
-  }
-  D.discResumo.forEach(d=>{
-    const row=document.createElement('div');row.className='row';
-    const inp=document.createElement('input');inp.className='row-label editable';
-    inp.value=d.nome;inp.placeholder='Nome da disciplina...';
-    inp.oninput=()=>{d.nome=inp.value;save();};
-    const dots=document.createElement('div');dots.className='dots';
-    for(let i=1;i<=5;i++){
-      const dt=document.createElement('div');dt.className='dot'+(i<=d.valor?' on':'');
-      dt.onclick=()=>{d.valor=i===d.valor?i-1:i;save();renderDiscResumo();};
-      dots.appendChild(dt);
-    }
-    const val=document.createElement('div');val.className='row-val';val.textContent=d.valor;
-    const del=document.createElement('button');
-    del.style.cssText='background:none;border:none;color:var(--tx3);cursor:pointer;font-size:13px;margin-left:6px;';
-    del.textContent='âœ•';del.title='Remover';
-    del.onclick=()=>{D.discResumo=D.discResumo.filter(x=>x.id!==d.id);save();renderDiscResumo();};
-    row.appendChild(inp);row.appendChild(dots);row.appendChild(val);row.appendChild(del);
-    el.appendChild(row);
-  });
-}
-
-function adicionarDiscResumo(){
-  _ensureDiscResumo();
-  D.discResumo.push({id:D.ndri++,nome:'',valor:0});
-  save();renderDiscResumo();
-}
-
-// inclui no hash canÃ´nico
-if(typeof snapshotCanonico==='function'){
-  const _oldSnap2=snapshotCanonico;
-  snapshotCanonico=function(d){
-    const s=_oldSnap2(d);
-    s.discResumo=d.discResumo||[];
-    return s;
-  };
-}
-
-// adiciona no goTab existente
-if(typeof goTab==='function'){
-  const _oldGoTab2=goTab;
-  goTab=function(id,btn){
-    _oldGoTab2(id,btn);
-    if(id==='discResumo') renderDiscResumo();
-  };
-}
-
-_ensureDiscResumo();
-
-
-// ════════════════════════════════
-// PRELÚDIO (vai no JSON exportado)
-// ════════════════════════════════
-let _preSt;
-function initPreludio(){
-  const el=document.getElementById('preludioText');
-  if(!el)return;
-  if(typeof D.preludio==='string') el.value=D.preludio;
-  el.addEventListener('input',()=>{
-    clearTimeout(_preSt);
-    _preSt=setTimeout(()=>{
-      D.preludio=el.value;
-      save();
-    },500);
-  });
-}
-
-// inclui no hash canônico
-if(typeof snapshotCanonico==='function'){
-  const _oldSnapPre=snapshotCanonico;
-  snapshotCanonico=function(d){
-    const s=_oldSnapPre(d);
-    s.preludio=d.preludio||'';
-    return s;
-  };
-}
-
-// goTab handler
-if(typeof goTab==='function'){
-  const _oldGoTabPre=goTab;
-  goTab=function(id,btn){
-    _oldGoTabPre(id,btn);
-    if(id==='preludio'){
-      const el=document.getElementById('preludioText');
-      if(el&&typeof D.preludio==='string') el.value=D.preludio;
-    }
-  };
-}
-
-// chamar initPreludio na inicialização
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+load();
+D.merits=D.merits||[];
+D.flaws=D.flaws||[];
+initSupabase();
+renderFicha();
+renderDiscs();
+setLockedUi();
+initNotas();
 initPreludio();
 
-</script>
+CS.bloodCur=D.bloodMax;
+CS.wpTemp=D.willpower;
+setAccessUI();
 
-<!-- DISCORD CFG MODAL -->
-<div class="ov" id="dscMod" style="display:none;" onclick="closeDiscordBg(event)">
-<div class="modal">
-  <button class="modal-close" onclick="closeDiscord()">âœ•</button>
-  <h3>Discord Webhook</h3>
-  <p style="font-size:13px;color:var(--tx2);line-height:1.55;margin-bottom:14px;">
-    Cole aqui o webhook URL do canal do Discord da crÃ´nica. Toda rolagem em combate Ã© enviada automaticamente â€” o mestre vÃª o hash imediatamente sem vocÃª precisar copiar nada.
-  </p>
-  <div class="frow">
-    <label>Webhook URL</label>
-    <input type="text" id="dscUrl" placeholder="https://discord.com/api/webhooks/..."/>
+document.getElementById('charName').addEventListener('input',function(){
+  D.info.name=this.value;save();document.title=(this.value||'Vampiro')+' — VtM';
+});
+if(D.info.name) document.title=D.info.name+' — VtM';
+
+// Verifica link token na URL (roda depois de tudo estar renderizado)
+verificarLinkToken();
+</script>
+<!-- SALA MODAL -->
+<div class="ov" id="salaMod" style="display:none;" onclick="if(event.target.id==='salaMod')fecharModalSala()">
+<div class="modal" style="max-width:420px;">
+  <button class="modal-close" onclick="fecharModalSala()">✕</button>
+  <h3 id="salaModTitle">⚔ Entrar na Sala de Combate</h3>
+  <div id="salaModConteudo">
+    <div style="font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:14px;">
+      O mestre te enviou um código e um PIN de sala. Digite abaixo para entrar e sincronizar seu status ao vivo.
+    </div>
+    <div class="fg2">
+      <div class="frow"><label>Código da Sala</label><input id="salaCodigoInput" placeholder="Ex: TREVAS-47" style="text-transform:uppercase;letter-spacing:3px;font-family:'Cinzel',serif;font-size:16px;"/></div>
+      <div class="frow"><label>PIN da Sala</label><input id="salaPinInput" type="password" placeholder="••••"/></div>
+    </div>
+    <div style="border-top:1px solid var(--br);padding-top:12px;margin-top:4px;">
+      <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--blood);margin-bottom:10px;text-transform:uppercase;">Configuração Supabase (uma vez)</div>
+      <div class="frow"><label>URL do Supabase</label><input id="salaUrlInput" placeholder="https://...supabase.co"/></div>
+      <div class="frow"><label>Publishable Key</label><input id="salaKeyInput" placeholder="sb_publishable_..."/></div>
+      <div style="font-size:11px;color:var(--tx3);line-height:1.5;">O mestre te passa esses dados. Ficam salvos neste dispositivo.</div>
+    </div>
+    <div id="salaErro" style="display:none;background:rgba(139,0,0,.15);border:1px solid var(--blood);border-radius:2px;padding:8px 10px;font-size:12px;color:#f88;margin-top:8px;"></div>
+    <div class="modal-btns">
+      <button class="btn btn-prim" onclick="entrarNaSala()">⚔ Entrar</button>
+      <button class="btn btn-sec" onclick="fecharModalSala()">Cancelar</button>
+    </div>
   </div>
-  <div class="frow">
-    <label>Seu nome no Discord (opcional)</label>
-    <input type="text" id="dscNome" placeholder="Como vai aparecer nas rolagens"/>
-  </div>
-  <div style="font-size:11px;color:var(--tx3);line-height:1.5;margin-bottom:10px;">
-    No Discord: ConfiguraÃ§Ãµes do canal â†’ IntegraÃ§Ãµes â†’ Webhooks â†’ Novo Webhook â†’ Copiar URL.
-  </div>
-  <div class="modal-btns">
-    <button class="btn btn-prim" onclick="salvarDiscord()">Salvar</button>
-    <button class="btn btn-sec" onclick="testarDiscord()">Testar conexÃ£o</button>
-    <button class="btn btn-sec" onclick="closeDiscord()">Cancelar</button>
+  <!-- Status quando na sala -->
+  <div id="salaModStatus" style="display:none;">
+    <div style="text-align:center;margin-bottom:12px;">
+      <div style="font-family:'Cinzel',serif;font-size:24px;color:var(--gd);letter-spacing:4px;" id="salaAtivaCodigo"></div>
+      <div style="font-size:13px;color:var(--tx2);margin-top:4px;" id="salaAtivaNome"></div>
+      <div style="font-size:11px;color:var(--gr);margin-top:6px;">● Sincronizando ao vivo com o mestre</div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--br);border-radius:2px;padding:10px;font-size:12px;color:var(--tx2);line-height:1.7;margin-bottom:12px;">
+      Seu sangue, vitalidade e FdV aparecem no painel do mestre em tempo real.<br>
+      A cada ação no combate, o status é enviado automaticamente.
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-del" onclick="sairDaSala()">Sair da Sala</button>
+      <button class="btn btn-sec" onclick="fecharModalSala()">Fechar</button>
+    </div>
   </div>
 </div>
 </div>
 
 </body>
 </html>
-
-
 
 
