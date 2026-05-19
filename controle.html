@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VTM ADMIN - VISUALIZAÇÃO</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+:root{
+  --bg:#090303;
+  --card:#140707;
+  --card2:#1f0d0d;
+  --line:#4a1616;
+  --gold:#c8a15a;
+  --txt:#e7d7bf;
+  --txt2:#897562;
+  --blood:#8b0000;
+  --green:#1f7027;
+}
+
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:Georgia,serif;
+}
+
+/* HEADER */
+.hdr{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 18px;
+  background:#120606;
+  border-bottom:1px solid var(--blood);
+}
+
+.title{
+  flex:1;
+}
+
+.title h1{
+  color:var(--gold);
+  font-size:20px;
+  letter-spacing:1px;
+}
+
+.title span{
+  color:var(--txt2);
+  font-size:11px;
+}
+
+.btn{
+  border:none;
+  cursor:pointer;
+  padding:10px 14px;
+  border-radius:4px;
+  font-size:12px;
+  font-weight:bold;
+  transition:all 0.1s ease;
+}
+
+.btn-red{
+  background:var(--blood);
+  color:white;
+}
+
+.btn-dark{
+  background:#222;
+  color:#ddd;
+  border:1px solid #4a1616;
+}
+
+.btn:active{
+  transform:scale(.95);
+}
+
+/* SCREENS */
+.screen{
+  display:none;
+}
+
+.screen.active{
+  display:block;
+}
+
+.body{
+  padding:14px;
+  max-width:800px;
+  margin:0 auto;
+}
+
+/* LOGIN */
+.login{
+  max-width:700px;
+  margin:auto;
+}
+
+.field{
+  margin-bottom:14px;
+}
+
+.field label{
+  display:block;
+  margin-bottom:6px;
+  color:var(--txt2);
+  font-size:12px;
+  letter-spacing:1px;
+}
+
+.field input,
+.field textarea{
+  width:100%;
+  background:var(--card);
+  border:1px solid var(--line);
+  color:var(--txt);
+  padding:10px;
+  border-radius:4px;
+  font-family:monospace;
+}
+
+.field textarea{
+  height:110px;
+}
+
+/* CARD PRINCIPAL */
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:8px;
+  overflow:hidden;
+  margin-bottom:18px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.5);
+}
+
+.card-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px;
+  background:var(--card2);
+  border-bottom:1px solid var(--line);
+}
+
+.online{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  box-shadow:0 0 4px currentColor;
+}
+
+.online.on{
+  background:#2eff2e;
+  box-shadow:0 0 6px #2eff2e;
+}
+
+.online.off{
+  background:#444;
+}
+
+.name{
+  flex:1;
+  color:var(--gold);
+  font-size:22px;
+  font-weight:bold;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+/* QUADRADINHOS DE VITALIDADE */
+.health-boxes{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin:10px 0;
+}
+
+.hbox{
+  width:32px;
+  height:32px;
+  border-radius:4px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  font-weight:bold;
+}
+
+.hbox.empty{
+  border:2px solid #5a3a20;
+  background:#0a0505;
+}
+
+.hbox.b{
+  background:#7a5a00;
+  border:1px solid #a07800;
+  color:#ffd070;
+}
+
+.hbox.l{
+  background:#8b0000;
+  border:1px solid #b22222;
+  color:#ffcccc;
+}
+
+.hbox.a{
+  background:#1a0000;
+  border:1px solid #8b0000;
+  color:#ff6666;
+  text-shadow:0 0 2px red;
+}
+
+/* paineis internos SOMENTE LEITURA */
+.panel{
+  background:#120707;
+  border:1px solid #3a1a1a;
+  padding:14px;
+  border-radius:8px;
+}
+
+.panel-title{
+  color:#8d7765;
+  font-size:11px;
+  margin-bottom:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  border-left:3px solid var(--gold);
+  padding-left:8px;
+}
+
+.dots{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-bottom:8px;
+  justify-content:center;
+}
+
+.dot-blood{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  border:1.5px solid #8b0000;
+  transition:all 0.1s;
+}
+
+.dot-blood.filled{
+  background:#8b0000;
+  box-shadow:0 0 4px #ff0000;
+}
+
+.dot-wp{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  border:1.5px solid #3d6fff;
+  transition:all 0.1s;
+}
+
+.dot-wp.filled{
+  background:#3d6fff;
+  box-shadow:0 0 4px #3d6fff;
+}
+
+.valor-texto{
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+  color:var(--gold);
+  margin-top:5px;
+}
+
+/* AVISO */
+.aviso{
+  text-align:center;
+  padding:8px;
+  background:#1a0a0a;
+  border:1px solid var(--blood);
+  border-radius:4px;
+  margin-bottom:16px;
+  font-size:12px;
+  color:#aa6655;
+}
+
+/* scroll */
+::-webkit-scrollbar{
+  width:6px;
+  background:#1a0a0a;
+}
+::-webkit-scrollbar-thumb{
+  background:var(--blood);
+  border-radius:4px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="screen active" id="loginScreen">
+  <div class="hdr">
+    <div class="title">
+      <h1>🜂 VTM ADMIN</h1>
+      <span>STORYTELLER — SOMENTE VISUALIZAÇÃO</span>
+    </div>
+  </div>
+  <div class="body">
+    <div class="login">
+      <div class="field">
+        <label>🔗 SUPABASE URL</label>
+        <input id="sbUrl" placeholder="https://seuprojeto.supabase.co"/>
+      </div>
+      <div class="field">
+        <label>🗝️ SUPABASE ANON KEY</label>
+        <textarea id="sbKey" placeholder="eyJhbGciOiJIUzI1NiIs..."></textarea>
+      </div>
+      <button class="btn btn-red" onclick="connect()">
+        🩸 CONECTAR
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN VISUALIZAÇÃO (SEM EDIÇÃO) -->
+<div class="screen" id="adminScreen">
+  <div class="hdr">
+    <div class="title">
+      <h1>⚔️ VTM — TRACKER DE PERSONAGENS</h1>
+      <span>PAINEL DO NARRADOR | LEITURA APENAS</span>
+    </div>
+    <button class="btn btn-dark" onclick="loadChars()">
+      🔄 ATUALIZAR
+    </button>
+  </div>
+  <div class="body">
+    <div class="aviso">
+      ⚠️ MODO SOMENTE LEITURA — NENHUMA ALTERAÇÃO PODE SER FEITA
+    </div>
+    <div id="chars"></div>
+  </div>
+</div>
+
+<script>
+
+/* ====================================
+GLOBAL
+==================================== */
+let SB = null;
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ====================================
+CONEXÃO SUPABASE
+==================================== */
+async function connect(){
+  const url = document.getElementById('sbUrl').value.trim();
+  const key = document.getElementById('sbKey').value.trim();
+  if(!url || !key){
+    alert('Preencha URL e KEY do Supabase');
+    return;
+  }
+  SB = window.supabase.createClient(url, key);
+  const { error } = await SB.from('personagens').select('id').limit(1);
+  if(error){
+    alert('Erro: ' + error.message);
+    return;
+  }
+  localStorage.setItem('vtm_url', url);
+  localStorage.setItem('vtm_key', key);
+  show('adminScreen');
+  loadChars();
+}
+
+/* ====================================
+RENDER HEALTH BOXES (quadradinhos de vitalidade)
+==================================== */
+function renderHealth(health){
+  const arr = Array.isArray(health) ? health : [];
+  return arr.map(h=>{
+    if(h === 'b') return `<div class="hbox b">⦻</div>`;
+    if(h === 'l') return `<div class="hbox l">✕</div>`;
+    if(h === 'a') return `<div class="hbox a">☠</div>`;
+    return `<div class="hbox empty"></div>`;
+  }).join('');
+}
+
+/* ====================================
+RENDER CARD COMPLETO (SOMENTE LEITURA)
+AGORA COM OS QUADRADINHOS DENTRO DO BLOCO VITALIDADE
+==================================== */
+function renderCard(char){
+  const box = document.getElementById('chars');
+  const old = document.getElementById('char-'+char.id);
+  if(old) old.remove();
+
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.id = 'char-'+char.id;
+
+  // BOLINHAS DE SANGUE
+  let bloodDots = '';
+  for(let i=0; i<char.blood_max; i++){
+    const filled = i < char.blood_cur ? 'filled' : '';
+    bloodDots += `<div class="dot-blood ${filled}"></div>`;
+  }
+
+  // BOLINHAS DE FORÇA DE VONTADE
+  let wpDots = '';
+  for(let i=0; i<char.wp_max; i++){
+    const filled = i < char.wp_cur ? 'filled' : '';
+    wpDots += `<div class="dot-wp ${filled}"></div>`;
+  }
+
+  // QUADRADINHOS DE VITALIDADE (agora gerados separadamente)
+  const healthBoxes = renderHealth(char.health);
+
+  div.innerHTML = `
+    <div class="card-top">
+      <div class="online ${char.online ? 'on' : 'off'}"></div>
+      <div class="name">${escapeHtml(char.nome)}</div>
+    </div>
+
+    <div class="card-body" style="padding:16px; display:flex; flex-direction:column; gap:16px;">
+      
+      <!-- BLOCO SANGUE -->
+      <div class="panel">
+        <div class="panel-title">🩸 SANGUE</div>
+        <div class="dots">
+          ${bloodDots}
+        </div>
+        <div class="valor-texto">${char.blood_cur} / ${char.blood_max}</div>
+      </div>
+
+      <!-- BLOCO VITALIDADE com os QUADRADINHOS dentro -->
+      <div class="panel">
+        <div class="panel-title">🛡️ VITALIDADE</div>
+        <div class="health-boxes">
+          ${healthBoxes}
+        </div>
+        <div style="font-size:12px; color:#897562; text-align:center; margin-top:5px;">
+          ${countDamage(char.health)} de ${char.health?.length || 7} danos
+        </div>
+      </div>
+
+      <!-- BLOCO FORÇA DE VONTADE -->
+      <div class="panel">
+        <div class="panel-title">✨ FORÇA DE VONTADE</div>
+        <div class="dots">
+          ${wpDots}
+        </div>
+        <div class="valor-texto">${char.wp_cur} / ${char.wp_max}</div>
+      </div>
+
+    </div>
+  `;
+  box.appendChild(div);
+}
+
+// Conta quantos danos tem no array health
+function countDamage(health){
+  if(!Array.isArray(health)) return 0;
+  return health.filter(h => h !== null).length;
+}
+
+// escape simples para XSS
+function escapeHtml(str){
+  if(!str) return '';
+  return str.replace(/[&<>]/g, function(m){
+    if(m === '&') return '&amp;';
+    if(m === '<') return '&lt;';
+    if(m === '>') return '&gt;';
+    return m;
+  });
+}
+
+/* ====================================
+LOAD TODOS PERSONAGENS
+==================================== */
+async function loadChars(){
+  const box = document.getElementById('chars');
+  box.innerHTML = '<div style="text-align:center; padding:40px; color:#897562;">🩸 CARREGANDO PERSONAGENS...</div>';
+  const { data, error } = await SB.from('personagens').select('*').order('nome');
+  if(error){
+    box.innerHTML = '<div style="text-align:center; color:red;">ERRO AO CARREGAR</div>';
+    console.error(error);
+    return;
+  }
+  box.innerHTML = '';
+  if(!data || data.length === 0){
+    box.innerHTML = '<div style="text-align:center; padding:40px; color:#897562;">NENHUM PERSONAGEM ENCONTRADO</div>';
+    return;
+  }
+  data.forEach(char => renderCard(char));
+}
+
+/* ====================================
+AUTO LOGIN
+==================================== */
+(function(){
+  const url = localStorage.getItem('vtm_url');
+  const key = localStorage.getItem('vtm_key');
+  if(url && key){
+    document.getElementById('sbUrl').value = url;
+    document.getElementById('sbKey').value = key;
+    connect();
+  }
+})();
+
+</script>
+</body>
+</html>
