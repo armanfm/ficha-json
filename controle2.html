@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d0905">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VtM Tracker">
+<title>VtM Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --blood:#8B0000;--blood2:#b22222;
+  --ink:#0d0905;--surf:#161008;--card:#1e1510;--card2:#261a10;
+  --br:#3a2a1a;--br2:#5a3a20;
+  --gd:#c9a84c;--gd2:#7a6030;
+  --tx:#e8d9c0;--tx2:#8a7a65;--tx3:#5a4a35;
+  --gr:#2d7a32;--gr2:#3a8a3e;
+  --wp:#3a6aaa;
+}
+html,body{height:100%;overflow:hidden;background:var(--ink);}
+body{font-family:'Crimson Text',serif;color:var(--tx);display:flex;flex-direction:column;
+  background-image:radial-gradient(ellipse at 20% 0%,rgba(139,0,0,.08) 0%,transparent 60%),
+  radial-gradient(ellipse at 80% 100%,rgba(139,0,0,.05) 0%,transparent 60%);}
+
+/* ── SCREENS ── */
+.screen{display:none;flex-direction:column;height:100%;}
+.screen.active{display:flex;}
+
+/* ── HEADER ── */
+.hdr{background:var(--surf);border-bottom:1.5px solid var(--blood);padding:10px 16px 8px;flex-shrink:0;display:flex;align-items:center;gap:10px;}
+.hdr-back{background:none;border:none;color:var(--tx2);font-size:20px;cursor:pointer;padding:0 6px 0 0;line-height:1;}
+.hdr-icon{font-size:16px;flex-shrink:0;}
+.hdr-title{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:var(--gd);letter-spacing:1px;flex:1;}
+.hdr-sub{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);}
+.hdr-badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;border:1px solid var(--br);color:var(--tx3);padding:3px 7px;border-radius:2px;white-space:nowrap;flex-shrink:0;}
+.online-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gr2);margin-right:4px;}
+
+/* ── SCROLL BODY ── */
+.body{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px;}
+.body::-webkit-scrollbar{width:3px;}
+.body::-webkit-scrollbar-thumb{background:var(--br2);}
+
+/* ── SETUP SCREEN ── */
+.setup-logo{text-align:center;padding:28px 0 20px;}
+.setup-logo-icon{font-size:48px;display:block;margin-bottom:10px;}
+.setup-logo-title{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--gd);letter-spacing:3px;}
+.setup-logo-sub{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--blood2);margin-top:4px;}
+.setup-card{background:var(--surf);border:1px solid var(--br);border-radius:3px;padding:18px;margin-bottom:14px;}
+.setup-card h3{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gd2);margin-bottom:14px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:5px;}
+.field input,.field textarea{width:100%;background:var(--card);border:1px solid var(--br2);border-radius:2px;padding:8px 11px;color:var(--tx);font-family:'Crimson Text',serif;font-size:14px;outline:none;}
+.field input:focus,.field textarea:focus{border-color:var(--blood);}
+.field textarea{height:70px;resize:none;font-size:12px;}
+.sql-box{background:#0a0705;border:1px solid var(--br);border-radius:2px;padding:10px;font-family:monospace;font-size:10px;color:#8d8;line-height:1.7;overflow-x:auto;white-space:pre;margin-top:8px;}
+.info-box{background:rgba(139,0,0,.1);border:1px solid rgba(139,0,0,.3);border-radius:2px;padding:10px 12px;font-size:12px;color:#f99;line-height:1.6;margin-bottom:12px;}
+
+/* ── BOTÕES ── */
+.btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:11px 0;border-radius:2px;cursor:pointer;border:none;transition:all .1s;width:100%;display:block;text-align:center;}
+.btn:active{transform:scale(.97);}
+.btn-prim{background:var(--blood);color:#fff;}
+.btn-prim:hover{background:var(--blood2);}
+.btn-prim:disabled{opacity:.4;cursor:not-allowed;}
+.btn-ghost{background:transparent;border:1px solid var(--br2);color:var(--tx2);}
+.btn-ghost:hover{border-color:var(--gd2);color:var(--gd);}
+.btn-danger{background:transparent;border:1px solid var(--br2);color:#f88;}
+.btn-danger:hover{border-color:var(--blood);}
+.btn-sm{padding:7px 14px;width:auto;display:inline-block;}
+
+/* ── LOBBY ── */
+.char-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.char-card{background:var(--surf);border:1px solid var(--br);border-radius:3px;overflow:hidden;cursor:pointer;transition:border-color .15s;}
+.char-card:hover{border-color:var(--br2);}
+.char-card:active{border-color:var(--blood);}
+.char-card-hd{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--card);}
+.char-card-name{font-family:'Cinzel',serif;font-size:16px;color:var(--gd);flex:1;letter-spacing:1.5px;}
+.char-card-time{font-size:10px;color:var(--tx3);}
+.char-card-body{padding:12px 16px 0;}
+.char-stats-row{display:flex;gap:24px;margin-bottom:12px;}
+.char-stat{display:flex;flex-direction:column;gap:4px;}
+.char-stat-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);}
+.char-stat-val{font-family:'Cinzel',serif;font-size:20px;font-weight:700;}
+
+/* ── DOTS VISUAIS ── */
+.card-blood-dots{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;}
+.cbd{
+  width:16px;height:16px;border-radius:50%;
+  border:2px solid var(--blood);
+  transition:background .15s;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.3);
+}
+.cbd.on{
+  background:var(--blood);
+  box-shadow:0 0 5px rgba(139,0,0,.45);
+}
+.card-wp-boxes{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
+.cwb{
+  width:18px;height:10px;
+  border:2px solid var(--wp);border-radius:2px;
+  transition:background .15s;
+}
+.cwb.on{
+  background:var(--wp);
+  box-shadow:0 0 4px rgba(58,106,170,.4);
+}
+
+/* ── CAIXAS DE VITALIDADE ── */
+.vita-boxes{display:flex;gap:5px;padding:10px 16px;background:rgba(0,0,0,.2);}
+.vita-box{
+  flex:1;height:30px;border-radius:3px;border:1.5px solid var(--br2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:900;color:transparent;
+  transition:all .2s;
+}
+.vita-box.ba{background:#7a5a00;border-color:#c09000;color:#ffd070;}
+.vita-box.le{background:var(--blood);border-color:var(--blood2);color:#fdd;}
+.vita-box.ag{background:#1a0808;border-color:#777;color:#f44;}
+.vita-label{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;text-transform:uppercase;
+  text-align:center;padding:4px 0 6px;color:var(--tx3);
+}
+.online-indicator{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.online-indicator.on{background:var(--gr2);box-shadow:0 0 5px rgba(58,138,62,.7);}
+.online-indicator.off{background:var(--br2);}
+.create-form{background:var(--surf);border:1px solid var(--blood);border-radius:3px;padding:16px;margin-bottom:14px;}
+.create-form h3{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blood2);margin-bottom:12px;}
+.create-row{display:flex;gap:8px;align-items:flex-end;}
+.empty-state{text-align:center;padding:32px 0;color:var(--tx3);font-style:italic;font-size:14px;}
+.empty-state-icon{font-size:32px;display:block;margin-bottom:10px;opacity:.5;}
+
+/* ── TRACKER ── */
+.sec{background:var(--surf);border:1px solid var(--br);border-radius:3px;overflow:hidden;margin-bottom:10px;}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;background:var(--card);border-bottom:1px solid var(--br);}
+.sec-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gd2);}
+.sec-val{font-family:'Cinzel',serif;font-size:12px;font-weight:700;}
+.sec-body{padding:12px 14px;}
+
+/* SANGUE */
+.blood-dots{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+.bdot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--blood);cursor:pointer;transition:transform .1s;}
+.bdot.on{background:var(--blood);box-shadow:0 0 5px rgba(139,0,0,.4);}
+.bdot:active{transform:scale(.82);}
+
+.ctrl-row{display:flex;gap:8px;align-items:center;}
+.ctrl-btn{flex:1;padding:13px 0;border:none;border-radius:3px;cursor:pointer;font-family:'Cinzel',serif;font-size:20px;font-weight:700;transition:all .1s;}
+.ctrl-btn:active{transform:scale(.93);}
+.ctrl-btn.minus{background:rgba(139,0,0,.2);color:#f99;border:1px solid rgba(139,0,0,.4);}
+.ctrl-btn.minus:active{background:rgba(139,0,0,.45);}
+.ctrl-btn.plus{background:rgba(58,138,62,.15);color:#8d8;border:1px solid rgba(58,138,62,.35);}
+.ctrl-btn.plus:active{background:rgba(58,138,62,.35);}
+.ctrl-mid{text-align:center;min-width:54px;font-family:'Cinzel',serif;font-size:24px;font-weight:700;color:var(--gd);}
+.ctrl-sub{font-size:10px;color:var(--tx3);display:block;margin-top:-2px;}
+.max-row{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(58,42,26,.4);}
+.max-lbl{font-size:11px;color:var(--tx3);flex:1;font-family:'Cinzel',serif;letter-spacing:1px;}
+.max-btn{width:26px;height:26px;border-radius:2px;border:1px solid var(--br2);background:transparent;color:var(--tx2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.max-btn:active{background:var(--card2);}
+.max-val{font-family:'Cinzel',serif;font-size:13px;color:var(--tx);min-width:20px;text-align:center;}
+
+/* VITALIDADE */
+.health-list{display:flex;flex-direction:column;gap:3px;}
+.h-row{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px dotted rgba(58,42,26,.3);}
+.h-row:last-child{border-bottom:none;}
+.h-lbl{flex:1;font-size:13px;color:var(--tx);}
+.h-pen{font-family:'Cinzel',serif;font-size:10px;color:var(--blood2);width:22px;text-align:right;flex-shrink:0;}
+.h-box{width:30px;height:30px;border:1.5px solid var(--br2);border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all .1s;}
+.h-box:active{transform:scale(.85);}
+.h-box.ba{background:#7a5a00;border-color:#a07800;color:#ffd070;}
+.h-box.le{background:var(--blood);border-color:var(--blood2);color:#fcc;}
+.h-box.ag{background:#111;border-color:#666;color:#f44;}
+.dano-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:8px;}
+.dano-btn{padding:12px 4px;border-radius:3px;border:1px solid;cursor:pointer;font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;text-transform:uppercase;text-align:center;transition:all .1s;}
+.dano-btn:active{transform:scale(.91);}
+.dano-btn.ba{background:rgba(122,90,0,.2);border-color:rgba(160,120,0,.5);color:#ffd070;}
+.dano-btn.ba:active{background:rgba(122,90,0,.4);}
+.dano-btn.le{background:rgba(139,0,0,.2);border-color:rgba(178,34,34,.5);color:#f99;}
+.dano-btn.le:active{background:rgba(139,0,0,.4);}
+.dano-btn.ag{background:rgba(30,10,10,.7);border-color:#555;color:#f44;}
+.dano-btn.ag:active{background:#1a0808;}
+.dano-sub{font-size:9px;display:block;margin-top:2px;opacity:.7;}
+.cure-btn{width:100%;padding:9px;border-radius:3px;background:rgba(45,122,50,.12);border:1px solid rgba(58,138,62,.35);color:#8d8;font-family:'Cinzel',serif;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .1s;}
+.cure-btn:active{background:rgba(45,122,50,.3);}
+
+/* FDV */
+.fdv-perm{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+.fdv-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--wp);}
+.fdv-dot.on{background:var(--wp);}
+.fdv-temp{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;}
+.fdv-box{width:18px;height:10px;border:1.5px solid var(--wp);border-radius:1px;cursor:pointer;transition:background .1s;}
+.fdv-box.on{background:var(--wp);}
+.fdv-box:active{opacity:.6;}
+
+/* PARTY PANEL */
+.party-panel{background:var(--surf);border:1px solid var(--br);border-radius:3px;overflow:hidden;margin-bottom:10px;}
+.party-hd{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;background:var(--card);border-bottom:1px solid var(--br);}
+.party-list{display:flex;flex-direction:column;}
+.party-row{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(58,42,26,.3);}
+.party-row:last-child{border-bottom:none;}
+.party-name{font-family:'Cinzel',serif;font-size:11px;color:var(--gd);flex:1;letter-spacing:.5px;}
+.party-stats{display:flex;gap:10px;align-items:center;}
+.party-stat{font-family:'Cinzel',serif;font-size:10px;text-align:center;}
+.party-stat-val{font-size:13px;font-weight:700;display:block;}
+.party-stat-lbl{font-size:7px;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);display:block;}
+
+/* LEGEND */
+.legend{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;font-size:10px;color:var(--tx3);}
+.leg-item{display:flex;align-items:center;gap:4px;}
+.leg-dot{width:9px;height:9px;border-radius:1px;}
+
+/* STATUS BAR */
+.status-bar{background:var(--card);border-top:1px solid var(--br);padding:6px 14px;text-align:center;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;flex-shrink:0;transition:color .3s;}
+
+/* PAINEL DO MESTRE */
+.mestre-card{
+  background:var(--surf);border:1px solid var(--br);border-radius:3px;overflow:hidden;
+  transition:border-color .3s;
+}
+.mestre-card.online{border-color:rgba(45,122,50,.5);}
+.mestre-card.incap{border-color:var(--blood);animation:pulseRed 2s infinite;}
+@keyframes pulseRed{0%,100%{border-color:var(--blood);}50%{border-color:var(--blood2);box-shadow:0 0 8px rgba(139,0,0,.3);}}
+.mestre-card-hd{
+  display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--card);
+  border-bottom:1px solid var(--br);
+}
+.mestre-card-name{font-family:'Cinzel',serif;font-size:16px;color:var(--gd);flex:1;letter-spacing:1.5px;}
+.mestre-card-status{font-family:'Cinzel',serif;font-size:11px;font-weight:700;}
+.mestre-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;}
+.mestre-stat{
+  padding:12px 16px;border-right:1px solid var(--br);text-align:center;
+}
+.mestre-stat:last-child{border-right:none;}
+.mestre-stat-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);display:block;margin-bottom:4px;}
+.mestre-stat-val{font-family:'Cinzel',serif;font-size:26px;font-weight:700;display:block;line-height:1;}
+.mestre-stat-sub{font-size:10px;color:var(--tx3);display:block;margin-top:2px;}
+.mestre-health-bar{
+  display:flex;gap:3px;padding:6px 14px;background:rgba(0,0,0,.2);flex-wrap:wrap;
+}
+.mestre-hbox{
+  flex:1;min-width:22px;height:10px;border-radius:1px;border:1px solid var(--br2);
+  transition:background .2s;
+}
+.mestre-hbox.ba{background:#7a5a00;border-color:#a07800;}
+.mestre-hbox.le{background:var(--blood);border-color:var(--blood2);}
+.mestre-hbox.ag{background:#333;border-color:#666;}
+
+/* FEED */
+.feed-entry{
+  display:flex;align-items:flex-start;gap:10px;padding:8px 14px;
+  border-bottom:1px solid rgba(58,42,26,.25);
+  animation:feedIn .3s ease;
+}
+.feed-entry:last-child{border-bottom:none;}
+@keyframes feedIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:none;}}
+.feed-time{font-family:'Cinzel',serif;font-size:8px;color:var(--tx3);letter-spacing:1px;white-space:nowrap;margin-top:2px;flex-shrink:0;}
+.feed-text{font-size:13px;color:var(--tx);line-height:1.4;flex:1;}
+.feed-name{color:var(--gd);font-family:'Cinzel',serif;font-size:11px;}
+.feed-blood{color:#f88;}
+.feed-health{color:#fa5;}
+.feed-wp{color:#8af;}
+.feed-online{color:var(--gr2);}
+.feed-offline{color:var(--tx3);}
+
+/* TOAST */
+.toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--br2);border-radius:3px;padding:8px 16px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx2);opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;}
+.toast.show{opacity:1;}
+
+/* LOADING */
+.loading{display:flex;align-items:center;justify-content:center;height:120px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     SCREEN 1: SETUP
+══════════════════════════════════════ -->
+<div class="screen active" id="screenSetup">
+  <div class="body">
+    <div class="setup-logo">
+      <span class="setup-logo-icon">🩸</span>
+      <div class="setup-logo-title">VtM Tracker</div>
+      <div class="setup-logo-sub">Vampiro · A Máscara</div>
+    </div>
+
+    <div class="setup-card">
+      <h3>Conectar ao Supabase</h3>
+      <div class="info-box">
+        Cole as credenciais do seu projeto Supabase. Elas ficam salvas neste dispositivo — só precisa fazer isso uma vez.
+      </div>
+      <div class="field">
+        <label>URL do Projeto</label>
+        <input id="sbUrl" placeholder="https://xxxxxxxxxxxx.supabase.co" autocomplete="off"/>
+      </div>
+      <div class="field">
+        <label>Anon Public Key</label>
+        <textarea id="sbKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."></textarea>
+      </div>
+      <button class="btn btn-prim" onclick="conectar()">⚔ Conectar e Entrar</button>
+    </div>
+
+    <div class="setup-card">
+      <h3>SQL — Criar Tabela</h3>
+      <div style="font-size:12px;color:var(--tx2);line-height:1.6;margin-bottom:10px;">
+        Rode este SQL no Editor do seu projeto Supabase antes de usar:
+      </div>
+      <div class="sql-box">create table personagens (
+  id uuid default gen_random_uuid() primary key,
+  nome text not null unique,
+  blood_cur int default 10,
+  blood_max int default 10,
+  health jsonb default '[]'::jsonb,
+  wp_cur int default 5,
+  wp_max int default 5,
+  online boolean default false,
+  atualizado_em timestamptz default now()
+);
+
+alter publication supabase_realtime
+  add table personagens;</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2: LOBBY
+══════════════════════════════════════ -->
+<div class="screen" id="screenLobby">
+  <div class="hdr">
+    <span class="hdr-icon">🩸</span>
+    <div>
+      <div class="hdr-title">VtM Tracker</div>
+      <div class="hdr-sub">Escolha seu personagem</div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="irMestre()" style="font-size:8px;padding:5px 10px;border-color:rgba(201,168,76,.4);color:var(--gd2);">👁 Mestre</button>
+    <button class="btn btn-ghost btn-sm" onclick="irSetup()" style="font-size:8px;padding:5px 10px;">⚙</button>
+  </div>
+  <div class="body" id="lobbyBody">
+    <div id="createForm" style="display:none;" class="create-form">
+      <h3>+ Novo Personagem</h3>
+      <div class="create-row">
+        <div class="field" style="flex:1;margin:0;">
+          <input id="novoNome" placeholder="Nome do personagem..." maxlength="40" style="font-size:15px;"/>
+        </div>
+        <button class="btn btn-prim btn-sm" onclick="criarPersonagem()">Criar</button>
+        <button class="btn btn-ghost btn-sm" onclick="toggleCreateForm(false)">✕</button>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);">Personagens</div>
+      <button class="btn btn-ghost btn-sm" onclick="toggleCreateForm(true)">+ Novo</button>
+    </div>
+
+    <div class="char-grid" id="charGrid">
+      <div class="loading">Carregando...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 4: PAINEL DO MESTRE
+══════════════════════════════════════ -->
+<div class="screen" id="screenMestre">
+  <div class="hdr">
+    <button class="hdr-back" onclick="voltarLobbyDeMestre()">‹</button>
+    <span class="hdr-icon" style="font-size:14px;">👁</span>
+    <div style="flex:1;">
+      <div class="hdr-title">Painel do Mestre</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
+      <div class="online-dot" id="mestreSyncDot" style="background:var(--tx3);"></div>
+      <span style="font-family:'Cinzel',serif;font-size:8px;color:var(--tx3);" id="mestreSyncLbl">—</span>
+    </div>
+  </div>
+  <div class="body">
+
+    <!-- PERSONAGENS AO VIVO -->
+    <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gd2);margin-bottom:10px;">
+      ⬥ Personagens ao vivo — <span id="mestreOnlineCount" style="color:var(--gr2);">0 online</span>
+    </div>
+    <div id="mestreCharGrid" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+      <div class="loading">Aguardando...</div>
+    </div>
+
+    <!-- FEED DE ATIVIDADE -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gd2);">⬥ Feed de atividade</div>
+      <button onclick="limparFeed()" style="background:none;border:none;color:var(--tx3);font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;cursor:pointer;text-transform:uppercase;">limpar</button>
+    </div>
+    <div id="mestreFeed" style="background:var(--surf);border:1px solid var(--br);border-radius:3px;overflow:hidden;">
+      <div style="padding:16px;text-align:center;font-size:13px;color:var(--tx3);font-style:italic;">Aguardando atividade...</div>
+    </div>
+    <div style="height:20px;"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 3: TRACKER
+══════════════════════════════════════ -->
+<div class="screen" id="screenTracker">
+  <div class="hdr">
+    <button class="hdr-back" onclick="voltarLobby()">‹</button>
+    <span class="hdr-icon">🩸</span>
+    <div style="flex:1;min-width:0;">
+      <div class="hdr-title" id="trackerNome" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+    </div>
+    <div class="hdr-badge" id="trackerStatusBadge">Ileso</div>
+    <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
+      <div class="online-dot" id="syncDot" style="background:var(--tx3);"></div>
+      <span style="font-family:'Cinzel',serif;font-size:8px;color:var(--tx3);" id="syncLbl">—</span>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- PARTY -->
+    <div class="party-panel" id="partyPanel" style="display:none;">
+      <div class="party-hd">
+        <span class="sec-title">⚔ Party</span>
+        <span style="font-family:'Cinzel',serif;font-size:9px;color:var(--tx3);" id="partyCount">—</span>
+      </div>
+      <div class="party-list" id="partyList"></div>
+    </div>
+
+    <!-- SANGUE -->
+    <div class="sec">
+      <div class="sec-hd">
+        <span class="sec-title">⬥ Sangue</span>
+        <span class="sec-val" id="bloodLabel" style="color:#f88;">—</span>
+      </div>
+      <div class="sec-body">
+        <div class="blood-dots" id="bloodDots"></div>
+        <div class="ctrl-row">
+          <button class="ctrl-btn minus" onclick="changeBlood(-1)">−</button>
+          <div class="ctrl-mid">
+            <span id="bloodCur">10</span>
+            <span class="ctrl-sub" id="bloodMaxLbl">/ 10</span>
+          </div>
+          <button class="ctrl-btn plus" onclick="changeBlood(1)">+</button>
+        </div>
+        <div class="max-row">
+          <span class="max-lbl">Máx</span>
+          <button class="max-btn" onclick="changeBloodMax(-1)">−</button>
+          <span class="max-val" id="bloodMaxVal">10</span>
+          <button class="max-btn" onclick="changeBloodMax(1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VITALIDADE -->
+    <div class="sec">
+      <div class="sec-hd">
+        <span class="sec-title">⬥ Vitalidade</span>
+        <span class="sec-val" id="healthLabel" style="font-size:10px;color:var(--tx2);">Ileso</span>
+      </div>
+      <div class="sec-body">
+        <div class="health-list" id="healthList"></div>
+        <div class="legend">
+          <div class="leg-item"><div class="leg-dot" style="background:#7a5a00;"></div>Contusão</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--blood);"></div>Letal</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#333;border:1px solid #666;"></div>Agravado</div>
+        </div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(58,42,26,.3);">
+          <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--tx3);text-transform:uppercase;margin-bottom:8px;">Aplicar dano</div>
+          <div class="dano-grid">
+            <button class="dano-btn ba" onclick="applyDamage('b')">Contusão<span class="dano-sub">1 caixa</span></button>
+            <button class="dano-btn le" onclick="applyDamage('l')">Letal<span class="dano-sub">1 caixa</span></button>
+            <button class="dano-btn ag" onclick="applyDamage('a')">Agravado<span class="dano-sub">1 caixa</span></button>
+          </div>
+          <button class="cure-btn" onclick="healOne()">✦ Curar 1 caixa</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FDV -->
+    <div class="sec">
+      <div class="sec-hd">
+        <span class="sec-title">⬥ Força de Vontade</span>
+        <span class="sec-val" id="wpLabel" style="color:#8af;">—</span>
+      </div>
+      <div class="sec-body">
+        <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:1.5px;color:var(--tx3);text-transform:uppercase;margin-bottom:5px;">Permanente</div>
+        <div class="fdv-perm" id="fdvPerm"></div>
+        <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:1.5px;color:var(--tx3);text-transform:uppercase;margin-bottom:5px;">Temporária</div>
+        <div class="fdv-temp" id="fdvTemp"></div>
+        <div class="ctrl-row">
+          <button class="ctrl-btn minus" onclick="changeWP(-1)">−</button>
+          <div class="ctrl-mid">
+            <span id="wpCur">5</span>
+            <span class="ctrl-sub" id="wpMaxLbl">/ 5</span>
+          </div>
+          <button class="ctrl-btn plus" onclick="changeWP(1)">+</button>
+        </div>
+        <div class="max-row">
+          <span class="max-lbl">Máx</span>
+          <button class="max-btn" onclick="changeWPMax(-1)">−</button>
+          <span class="max-val" id="wpMaxVal">5</span>
+          <button class="max-btn" onclick="changeWPMax(1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-ghost" onclick="resetRecursos()" style="margin-bottom:8px;">↺ Resetar sangue + FdV ao máximo</button>
+    <button class="btn btn-danger" onclick="deletarPersonagem()">✕ Deletar este personagem</button>
+    <div style="height:16px;"></div>
+  </div>
+
+  <div class="status-bar" id="statusBar" style="color:var(--gr2);">● Ileso</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// CONSTANTES
+// ═══════════════════════════════════════════════════════════
+const HL=[
+  {l:'Escoriado',p:'—'},{l:'Machucado',p:'-1'},{l:'Ferido',p:'-1'},
+  {l:'Ferido Grav.',p:'-2'},{l:'Espancado',p:'-2'},{l:'Aleijado',p:'-5'},{l:'Incapacitado',p:'Inc'}
+];
+
+// ═══════════════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ═══════════════════════════════════════════════════════════
+let SB=null;               // cliente Supabase
+let CHAR=null;             // personagem atual {id, nome, blood_cur, blood_max, health, wp_cur, wp_max}
+let PARTY=[];              // outros personagens
+let CHANNEL=null;          // canal realtime
+let SAVE_TIMER=null;       // debounce do save
+let SAVING=false;
+
+// ═══════════════════════════════════════════════════════════
+// NAVEGAÇÃO
+// ═══════════════════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════
+// SETUP
+// ═══════════════════════════════════════════════════════════
+function irSetup(){
+  if(CHANNEL)SB.removeChannel(CHANNEL);
+  if(CHAR)marcarOffline();
+  showScreen('screenSetup');
+}
+
+async function conectar(){
+  const url=document.getElementById('sbUrl').value.trim();
+  const key=document.getElementById('sbKey').value.trim();
+  if(!url||!key){toast('Preencha URL e Key');return;}
+  try{
+    SB=window.supabase.createClient(url,key);
+    // Testa a conexão
+    const {error}=await SB.from('personagens').select('id').limit(1);
+    if(error){
+      if(error.code==='42P01')toast('Tabela não existe — rode o SQL primeiro ⬆');
+      else toast('Erro: '+error.message);
+      return;
+    }
+    localStorage.setItem('vtm_sb_url',url);
+    localStorage.setItem('vtm_sb_key',key);
+    await irLobby();
+  }catch(e){toast('Falha ao conectar: '+e.message);}
+}
+
+// ═══════════════════════════════════════════════════════════
+// LOBBY
+// ═══════════════════════════════════════════════════════════
+async function irLobby(){
+  toggleCreateForm(false);
+  showScreen('screenLobby');
+  await carregarPersonagens();
+}
+
+async function carregarPersonagens(){
+  const grid=document.getElementById('charGrid');
+  grid.innerHTML='<div class="loading">Carregando...</div>';
+  const {data,error}=await SB.from('personagens').select('*').order('nome');
+  if(error){grid.innerHTML='<div class="loading" style="color:#f88;">Erro ao carregar</div>';return;}
+  renderCharGrid(data||[]);
+}
+
+function renderCharGrid(chars){
+  const grid=document.getElementById('charGrid');grid.innerHTML='';
+  if(!chars.length){
+    grid.innerHTML=`<div class="empty-state"><span class="empty-state-icon">🧛</span>Nenhum personagem ainda.<br>Crie o primeiro!</div>`;
+    return;
+  }
+  chars.forEach(c=>{
+    const h=Array.isArray(c.health)?c.health:[null,null,null,null,null,null,null];
+    const w=h.findIndex(x=>x!==null);
+    const hLabels=['Escoriado','Machucado','Ferido','Ferido Grav.','Espancado','Aleijado','INCAPACITADO'];
+    const hTxt=w===-1?'Ileso':hLabels[w]||'Ileso';
+    const hColor=w>=6?'#f44':w>4?'#f88':w>2?'#fa5':'var(--gr2)';
+    const online=c.online;
+    const pct=c.blood_max>0?(c.blood_cur/c.blood_max):0;
+    const bColor=pct===0?'#f44':pct<0.25?'#f88':pct<0.5?'#fa5':'#f99';
+
+    // Caixas de vitalidade com símbolo
+    const vitaBoxes=Array.from({length:7},(_,i)=>{
+      const dmg=h[i];
+      const cls=dmg==='b'?' ba':dmg==='l'?' le':dmg==='a'?' ag':'';
+      const ch=dmg==='b'?'/':dmg==='l'?'✕':dmg==='a'?'✱':'';
+      return `<div class="vita-box${cls}">${ch}</div>`;
+    }).join('');
+
+    const card=document.createElement('div');card.className='char-card';
+    card.innerHTML=`
+      <div class="char-card-hd">
+        <div class="online-indicator${online?' on':' off'}"></div>
+        <div class="char-card-name">${c.nome}</div>
+        <div style="font-family:'Cinzel',serif;font-size:10px;color:${hColor};font-weight:700;">${hTxt}</div>
+      </div>
+      <div class="char-card-body">
+        <div class="char-stats-row">
+          <div class="char-stat">
+            <span class="char-stat-lbl">Sangue</span>
+            <span class="char-stat-val" style="color:${bColor};">${c.blood_cur??'?'}<span style="font-size:11px;color:var(--tx3);">/${c.blood_max??'?'}</span></span>
+            <div class="card-blood-dots">${Array.from({length:Math.min(c.blood_max||10,20)},(_,i)=>`<div class="cbd${i<(c.blood_cur||0)?' on':''}"></div>`).join('')}</div>
+          </div>
+          <div class="char-stat">
+            <span class="char-stat-lbl">FdV</span>
+            <span class="char-stat-val" style="color:#8af;">${c.wp_cur??'?'}<span style="font-size:11px;color:var(--tx3);">/${c.wp_max??'?'}</span></span>
+            <div class="card-wp-boxes">${Array.from({length:Math.min(c.wp_max||5,10)},(_,i)=>`<div class="cwb${i<(c.wp_cur||0)?' on':''}"></div>`).join('')}</div>
+          </div>
+        </div>
+      </div>
+      <div class="vita-boxes">${vitaBoxes}</div>
+      <div class="vita-label">
+        <span style="display:inline-flex;gap:12px;">
+          <span style="color:#7a5a00;">/ contusão</span>
+          <span style="color:var(--blood);">✕ letal</span>
+          <span style="color:#666;">✱ agravado</span>
+        </span>
+      </div>`;
+    card.onclick=()=>entrarComoPersonagem(c);
+    grid.appendChild(card);
+  });
+}
+
+function toggleCreateForm(show){
+  document.getElementById('createForm').style.display=show?'block':'none';
+  if(show)setTimeout(()=>document.getElementById('novoNome').focus(),100);
+}
+
+async function criarPersonagem(){
+  const nome=document.getElementById('novoNome').value.trim();
+  if(!nome){toast('Digite um nome');return;}
+  const {data,error}=await SB.from('personagens').insert({
+    nome,blood_cur:10,blood_max:10,
+    health:[null,null,null,null,null,null,null],
+    wp_cur:5,wp_max:5,online:false
+  }).select().single();
+  if(error){
+    if(error.code==='23505')toast('Nome já existe!');
+    else toast('Erro: '+error.message);
+    return;
+  }
+  document.getElementById('novoNome').value='';
+  toggleCreateForm(false);
+  await entrarComoPersonagem(data);
+}
+
+// ═══════════════════════════════════════════════════════════
+// TRACKER
+// ═══════════════════════════════════════════════════════════
+async function entrarComoPersonagem(char){
+  CHAR={...char};
+  // health pode vir como array vazio — normaliza
+  if(!Array.isArray(CHAR.health)||CHAR.health.length!==7){
+    CHAR.health=[null,null,null,null,null,null,null];
+  }
+  // Marca online
+  await SB.from('personagens').update({online:true}).eq('id',CHAR.id);
+  CHAR.online=true;
+
+  // Atualiza UI
+  document.getElementById('trackerNome').textContent=CHAR.nome;
+  renderBlood();renderHealth();renderWP();updateStatus();
+
+  // Carrega party
+  await carregarParty();
+
+  // Inscreve no realtime
+  inscreverRealtime();
+
+  showScreen('screenTracker');
+}
+
+async function voltarLobby(){
+  await marcarOffline();
+  if(CHANNEL){SB.removeChannel(CHANNEL);CHANNEL=null;}
+  CHAR=null;PARTY=[];
+  await irLobby();
+}
+
+async function marcarOffline(){
+  if(CHAR&&SB)await SB.from('personagens').update({online:false}).eq('id',CHAR.id).catch(()=>{});
+}
+
+// ═══════════════════════════════════════════════════════════
+// REALTIME
+// ═══════════════════════════════════════════════════════════
+function inscreverRealtime(){
+  if(CHANNEL)SB.removeChannel(CHANNEL);
+  CHANNEL=SB.channel('personagens-global')
+    .on('postgres_changes',{event:'*',schema:'public',table:'personagens'},payload=>{
+      const updated=payload.new;
+      if(!updated||!updated.id)return;
+      // Ignora se for o próprio char (já temos local)
+      if(CHAR&&updated.id===CHAR.id)return;
+      // Atualiza party
+      const idx=PARTY.findIndex(p=>p.id===updated.id);
+      if(payload.eventType==='DELETE'){
+        if(idx>=0)PARTY.splice(idx,1);
+      }else if(idx>=0){
+        PARTY[idx]={...updated};
+      }else{
+        PARTY.push({...updated});
+      }
+      renderParty();
+    })
+    .subscribe(status=>{
+      const dot=document.getElementById('syncDot');
+      const lbl=document.getElementById('syncLbl');
+      if(status==='SUBSCRIBED'){
+        dot.style.background='var(--gr2)';lbl.textContent='sync';
+      }else{
+        dot.style.background='var(--tx3)';lbl.textContent='—';
+      }
+    });
+}
+
+// ═══════════════════════════════════════════════════════════
+// PARTY
+// ═══════════════════════════════════════════════════════════
+async function carregarParty(){
+  const {data}=await SB.from('personagens').select('*').neq('id',CHAR.id);
+  PARTY=data||[];
+  renderParty();
+}
+
+function renderParty(){
+  const panel=document.getElementById('partyPanel');
+  const list=document.getElementById('partyList');
+  const count=document.getElementById('partyCount');
+  const ativos=PARTY.filter(p=>p.online);
+  count.textContent=`${ativos.length} online · ${PARTY.length} total`;
+  if(!PARTY.length){panel.style.display='none';return;}
+  panel.style.display='block';
+  list.innerHTML='';
+  // Ordena: online primeiro
+  const sorted=[...PARTY].sort((a,b)=>(b.online?1:0)-(a.online?1:0));
+  sorted.forEach(p=>{
+    const w=Array.isArray(p.health)?p.health.findIndex(h=>h!==null):-1;
+    const hLabels=['Esc.','Mac.','Fer.','F.G.','Esp.','Alei.','INCAP.'];
+    const hTxt=w===-1?'Ileso':hLabels[w]||'?';
+    const hColor=w>=6?'#f44':w>4?'#f88':w>2?'#fa5':'var(--gr2)';
+    const row=document.createElement('div');row.className='party-row';
+    row.innerHTML=`
+      <div class="online-indicator${p.online?' on':' off'}"></div>
+      <div class="party-name">${p.nome}</div>
+      <div class="party-stats">
+        <div class="party-stat">
+          <span class="party-stat-val" style="color:#f88;">${p.blood_cur??'?'}/${p.blood_max??'?'}</span>
+          <span class="party-stat-lbl">Sangue</span>
+        </div>
+        <div class="party-stat">
+          <span class="party-stat-val" style="color:#8af;">${p.wp_cur??'?'}/${p.wp_max??'?'}</span>
+          <span class="party-stat-lbl">FdV</span>
+        </div>
+        <div class="party-stat">
+          <span class="party-stat-val" style="color:${hColor};font-size:11px;">${hTxt}</span>
+          <span class="party-stat-lbl">Vita.</span>
+        </div>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// SAVE SUPABASE (debounced)
+// ═══════════════════════════════════════════════════════════
+function scheduleSave(){
+  clearTimeout(SAVE_TIMER);
+  SAVE_TIMER=setTimeout(pushSave,600);
+}
+
+async function pushSave(){
+  if(!CHAR||!SB)return;
+  SAVING=true;
+  const {error}=await SB.from('personagens').update({
+    blood_cur:CHAR.blood_cur,blood_max:CHAR.blood_max,
+    health:CHAR.health,
+    wp_cur:CHAR.wp_cur,wp_max:CHAR.wp_max,
+    atualizado_em:new Date().toISOString()
+  }).eq('id',CHAR.id);
+  SAVING=false;
+  const dot=document.getElementById('syncDot');
+  if(error){dot.style.background='#f44';toast('Erro ao salvar');}
+  else{dot.style.background='var(--gr2)';}
+}
+
+// ═══════════════════════════════════════════════════════════
+// SANGUE
+// ═══════════════════════════════════════════════════════════
+function changeBlood(n){
+  CHAR.blood_cur=Math.max(0,Math.min(CHAR.blood_max,CHAR.blood_cur+n));
+  renderBlood();updateStatus();scheduleSave();
+}
+function changeBloodMax(n){
+  CHAR.blood_max=Math.max(1,Math.min(30,CHAR.blood_max+n));
+  CHAR.blood_cur=Math.min(CHAR.blood_cur,CHAR.blood_max);
+  renderBlood();scheduleSave();
+}
+function renderBlood(){
+  const el=document.getElementById('bloodDots');el.innerHTML='';
+  for(let i=0;i<CHAR.blood_max;i++){
+    const d=document.createElement('div');d.className='bdot'+(i<CHAR.blood_cur?' on':'');
+    d.onclick=()=>i<CHAR.blood_cur?changeBlood(-1):changeBlood(1);
+    el.appendChild(d);
+  }
+  document.getElementById('bloodCur').textContent=CHAR.blood_cur;
+  document.getElementById('bloodMaxLbl').textContent='/ '+CHAR.blood_max;
+  document.getElementById('bloodMaxVal').textContent=CHAR.blood_max;
+  document.getElementById('bloodLabel').textContent=CHAR.blood_cur+'/'+CHAR.blood_max;
+}
+
+// ═══════════════════════════════════════════════════════════
+// VITALIDADE
+// ═══════════════════════════════════════════════════════════
+function applyDamage(type){
+  let idx=-1;
+  if(type==='a'){
+    idx=CHAR.health.findIndex(h=>h==='l');
+    if(idx===-1)idx=CHAR.health.findIndex(h=>h==='b');
+    if(idx===-1)idx=CHAR.health.findIndex(h=>h===null);
+  }else if(type==='l'){
+    idx=CHAR.health.findIndex(h=>h==='b');
+    if(idx===-1)idx=CHAR.health.findIndex(h=>h===null);
+  }else{
+    idx=CHAR.health.findIndex(h=>h===null);
+  }
+  if(idx!==-1){CHAR.health[idx]=type;renderHealth();updateStatus();scheduleSave();}
+  else{if(navigator.vibrate)navigator.vibrate(80);toast('Vitalidade cheia!');}
+}
+function healOne(){
+  const idx=CHAR.health.map((h,i)=>({h,i})).reverse().find(x=>x.h!==null);
+  if(idx){CHAR.health[idx.i]=null;renderHealth();updateStatus();scheduleSave();}
+  else toast('Já está ileso!');
+}
+function cycleBox(i){
+  const c={'null':'b',b:'l',l:'a',a:null};
+  CHAR.health[i]=c[String(CHAR.health[i])];
+  renderHealth();updateStatus();scheduleSave();
+}
+function renderHealth(){
+  const el=document.getElementById('healthList');el.innerHTML='';
+  const w=CHAR.health.findIndex(h=>h!==null);
+  HL.forEach((h,i)=>{
+    const dmg=CHAR.health[i];
+    const cls=dmg==='b'?'ba':dmg==='l'?'le':dmg==='a'?'ag':'';
+    const ch=dmg==='b'?'/':dmg==='l'?'✕':dmg==='a'?'*':'';
+    const row=document.createElement('div');row.className='h-row';
+    row.innerHTML=`<div class="h-lbl">${h.l}</div><div class="h-pen">${h.p}</div><div class="h-box${cls?' '+cls:''}" onclick="cycleBox(${i})" style="color:${cls?'inherit':'transparent'}">${ch||'&nbsp;'}</div>`;
+    el.appendChild(row);
+  });
+  const labels=['Escoriado','Machucado','Ferido','Ferido Grav.','Espancado','Aleijado','INCAPACITADO'];
+  const hl=document.getElementById('healthLabel');
+  if(w===-1){hl.textContent='Ileso';hl.style.color='var(--gr2)';}
+  else if(w>=6){hl.textContent='INCAPACITADO';hl.style.color='#f44';}
+  else{hl.textContent=labels[w];hl.style.color=w>4?'#f44':w>2?'#fa5':'var(--tx2)';}
+}
+
+// ═══════════════════════════════════════════════════════════
+// FORÇA DE VONTADE
+// ═══════════════════════════════════════════════════════════
+function changeWP(n){
+  CHAR.wp_cur=Math.max(0,Math.min(CHAR.wp_max,CHAR.wp_cur+n));
+  renderWP();updateStatus();scheduleSave();
+}
+function changeWPMax(n){
+  CHAR.wp_max=Math.max(1,Math.min(10,CHAR.wp_max+n));
+  CHAR.wp_cur=Math.min(CHAR.wp_cur,CHAR.wp_max);
+  renderWP();scheduleSave();
+}
+function renderWP(){
+  const pe=document.getElementById('fdvPerm');pe.innerHTML='';
+  for(let i=0;i<CHAR.wp_max;i++){
+    const d=document.createElement('div');d.className='fdv-dot on';pe.appendChild(d);
+  }
+  const te=document.getElementById('fdvTemp');te.innerHTML='';
+  for(let i=0;i<CHAR.wp_max;i++){
+    const d=document.createElement('div');d.className='fdv-box'+(i<CHAR.wp_cur?' on':'');
+    d.onclick=()=>i<CHAR.wp_cur?changeWP(-1):changeWP(1);
+    te.appendChild(d);
+  }
+  document.getElementById('wpCur').textContent=CHAR.wp_cur;
+  document.getElementById('wpMaxLbl').textContent='/ '+CHAR.wp_max;
+  document.getElementById('wpMaxVal').textContent=CHAR.wp_max;
+  document.getElementById('wpLabel').textContent=CHAR.wp_cur+'/'+CHAR.wp_max;
+}
+
+// ═══════════════════════════════════════════════════════════
+// STATUS
+// ═══════════════════════════════════════════════════════════
+function updateStatus(){
+  const w=CHAR.health.findIndex(h=>h!==null);
+  const bar=document.getElementById('statusBar');
+  const badge=document.getElementById('trackerStatusBadge');
+  const pct=CHAR.blood_cur/CHAR.blood_max;
+  const labels=['Escoriado','Machucado','Ferido','Ferido Grav.','Espancado','Aleijado','INCAPACITADO'];
+  let hTxt,hColor;
+  if(w===-1){hTxt='Ileso';hColor='var(--gr2)';}
+  else if(w>=6){hTxt='INCAPACITADO';hColor='#f44';}
+  else{hTxt=labels[w];hColor=w>4?'#f44':w>2?'#fa5':'var(--tx2)';}
+  let extra='';
+  if(pct===0)extra=' · 💀 Sem sangue!';
+  else if(pct<0.2)extra=' · Sangue crítico';
+  if(CHAR.wp_cur===0)extra+=' · FdV esgotada';
+  bar.textContent='● '+hTxt+extra;
+  bar.style.color=hColor;
+  badge.textContent=hTxt;
+  badge.style.color=hColor;
+}
+
+// ═══════════════════════════════════════════════════════════
+// AÇÕES
+// ═══════════════════════════════════════════════════════════
+function resetRecursos(){
+  if(!confirm('Resetar sangue e FdV para o máximo?'))return;
+  CHAR.blood_cur=CHAR.blood_max;CHAR.wp_cur=CHAR.wp_max;
+  renderBlood();renderWP();updateStatus();scheduleSave();toast('Recursos resetados');
+}
+
+async function deletarPersonagem(){
+  if(!confirm(`Deletar "${CHAR.nome}" permanentemente? Não tem como desfazer.`))return;
+  if(!confirm('Tem certeza?'))return;
+  await SB.from('personagens').delete().eq('id',CHAR.id);
+  if(CHANNEL)SB.removeChannel(CHANNEL);
+  CHAR=null;PARTY=[];
+  await irLobby();
+}
+
+// ═══════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════
+let _toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(_toastTimer);_toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+// ═══════════════════════════════════════════════════════════
+// PAINEL DO MESTRE
+// ═══════════════════════════════════════════════════════════
+let MESTRE_CHARS={};
+let MESTRE_CHANNEL=null;
+let FEED_ENTRIES=[];
+
+async function irMestre(){
+  showScreen('screenMestre');
+  await carregarMestre();
+  inscreverMestre();
+}
+
+function voltarLobbyDeMestre(){
+  if(MESTRE_CHANNEL){SB.removeChannel(MESTRE_CHANNEL);MESTRE_CHANNEL=null;}
+  irLobby();
+}
+
+async function carregarMestre(){
+  const {data,error}=await SB.from('personagens').select('*').order('nome');
+  if(error){toast('Erro: '+error.message);return;}
+  MESTRE_CHARS={};
+  (data||[]).forEach(c=>{MESTRE_CHARS[c.id]=c;});
+  renderMestre();
+}
+
+function inscreverMestre(){
+  if(MESTRE_CHANNEL)SB.removeChannel(MESTRE_CHANNEL);
+  const dot=document.getElementById('mestreSyncDot');
+  const lbl=document.getElementById('mestreSyncLbl');
+  MESTRE_CHANNEL=SB.channel('mestre-global')
+    .on('postgres_changes',{event:'*',schema:'public',table:'personagens'},payload=>{
+      const novo=payload.new;
+      const tipo=payload.eventType;
+      if(tipo==='DELETE'){
+        const ant=MESTRE_CHARS[payload.old?.id];
+        if(ant)addFeedEntry(ant.nome,'personagem deletado','feed-offline');
+        delete MESTRE_CHARS[payload.old?.id];
+      }else if(novo){
+        const ant=MESTRE_CHARS[novo.id];
+        if(ant)detectarMudancas(ant,novo);
+        else addFeedEntry(novo.nome,'entrou na sessão','feed-online');
+        MESTRE_CHARS[novo.id]=novo;
+      }
+      renderMestre();
+    })
+    .subscribe(status=>{
+      if(status==='SUBSCRIBED'){dot.style.background='var(--gr2)';lbl.textContent='ao vivo';}
+      else{dot.style.background='#fa5';lbl.textContent='reconectando';}
+    });
+}
+
+function detectarMudancas(antes,depois){
+  const nome=depois.nome;
+  if(antes.online!==depois.online){
+    if(depois.online)addFeedEntry(nome,'ficou online','feed-online');
+    else addFeedEntry(nome,'ficou offline','feed-offline');
+  }
+  if(antes.blood_cur!==depois.blood_cur){
+    const d=depois.blood_cur-antes.blood_cur;
+    const txt=d<0
+      ?`perdeu <span class="feed-blood">${Math.abs(d)} sangue</span> → ${depois.blood_cur}/${depois.blood_max}`
+      :`recuperou <span class="feed-blood">${d} sangue</span> → ${depois.blood_cur}/${depois.blood_max}`;
+    addFeedEntry(nome,txt,'');
+  }
+  if(antes.wp_cur!==depois.wp_cur){
+    const d=depois.wp_cur-antes.wp_cur;
+    const txt=d<0
+      ?`gastou <span class="feed-wp">${Math.abs(d)} FdV</span> → ${depois.wp_cur}/${depois.wp_max}`
+      :`recuperou <span class="feed-wp">${d} FdV</span> → ${depois.wp_cur}/${depois.wp_max}`;
+    addFeedEntry(nome,txt,'');
+  }
+  const hA=Array.isArray(antes.health)?antes.health:[];
+  const hD=Array.isArray(depois.health)?depois.health:[];
+  const wA=hA.findIndex(h=>h!==null);
+  const wD=hD.findIndex(h=>h!==null);
+  if(wA!==wD){
+    const lb=['Escoriado','Machucado','Ferido','Ferido Grav.','Espancado','Aleijado','INCAPACITADO'];
+    const sA=wA===-1?'Ileso':lb[wA]||'?';
+    const sD=wD===-1?'Ileso':lb[wD]||'?';
+    const cor=wD>=6?'feed-blood':wD>wA?'feed-health':'feed-online';
+    addFeedEntry(nome,`<span class="${cor}">${sA} → ${sD}</span>`,'');
+  }
+}
+
+function addFeedEntry(nome,txt,cls){
+  const now=new Date();
+  const t=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0')+':'+now.getSeconds().toString().padStart(2,'0');
+  FEED_ENTRIES.unshift({nome,txt,cls,t});
+  if(FEED_ENTRIES.length>60)FEED_ENTRIES.pop();
+  renderFeed();
+}
+
+function renderFeed(){
+  const el=document.getElementById('mestreFeed');
+  if(!FEED_ENTRIES.length){el.innerHTML='<div style="padding:16px;text-align:center;font-size:13px;color:var(--tx3);font-style:italic;">Aguardando atividade...</div>';return;}
+  el.innerHTML=FEED_ENTRIES.map(e=>`<div class="feed-entry"><span class="feed-time">${e.t}</span><span class="feed-text"><span class="feed-name">${e.nome}</span> ${e.txt}</span></div>`).join('');
+}
+
+function limparFeed(){FEED_ENTRIES=[];renderFeed();}
+
+function renderMestre(){
+  const chars=Object.values(MESTRE_CHARS).sort((a,b)=>a.nome.localeCompare(b.nome));
+  const online=chars.filter(c=>c.online).length;
+  document.getElementById('mestreOnlineCount').textContent=`${online} online · ${chars.length} total`;
+  const grid=document.getElementById('mestreCharGrid');
+  if(!chars.length){grid.innerHTML='<div class="loading">Nenhum personagem ainda.</div>';return;}
+  grid.innerHTML='';
+  chars.forEach(c=>{
+    const h=Array.isArray(c.health)?c.health:[null,null,null,null,null,null,null];
+    const w=h.findIndex(x=>x!==null);
+    const lb=['Escoriado','Machucado','Ferido','Ferido Grav.','Espancado','Aleijado','INCAPACITADO'];
+    const hTxt=w===-1?'Ileso':lb[w]||'?';
+    const hColor=w>=6?'#f44':w>4?'#f88':w>2?'#fa5':'var(--gr2)';
+    const pct=c.blood_max>0?(c.blood_cur/c.blood_max):0;
+    const bColor=pct===0?'#f44':pct<0.25?'#f88':pct<0.5?'#fa5':'#f99';
+
+    const vitaBoxes=Array.from({length:7},(_,i)=>{
+      const dmg=h[i];
+      const cls=dmg==='b'?' ba':dmg==='l'?' le':dmg==='a'?' ag':'';
+      const ch=dmg==='b'?'/':dmg==='l'?'✕':dmg==='a'?'✱':'';
+      return `<div class="vita-box${cls}">${ch}</div>`;
+    }).join('');
+
+    const card=document.createElement('div');
+    card.className='mestre-card'+(c.online?' online':'')+(w>=6?' incap':'');
+    card.innerHTML=`
+      <div class="mestre-card-hd">
+        <div class="online-indicator${c.online?' on':' off'}"></div>
+        <div class="mestre-card-name">${c.nome}</div>
+        <div class="mestre-card-status" style="color:${hColor};">${hTxt}</div>
+      </div>
+      <div class="mestre-stats">
+        <div class="mestre-stat">
+          <span class="mestre-stat-lbl">Sangue</span>
+          <span class="mestre-stat-val" style="color:${bColor};">${c.blood_cur??'?'}</span>
+          <span class="mestre-stat-sub">/ ${c.blood_max??'?'}</span>
+          <div class="card-blood-dots" style="justify-content:center;margin-top:5px;">${Array.from({length:Math.min(c.blood_max||10,20)},(_,i)=>`<div class="cbd${i<(c.blood_cur||0)?' on':''}"></div>`).join('')}</div>
+        </div>
+        <div class="mestre-stat">
+          <span class="mestre-stat-lbl">FdV</span>
+          <span class="mestre-stat-val" style="color:#8af;">${c.wp_cur??'?'}</span>
+          <span class="mestre-stat-sub">/ ${c.wp_max??'?'}</span>
+          <div class="card-wp-boxes" style="justify-content:center;margin-top:5px;">${Array.from({length:Math.min(c.wp_max||5,10)},(_,i)=>`<div class="cwb${i<(c.wp_cur||0)?' on':''}"></div>`).join('')}</div>
+        </div>
+        <div class="mestre-stat">
+          <span class="mestre-stat-lbl">Vitalidade</span>
+          <span class="mestre-stat-val" style="color:${hColor};font-size:14px;margin-top:3px;">${hTxt}</span>
+        </div>
+      </div>
+      <div class="vita-boxes">${vitaBoxes}</div>
+      <div class="vita-label">
+        <span style="display:inline-flex;gap:12px;">
+          <span style="color:#7a5a00;">/ contusão</span>
+          <span style="color:var(--blood);">✕ letal</span>
+          <span style="color:#666;">✱ agravado</span>
+        </span>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+(function init(){
+  const url=localStorage.getItem('vtm_sb_url');
+  const key=localStorage.getItem('vtm_sb_key');
+  if(url&&key){
+    document.getElementById('sbUrl').value=url;
+    document.getElementById('sbKey').value=key;
+    SB=window.supabase.createClient(url,key);
+    SB.from('personagens').select('id').limit(1).then(({error})=>{
+      if(!error)irLobby();
+    });
+  }
+})();
+
+// Marca offline ao sair
+window.addEventListener('beforeunload',()=>{
+  if(CHAR&&SB)SB.from('personagens').update({online:false}).eq('id',CHAR.id);
+});
+window.addEventListener('pagehide',()=>{
+  if(CHAR&&SB)SB.from('personagens').update({online:false}).eq('id',CHAR.id);
+});
+</script>
+</body>
+</html>
