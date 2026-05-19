@@ -26,7 +26,7 @@ Sem servidor, sem conta, sem mensalidade. Cada um dono dos próprios dados.
 
 - [Controle](https://armanfm.github.io/ficha-json/controle.html)
 
-- [Controle](https://armanfm.github.io/ficha-json/controle2.html)
+- [Controle 2](https://armanfm.github.io/ficha-json/controle2.html)
 
 - [D&D 5e](https://armanfm.github.io/ficha-json/dnd5e.html)
   
