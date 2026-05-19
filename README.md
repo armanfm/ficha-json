@@ -24,7 +24,10 @@ Sem servidor, sem conta, sem mensalidade. Cada um dono dos próprios dados.
 
 - [Ficha PDF Viewer](https://armanfm.github.io/ficha-json/ficha_vtm_com_pdf.html)
 
+- [Controle](https://armanfm.github.io/ficha-json/controle.html)
+
 - [D&D 5e](https://armanfm.github.io/ficha-json/dnd5e.html)
+  
 
 ---
 
